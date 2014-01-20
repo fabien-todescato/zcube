@@ -1,0 +1,294 @@
+package net.ftod.zcube.zdd;
+
+import static net.ftod.zcube.zdd.ZDD.included;
+
+import java.util.Collection;
+
+/**
+ * <h1>Representing polynomials of set of sets over integers</h1>
+ * 
+ * @author Fabien
+ */
+public final class ZDDNumber {
+
+    public final ZDD digit;
+    public final ZDDNumber number;
+
+    private ZDDNumber(final ZDD digit, final ZDDNumber number) {
+        super();
+        this.digit = digit;
+        this.number = number;
+    }
+
+    private static ZDDNumber number(final ZDD digit, final ZDDNumber number)
+    {
+        if (digit == ZDD.BOT && number == null) {
+            return null;
+        }
+
+        return new ZDDNumber(digit, number);
+    }
+
+    static ZDDNumber shift(final ZDDNumber n)
+    {
+        return number(ZDD.BOT, n);
+    }
+
+    /**
+     * <h3>Binary representation of a monomial</h3>
+     * 
+     * <p>
+     * Return the unsigned binary representation of a monomial with a positive coefficient.
+     * </p>
+     * 
+     * @param l
+     *            the <code>long</code> holding the positive coefficient.
+     * @param zdd
+     *            the {@link ZDD} holding the set of sets.
+     * @return the {@link ZDDNumber} representing the monomial.
+     */
+    public static ZDDNumber binary(final long l, final ZDD zdd)
+    {
+        return l == 0L ? null : number(l % 2L == 0 ? ZDD.BOT : zdd, binary(l >> 1, zdd));
+    }
+
+    /**
+     * <h3>Projecting a {@link ZDDNumber} onto a {@link ZDD}</h3>
+     * 
+     * <p>
+     * Return the number of occurrences of a set of sets represented as a {@link ZDD} within a {@link ZDDNumber}.
+     * </p>
+     * 
+     * @param zddn
+     * @param zdd
+     * @return
+     */
+    public static long binary(final ZDDNumber zddn, final ZDD zdd)
+    {
+        return binary(new ZDDPredicateCache(), new ZDDPredicateCache(), zddn, zdd);
+    }
+
+    static long binary(final ZDDPredicateCache eq, final ZDDPredicateCache in, final ZDDNumber zddn, final ZDD zdd)
+    {
+        return zddn == null ? 0L : (included(eq, in, zdd, zddn.digit) ? 1L : 0L) + (binary(eq, in, zddn.number, zdd) << 1);
+    }
+
+    public static ZDDNumber binaryAdd(final ZDDNumber zddn1, final ZDDNumber zddn2)
+    {
+        return binaryAdd(new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache(), new ZDDOperationCache(), zddn1, zddn2);
+    }
+
+    static ZDDNumber binaryAdd(final ZDDPredicateCache eq, final ZDDOperationCache in, final ZDDOperationCache un, final ZDDOperationCache di, final ZDDNumber zddn1, final ZDDNumber zddn2)
+    {
+        final ZDDNumber zddnc = intersection(eq, in, zddn1, zddn2);
+        final ZDDNumber zddns = difference(eq, di, union(eq, un, zddn1, zddn2), zddnc);
+
+        if (zddnc == null) {
+            return zddns;
+        }
+
+        if (zddns == null) {
+            return new ZDDNumber(ZDD.BOT, zddnc);
+        }
+
+        return number(zddns.digit, binaryAdd(eq, in, un, di, zddns.number, zddnc));
+    }
+
+    public static ZDDNumber negabinary(final long l, final ZDD zdd)
+    {
+        if (l == 0) {
+            return null;
+        }
+
+        final long q = l / -2L;
+        final long r = l + 2L * q;
+
+        final long l1;
+        ZDD digit;
+
+        if (r > 0) {
+            digit = zdd;
+            l1 = q;
+        } else if (r < 0) {
+            digit = zdd;
+            l1 = q + 1;
+        } else {
+            digit = ZDD.BOT;
+            l1 = q;
+        }
+
+        return number(digit, negabinary(l1, zdd));
+    }
+
+    public static long negabinary(final ZDDNumber zddn, final ZDD zdd)
+    {
+        return negabinary(new ZDDPredicateCache(), new ZDDPredicateCache(), zddn, zdd);
+    }
+
+    static long negabinary(final ZDDPredicateCache eq, final ZDDPredicateCache in, final ZDDNumber zddn, final ZDD zdd)
+    {
+        if (zddn == null) {
+            return 0L;
+        }
+
+        return (included(eq, in, zdd, zddn.digit) ? 1L : 0L) + negabinary(eq, in, zddn.number, zdd) * -2L;
+    }
+
+    public static ZDDNumber negabinaryAdd(final ZDDNumber zddn1, final ZDDNumber zddn2)
+    {
+        return negabinaryAdd(new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache(), new ZDDOperationCache(), zddn1, zddn2);
+    }
+
+    static ZDDNumber negabinaryAdd(final ZDDPredicateCache eq, final ZDDOperationCache in, final ZDDOperationCache un, final ZDDOperationCache di, final ZDDNumber zddn1, final ZDDNumber zddn2)
+    {
+        final ZDDNumber zddnc = intersection(eq, in, zddn1, zddn2);
+        final ZDDNumber zddns = difference(eq, di, union(eq, un, zddn1, zddn2), zddnc);
+
+        if (zddnc == null) {
+            return zddns;
+        }
+
+        return negabinarySub(eq, in, un, di, zddns, shift(zddnc));
+    }
+
+    public static ZDDNumber negabinarySub(final ZDDNumber zddn1, final ZDDNumber zddn2)
+    {
+        return negabinarySub(new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache(), new ZDDOperationCache(), zddn1, zddn2);
+    }
+
+    static ZDDNumber negabinarySub(final ZDDPredicateCache eq, final ZDDOperationCache in, final ZDDOperationCache un, final ZDDOperationCache di, final ZDDNumber zddn1, final ZDDNumber zddn2)
+    {
+        final ZDDNumber zddnb = difference(eq, di, zddn2, zddn1);
+        final ZDDNumber zddnd = union(eq, un, difference(eq, di, zddn1, zddn2), zddnb);
+
+        if (zddnb == null) {
+            return zddnd;
+        }
+
+        return negabinaryAdd(eq, in, un, di, zddnd, shift(zddnb));
+    }
+
+    private static ZDDNumber intersection(final ZDDPredicateCache eq, final ZDDOperationCache in, final ZDDNumber zddn1, final ZDDNumber zddn2)
+    {
+        if (zddn1 == null) {
+            return null;
+        }
+        if (zddn2 == null) {
+            return null;
+        }
+        return number(ZDD.intersection(eq, in, zddn1.digit, zddn2.digit), intersection(eq, in, zddn1.number, zddn2.number));
+    }
+
+    private static ZDDNumber union(final ZDDPredicateCache eq, final ZDDOperationCache un, final ZDDNumber zddn1, final ZDDNumber zddn2)
+    {
+        if (zddn1 == null) {
+            return zddn2;
+        }
+        if (zddn2 == null) {
+            return zddn1;
+        }
+        return number(ZDD.union(eq, un, zddn1.digit, zddn2.digit), union(eq, un, zddn1.number, zddn2.number));
+    }
+
+    private static ZDDNumber difference(final ZDDPredicateCache eq, final ZDDOperationCache di, final ZDDNumber zddn1, final ZDDNumber zddn2)
+    {
+        if (zddn1 == null) {
+            return null;
+        }
+        if (zddn2 == null) {
+            return zddn1;
+        }
+        return number(ZDD.difference(eq, di, zddn1.digit, zddn2.digit), difference(eq, di, zddn1.number, zddn2.number));
+    }
+
+    public static ZDDNumber cube(final ZDDLong zl, final ZDDNumber zn)
+    {
+        return cube(zl.l, zl.t, zn);
+    }
+
+    public static ZDDNumber cube(final long l, final ZDDTree trees, final ZDDNumber zn)
+    {
+        final ZDDPredicateCache _equ = new ZDDPredicateCache();
+        final ZDDOperationCache _cru = new ZDDOperationCache();
+        final ZDDOperationCache _uni = new ZDDOperationCache();
+        final ZDDOperationCache _int = new ZDDOperationCache();
+        final ZDDOperationCache _dif = new ZDDOperationCache();
+
+        return binaryAdd(_equ, _int, _uni, _dif, binary(l, ZDDTree.subtrees(trees, _equ, _cru, _uni)), zn);
+    }
+
+    public static ZDDNumber cube(final ZDDLong zl, final ZDD filter, final ZDDNumber zn)
+    {
+        return cube(zl.l, zl.t, filter, zn);
+    }
+
+    public static ZDDNumber cube(final long l, final ZDDTree trees, final ZDD filter, final ZDDNumber zn)
+    {
+        final ZDDPredicateCache _equ = new ZDDPredicateCache();
+        final ZDDOperationCache _cru = new ZDDOperationCache();
+        final ZDDOperationCache _uni = new ZDDOperationCache();
+        final ZDDOperationCache _int = new ZDDOperationCache();
+        final ZDDOperationCache _dif = new ZDDOperationCache();
+
+        return binaryAdd(_equ, _int, _uni, _dif, binary(l, ZDD.intersection(_equ, _int, filter, ZDDTree.trees(trees, _equ, _cru, _uni))), zn);
+    }
+
+    public static ZDDNumber cube(final long l, final Collection<Collection<Collection<String>>> trees, final ZDDNumber zn)
+    {
+        final ZDDPredicateCache _equ = new ZDDPredicateCache();
+        final ZDDOperationCache _cru = new ZDDOperationCache();
+        final ZDDOperationCache _uni = new ZDDOperationCache();
+        final ZDDOperationCache _int = new ZDDOperationCache();
+        final ZDDOperationCache _dif = new ZDDOperationCache();
+
+        return binaryAdd(_equ, _int, _uni, _dif, binary(l, ZDD.trees3(_equ, _cru, _uni, trees)), zn);
+    }
+
+    public static ZDDNumber cube(final long l, final Collection<Collection<Collection<String>>> trees, final ZDD filter, final ZDDNumber zn)
+    {
+        final ZDDPredicateCache _equ = new ZDDPredicateCache();
+        final ZDDOperationCache _cru = new ZDDOperationCache();
+        final ZDDOperationCache _uni = new ZDDOperationCache();
+        final ZDDOperationCache _int = new ZDDOperationCache();
+        final ZDDOperationCache _dif = new ZDDOperationCache();
+
+        return binaryAdd(_equ, _int, _uni, _dif, binary(l, ZDD.intersection(_equ, _int, filter, ZDD.trees3(_equ, _cru, _uni, trees))), zn);
+    }
+
+    public static ZDDNumber cube(final long l, final String[][][] trees, final ZDDNumber zn)
+    {
+        final ZDDPredicateCache _equ = new ZDDPredicateCache();
+        final ZDDOperationCache _cru = new ZDDOperationCache();
+        final ZDDOperationCache _uni = new ZDDOperationCache();
+        final ZDDOperationCache _int = new ZDDOperationCache();
+        final ZDDOperationCache _dif = new ZDDOperationCache();
+
+        return binaryAdd(_equ, _int, _uni, _dif, binary(l, ZDD.trees(_equ, _cru, _uni, trees)), zn);
+    }
+
+    public static ZDDNumber cube(final long l, final String[][][] trees, final ZDD filter, final ZDDNumber zn)
+    {
+        final ZDDPredicateCache _equ = new ZDDPredicateCache();
+        final ZDDOperationCache _cru = new ZDDOperationCache();
+        final ZDDOperationCache _uni = new ZDDOperationCache();
+        final ZDDOperationCache _int = new ZDDOperationCache();
+        final ZDDOperationCache _dif = new ZDDOperationCache();
+
+        return binaryAdd(_equ, _int, _uni, _dif, binary(l, ZDD.intersection(_equ, _int, filter, ZDD.trees(_equ, _cru, _uni, trees))), zn);
+    }
+
+    public static String sizes(final ZDDNumber n)
+    {
+        final StringBuilder sb = new StringBuilder();
+        sb.append('[');
+        if (n != null) {
+            sb.append(n.digit.s);
+            for (ZDDNumber n1 = n.number; n1 != null; n1 = n1.number) {
+                sb.append(',');
+                sb.append(n1.digit.s);
+            }
+        }
+        sb.append(']');
+        return sb.toString();
+    }
+}
