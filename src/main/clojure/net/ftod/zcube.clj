@@ -24,7 +24,7 @@
 )
 
 ( defn ^long measure
-  [ ^ZDDNumber cube ^ZDD z ] ( ZDDNumber/binary cube z )
+  [ ^ZDDNumber cube ^ZDD z ] ( ZDDNumber/negabinary cube z )
 )
 
 ( defn ^ZDDNumber make-cube

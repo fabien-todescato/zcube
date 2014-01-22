@@ -214,7 +214,7 @@ public final class ZDDNumber {
         final ZDDOperationCache _int = new ZDDOperationCache();
         final ZDDOperationCache _dif = new ZDDOperationCache();
 
-        return binaryAdd(_equ, _int, _uni, _dif, binary(l, ZDDTree.subtrees(trees, _equ, _cru, _uni)), zn);
+        return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(l, ZDDTree.subtrees(trees, _equ, _cru, _uni)), zn);
     }
 
     public static ZDDNumber cube(final ZDDLong zl, final ZDD filter, final ZDDNumber zn)
@@ -230,7 +230,7 @@ public final class ZDDNumber {
         final ZDDOperationCache _int = new ZDDOperationCache();
         final ZDDOperationCache _dif = new ZDDOperationCache();
 
-        return binaryAdd(_equ, _int, _uni, _dif, binary(l, ZDD.intersection(_equ, _int, filter, ZDDTree.trees(trees, _equ, _cru, _uni))), zn);
+        return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(l, ZDD.intersection(_equ, _int, filter, ZDDTree.trees(trees, _equ, _cru, _uni))), zn);
     }
 
     public static ZDDNumber cube(final long l, final Collection<Collection<Collection<String>>> trees, final ZDDNumber zn)
@@ -241,7 +241,7 @@ public final class ZDDNumber {
         final ZDDOperationCache _int = new ZDDOperationCache();
         final ZDDOperationCache _dif = new ZDDOperationCache();
 
-        return binaryAdd(_equ, _int, _uni, _dif, binary(l, ZDD.trees3(_equ, _cru, _uni, trees)), zn);
+        return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(l, ZDD.trees3(_equ, _cru, _uni, trees)), zn);
     }
 
     public static ZDDNumber cube(final long l, final Collection<Collection<Collection<String>>> trees, final ZDD filter, final ZDDNumber zn)
@@ -252,7 +252,7 @@ public final class ZDDNumber {
         final ZDDOperationCache _int = new ZDDOperationCache();
         final ZDDOperationCache _dif = new ZDDOperationCache();
 
-        return binaryAdd(_equ, _int, _uni, _dif, binary(l, ZDD.intersection(_equ, _int, filter, ZDD.trees3(_equ, _cru, _uni, trees))), zn);
+        return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(l, ZDD.intersection(_equ, _int, filter, ZDD.trees3(_equ, _cru, _uni, trees))), zn);
     }
 
     public static ZDDNumber cube(final long l, final String[][][] trees, final ZDDNumber zn)
@@ -263,7 +263,7 @@ public final class ZDDNumber {
         final ZDDOperationCache _int = new ZDDOperationCache();
         final ZDDOperationCache _dif = new ZDDOperationCache();
 
-        return binaryAdd(_equ, _int, _uni, _dif, binary(l, ZDD.trees(_equ, _cru, _uni, trees)), zn);
+        return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(l, ZDD.trees(_equ, _cru, _uni, trees)), zn);
     }
 
     public static ZDDNumber cube(final long l, final String[][][] trees, final ZDD filter, final ZDDNumber zn)
@@ -274,7 +274,7 @@ public final class ZDDNumber {
         final ZDDOperationCache _int = new ZDDOperationCache();
         final ZDDOperationCache _dif = new ZDDOperationCache();
 
-        return binaryAdd(_equ, _int, _uni, _dif, binary(l, ZDD.intersection(_equ, _int, filter, ZDD.trees(_equ, _cru, _uni, trees))), zn);
+        return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(l, ZDD.intersection(_equ, _int, filter, ZDD.trees(_equ, _cru, _uni, trees))), zn);
     }
 
     public static String sizes(final ZDDNumber n)
