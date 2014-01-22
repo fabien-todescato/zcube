@@ -25,7 +25,7 @@ import org.junit.Test;
  */
 public class ZDDTest {
 
-    private static final long _N = 32L;
+    private static final long _N = 128L;
 
     private abstract class ZDDContextTest extends ZDDContext {
 
@@ -303,7 +303,7 @@ public class ZDDTest {
                     ZDDNumber zn = null;
                     long n = 0L;
 
-                    for (int i = 0; i < 1024; ++i) {
+                    for (int i = 0; i < _N; ++i) {
                         n += i;
                         zn = binaryAdd(zn, binary(i, z0));
                     }
@@ -324,7 +324,7 @@ public class ZDDTest {
                     ZDDNumber zn = null;
                     long n = 0L;
 
-                    for (int i = 0; i < 1024; ++i) {
+                    for (int i = 0; i < _N; ++i) {
                         n += i;
                         zn = binaryAdd(zn, binary(i, zab));
                         zn = binaryAdd(zn, binary(i, zac));
@@ -363,7 +363,7 @@ public class ZDDTest {
                     ZDDNumber zn = null;
                     long n = 0L;
 
-                    for (int i = 0; i < 1024; ++i) {
+                    for (int i = 0; i < _N; ++i) {
                         n += i;
                         zn = negabinaryAdd(zn, negabinary(i, z0));
                     }
@@ -384,7 +384,7 @@ public class ZDDTest {
                     ZDDNumber zn = null;
                     long n = 0L;
 
-                    for (int i = 0; i < 1024; ++i) {
+                    for (int i = 0; i < _N; ++i) {
                         n += i;
                         zn = negabinaryAdd(zn, negabinary(i, zab));
                         zn = negabinaryAdd(zn, negabinary(i, zac));
@@ -507,7 +507,7 @@ public class ZDDTest {
                     final ZDD[] zdds = { set(1L), set(2L), set(3L), set(1L, 2L, 3L), set(8L, 1L), set(10L, 2L) };
                     final ZDD u = union(zdds);
 
-                    for (long i = 0; i < 1024; ++i) {
+                    for (long i = 0; i < _N; ++i) {
 
                         for (long j = 0; j < _N; ++j) {
 
