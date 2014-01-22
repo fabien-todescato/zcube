@@ -32,4 +32,18 @@ We can _symbolically_ sum the above decompositions as follows :
 
 This generalizes easily to multiple occurrences of trees, again, using a _multiplicative_ notation to suggest multiple occurrences, as follows :
 
+      5*a      5*a     5*a   5*a     5*a                           
+       / \  =      +    /  +    \  +  / \                          
+      b   c            b         c   b   c                         
+            +                                                      
+      3*a      3*a     3*a                    3*       a
+       / \  =      +    /                  +    \  +  / \
+      b   d            b                         d   b   d
+     ------------------------------------------------------
+               8*a     8*a   5*a     5*a     3*a     3*a
+            =      +    /  +    \  +  / \  +    \  +  / \
+                       b         c   b   c       d   b   d
 
+# Counting subtrees, what for ?
+
+Now, why in the world would you want to do such a thing, decomposing trees into subtrees, and counting their occurrences ?
