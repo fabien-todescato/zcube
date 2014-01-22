@@ -1,6 +1,35 @@
-zcube
-=====
+zcube - Counting trees for fun and profit
+=========================================
 
-# Counting trees for fun and profit
+_zcube_ is about counting trees, and aggregating the counts over the _subtrees_ of these trees.
 
-_zcube_ is about counting trees, and automatically aggregating the counts over the subtrees.
+
+# About couting subtrees
+
+As an example, consider the following pair of trees, and their respective decompositions into subtrees :
+
+      a      a       a      a         a
+     / \  =     +   /   +    \   +   / \
+    b   c          b          c     b   c
+
+      a      a       a      a         a
+     / \  =     +   /   +    \   +   / \
+    b   d          b          d     b   d
+
+We can _symbolically_ sum the above decompositions as follows :
+
+        a        a       a   a       a                           
+       / \  =      +    /  +  \  +  / \                          
+      b   c            b       c   b   c                         
+            +                                                    
+        a        a       a                 a       a
+       / \  =      +    /                +  \  +  / \
+      b   d            b                     d   b   d
+     --------------------------------------------------
+               2*a     2*a   a       a     a       a
+            =      +    /  +  \  +  / \  +  \  +  / \
+                       b       c   b   c     d   b   d
+
+This generalizes easily to multiple occurrences of trees, again, using a _multiplicative_ notation to suggest multiple occurrences, as follows :
+
+
