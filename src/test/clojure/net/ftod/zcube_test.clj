@@ -12,12 +12,9 @@
   )
 )
 
-; ( = ( subtrees ( prefix [ "a" ] ( product ( branch "b" ) ( branch "c" ) ) ) ) ( subtrees ( product ( branch "a" "b" ) ( branch "a" "c" ) ) ) )
-; => true
-; ( = ( trees ( prefix [ "a" ] ( product ( branch "b" ) ( branch "c" ) ) ) ) ( trees ( product ( branch "a" "b" ) ( branch "a" "c" ) ) ) )
-; => true
-; ( = ( trees ( prefix [ "a" ] ( product ( branch "b" ) ( branch "c" ) ) ) ) ( trees ( product ( branch "a" "b" ) ( branch "a" "d" ) ) ) )
-; => false
+( deftest test-subtrees-1 ( is ( = ( subtrees ( prefix [ "a" ] ( product ( branch "b" ) ( branch "c" ) ) ) ) ( subtrees ( product ( branch "a" "b" ) ( branch "a" "c" ) ) ) ) ) )
+( deftest test-subtrees-2 ( is ( = ( trees ( prefix [ "a" ] ( product ( branch "b" ) ( branch "c" ) ) ) ) ( trees ( product ( branch "a" "b" ) ( branch "a" "c" ) ) ) ) ) )
+( deftest test-subtrees-3 ( is ( = ( trees ( prefix [ "a" ] ( product ( branch "b" ) ( branch "d" ) ) ) ) ( trees ( product ( branch "a" "b" ) ( branch "a" "d" ) ) ) ) ) )
 
 
 
