@@ -44,6 +44,12 @@ This generalizes easily to multiple occurrences of trees, again, using a _multip
             =      +    /  +    \  +  / \  +    \  +  / \
                        b         c   b   c       d   b   d
 
+Using a more compact algebraic-like notation for trees, we could _informally_ write this as follows :
+
+      5*(a/(b+c))+3*(a/(b+d)) ~ 8*a + 8*a/b + 5*a/c + 3*a/d + 3*(a/(b+d))
+
 # Counting subtrees, what for ?
 
 Now, why in the world would you want to do such a thing, decomposing trees into subtrees, and counting their occurrences ?
+
+Well, suppose you want to perform some analytics on a clickstream, where each event in the stream, besides the url, gives you data about the demographic segment of the user, and the time of click.
