@@ -4,7 +4,7 @@ zcube - Counting trees for fun and profit
 _zcube_ is about counting trees, and aggregating the counts over the _subtrees_ of these trees.
 
 
-# About couting subtrees
+# About counting subtrees
 
 As an example, consider the following pair of trees, and their respective decompositions into subtrees :
 
