@@ -12,6 +12,28 @@
   )
 )
 
+( deftest test-cube-2
+  ( is ( let [ cube ( make-cube
+                      [ [ 1 ( product ( branch "www.company.com" "page1" ) ( branch "gender" "male"   ) ( branch "2014" "01" "01" "10" "32" ) ) ]
+                      , [ 1 ( product ( branch "www.company.com" "page2" ) ( branch "gender" "female" ) ( branch "2014" "01" "02" "11" "35" ) ) ]
+                      , [ 1 ( product ( branch "www.company.com" "page1" ) ( branch "gender" "female" ) ( branch "2014" "01" "03" "08" "15" ) ) ]
+                      ]
+                    )
+             ]
+      ( = ( map #( measure cube ( trees % ) )
+            [ ( branch "www.company.com" )
+            , ( branch "www.company.com" "page1" )
+            , ( branch "2014" "01" )
+            , ( branch "gender" "female" )
+            ]
+          )
+          [ 3
+          , 2
+          , 3
+          , 2
+          ]
+      ) ) ) )
+
 ( deftest test-subtrees-1 ( is ( = ( subtrees ( prefix [ "a" ] ( product ( branch "b" ) ( branch "c" ) ) ) ) ( subtrees ( product ( branch "a" "b" ) ( branch "a" "c" ) ) ) ) ) )
 ( deftest test-subtrees-2 ( is ( = ( trees ( prefix [ "a" ] ( product ( branch "b" ) ( branch "c" ) ) ) ) ( trees ( product ( branch "a" "b" ) ( branch "a" "c" ) ) ) ) ) )
 ( deftest test-subtrees-3 ( is ( = ( trees ( prefix [ "a" ] ( product ( branch "b" ) ( branch "d" ) ) ) ) ( trees ( product ( branch "a" "b" ) ( branch "a" "d" ) ) ) ) ) )
