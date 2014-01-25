@@ -11,12 +11,24 @@
 ( def ^ZDDTree bot ZDDTree/BOT ) 
 
 ( defn ^ZDDTree prefix  [ strings  ^ZDDTree treeSet ] ( ZDDTree/prefix strings treeSet ) )
-( defn ^ZDDTree branch  [ & strings  ] ( ZDDTree/branch strings   ) )
+( defn ^ZDDTree path    [ & strings  ] ( ZDDTree/path strings ) )
 ( defn ^ZDDTree product [ & treeSets ] ( ZDDTree/product treeSets ) ) 
 ( defn ^ZDDTree sum     [ & treeSets ] ( ZDDTree/sum     treeSets ) ) 
 
 ( defn ^ZDD trees    [ ^ZDDTree t ] ( ZDDTree/trees    t ) )
 ( defn ^ZDD subtrees [ ^ZDDTree t ] ( ZDDTree/subtrees t ) )
+
+( defn ^ZDDNumber add
+  "Add two signed ZDD numbers"
+  [ ^ZDDNumber zn1 ^ZDDNumber zn2 ]
+  ( ZDDNumber/negabinaryAdd zn1 zn2 )
+)
+
+( defn ^ZDDNumber sub
+  "Subtract two signed ZDD numbers"
+  [ ^ZDDNumber zn1 ^ZDDNumber zn2 ]
+  ( ZDDNumber/negabinarySub zn1 zn2 )
+)
 
 ( defn ^ZDDNumber cube
   ( [ ^long l ^ZDDTree trees ^ZDDNumber zn ] ( ZDDNumber/cube l trees zn ) )

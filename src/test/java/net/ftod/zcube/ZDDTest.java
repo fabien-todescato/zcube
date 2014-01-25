@@ -3,7 +3,7 @@ package net.ftod.zcube;
 import static net.ftod.zcube.zdd.ZDD.BOT;
 import static net.ftod.zcube.zdd.ZDD.TOP;
 import static net.ftod.zcube.zdd.ZDD.singleton;
-import static net.ftod.zcube.zdd.ZDDTree.branch;
+import static net.ftod.zcube.zdd.ZDDTree.path;
 import static net.ftod.zcube.zdd.ZDDTree.product;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -265,21 +265,21 @@ public class ZDDTest {
                 assertEquals(1L, subtrees(ZDDTree.TOP).s);
 
                 assertEquals(2L, trees("a").s);
-                assertEquals(2L, subtrees(branch("a")).s);
+                assertEquals(2L, subtrees(path("a")).s);
                 assertEquals(3L, trees("a", "b").s);
-                assertEquals(3L, subtrees(branch("a", "b")).s);
+                assertEquals(3L, subtrees(path("a", "b")).s);
 
                 assertEquals(4L, trees("a", "b", "c").s);
-                assertEquals(4L, subtrees(branch("a", "b", "c")).s);
+                assertEquals(4L, subtrees(path("a", "b", "c")).s);
 
                 assertEquals(4L, trees(array("a", "b", "c"), array("a", "b", "c")).s);
-                assertEquals(4L, subtrees(product(branch("a", "b", "c"), branch("a", "b", "c"))).s);
+                assertEquals(4L, subtrees(product(path("a", "b", "c"), path("a", "b", "c"))).s);
 
                 assertEquals(6L, trees(array("a", "b", "c"), array("a", "b", "d")).s);
-                assertEquals(6L, subtrees(product(branch("a", "b", "c"), branch("a", "b", "d"))).s);
+                assertEquals(6L, subtrees(product(path("a", "b", "c"), path("a", "b", "d"))).s);
 
                 assertEquals(10L, trees(array("a", "b", "c"), array("a", "b", "d"), array("a", "b", "e")).s);
-                assertEquals(10L, subtrees(product(branch("a", "b", "c"), branch("a", "b", "d"), branch("a", "b", "e"))).s);
+                assertEquals(10L, subtrees(product(path("a", "b", "c"), path("a", "b", "d"), path("a", "b", "e"))).s);
 
                 return null;
             }

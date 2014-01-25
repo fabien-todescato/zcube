@@ -5,7 +5,7 @@ import static net.ftod.zcube.zdd.ZDD.included;
 import java.util.Collection;
 
 /**
- * <h1>Representing polynomials of set of sets over integers</h1>
+ * <h1>Representing integer polynomials over set of sets</h1>
  * 
  * @author Fabien
  */
@@ -44,7 +44,7 @@ public final class ZDDNumber {
      * @param l
      *            the <code>long</code> holding the positive coefficient.
      * @param zdd
-     *            the {@link ZDD} holding the set of sets.
+     *            the {@link ZDD} representing the set of sets.
      * @return the {@link ZDDNumber} representing the monomial.
      */
     public static ZDDNumber binary(final long l, final ZDD zdd)
@@ -53,15 +53,17 @@ public final class ZDDNumber {
     }
 
     /**
-     * <h3>Projecting a {@link ZDDNumber} onto a {@link ZDD}</h3>
+     * <h3>Projecting an unsigned binary {@link ZDDNumber} onto a {@link ZDD}</h3>
      * 
      * <p>
      * Return the number of occurrences of a set of sets represented as a {@link ZDD} within a {@link ZDDNumber}.
      * </p>
      * 
      * @param zddn
+     *            the {@link ZDDNumber} to be projected over the set of sets.
      * @param zdd
-     * @return
+     *            the {@link ZDD} representing the set of sets.
+     * @return the <code>long</code> representing the number of occurrences of the set of sets within the {@link ZDDNumber}.
      */
     public static long binary(final ZDDNumber zddn, final ZDD zdd)
     {
@@ -73,6 +75,15 @@ public final class ZDDNumber {
         return zddn == null ? 0L : (included(eq, in, zdd, zddn.digit) ? 1L : 0L) + (binary(eq, in, zddn.number, zdd) << 1);
     }
 
+    /**
+     * <h3>Addition of two unsigned {@link ZDDNumber}</h3>
+     * 
+     * @param zddn1
+     *            left operand {@link ZDDNumber}.
+     * @param zddn2
+     *            right operand {@link ZDDNumber}.
+     * @return the {@link ZDDNumber} sum of the above.
+     */
     public static ZDDNumber binaryAdd(final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
         return binaryAdd(new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache(), new ZDDOperationCache(), zddn1, zddn2);
