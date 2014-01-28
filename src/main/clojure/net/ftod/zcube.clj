@@ -18,6 +18,17 @@
 ( defn ^ZDD trees    [ ^ZDDTree t ] ( ZDDTree/trees    t ) )
 ( defn ^ZDD subtrees [ ^ZDDTree t ] ( ZDDTree/subtrees t ) )
 
+( defn ^ZDDNumber number
+  [ ^long l ^ZDDTree t]
+  ( ZDDNumber/negabinary l ( ZDDTree/subtrees t ) )
+)
+
+( defn number-filter [ & ts ]
+  ( let [ ^ZDD z ( ZDDTree/unionTrees ts ) ]
+    ( fn [ ^long l ^ZDDTree t ] ( ZDDNumber/negabinary l ( ZDDTree/subtrees z t ) ) )
+  )
+)
+
 ( defn ^ZDDNumber add
   "Add two signed ZDD numbers"
   [ ^ZDDNumber zn1 ^ZDDNumber zn2 ]
@@ -30,9 +41,9 @@
   ( ZDDNumber/negabinarySub zn1 zn2 )
 )
 
-( defn ^ZDDNumber cube
-  ( [ ^long l ^ZDDTree trees ^ZDDNumber zn ] ( ZDDNumber/cube l trees zn ) )
-  ( [ ^long l ^ZDDTree trees ^ZDD filter ^ZDDNumber zn ] ( ZDDNumber/cube l trees filter zn ) )
+( defn ^ZDDNumber add-subtrees
+  ( [ ^long l ^ZDDTree trees ^ZDDNumber zn ] ( ZDDNumber/addSubtrees l trees zn ) )
+  ( [ ^long l ^ZDDTree trees ^ZDD filter ^ZDDNumber zn ] ( ZDDNumber/addSubtrees l trees filter zn ) )
 )
 
 ( defn ^long measure
@@ -41,5 +52,5 @@
 
 ( defn ^ZDDNumber make-cube
   [ long-trees ]
-  ( reduce ( fn [ zn [ l trees] ] ( cube l trees zn ) ) nil long-trees )
+  ( reduce ( fn [ zn [ l trees] ] ( add-subtrees l trees zn ) ) nil long-trees )
 )
