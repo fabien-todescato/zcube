@@ -43,6 +43,9 @@
 				<groupId>com.theoryinpractise</groupId>
 				<artifactId>clojure-maven-plugin</artifactId>
 				<version>1.3.17</version>
+				<configuration>
+					<warnOnReflection>true</warnOnReflection>
+				</configuration>
 				<executions>
 					<execution>
 						<id>compile</id>
