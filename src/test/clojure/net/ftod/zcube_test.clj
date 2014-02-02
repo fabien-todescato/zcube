@@ -4,8 +4,8 @@
 
 ( deftest test-cube-1
   ( is
-    ( let [ cube ( make-cube [ [ 5 ( path "a" "b" "c" ) ] [ 10 ( path "a" "b" "d" ) ] ] ) ]
-      ( = ( map #( measure cube ( trees % ) ) [ ( path "a" ) ( path "a" "b" ) ( path "a" "b" "c" ) ( path "a" "b" "d" ) ] )
+    ( let [ cube ( sum-subtrees [ [ 5 ( path "a" "b" "c" ) ] [ 10 ( path "a" "b" "d" ) ] ] ) ]
+      ( = ( map #( ( count-trees % ) cube ) [ ( path "a" ) ( path "a" "b" ) ( path "a" "b" "c" ) ( path "a" "b" "d" ) ] )
           [ 15 15 5 10 ]
       )
     )
@@ -13,14 +13,14 @@
 )
 
 ( deftest test-cube-2
-  ( is ( let [ cube ( make-cube
+  ( is ( let [ cube ( sum-subtrees
                       [ [ 1 ( product ( path "www.company.com" "page1" ) ( path "gender" "male"   ) ( path "2014" "01" "01" "10" "32" ) ) ]
                       , [ 1 ( product ( path "www.company.com" "page2" ) ( path "gender" "female" ) ( path "2014" "01" "02" "11" "35" ) ) ]
                       , [ 1 ( product ( path "www.company.com" "page1" ) ( path "gender" "female" ) ( path "2014" "01" "03" "08" "15" ) ) ]
                       ]
                     )
              ]
-      ( = ( map #( measure cube ( trees % ) )
+      ( = ( map #( ( count-trees % ) cube )
             [ ( path "www.company.com" )
             , ( path "www.company.com" "page1" )
             , ( path "2014" "01" )
@@ -33,12 +33,6 @@
           , 2
           ]
       ) ) ) )
-
-( deftest test-subtrees-1 ( is ( = ( subtrees ( prefix [ "a" ] ( product ( path "b" ) ( path "c" ) ) ) ) ( subtrees ( product ( path "a" "b" ) ( path "a" "c" ) ) ) ) ) )
-( deftest test-subtrees-2 ( is ( = ( trees ( prefix [ "a" ] ( product ( path "b" ) ( path "c" ) ) ) ) ( trees ( product ( path "a" "b" ) ( path "a" "c" ) ) ) ) ) )
-( deftest test-subtrees-3 ( is ( = ( trees ( prefix [ "a" ] ( product ( path "b" ) ( path "d" ) ) ) ) ( trees ( product ( path "a" "b" ) ( path "a" "d" ) ) ) ) ) )
-
-
 
 ;( def big-cube
 ;  ( make-cube

@@ -2,30 +2,26 @@
   ( :import net.ftod.zcube.zdd.ZDD
             net.ftod.zcube.zdd.ZDDNumber
             net.ftod.zcube.zdd.ZDDTree
-  )
-  ( :require [ clojure [ string :as s ] ]
+            java.lang.Iterable
+            java.util.Collection
   )
 )
 
 ( def ^ZDDTree top ZDDTree/TOP ) 
 ( def ^ZDDTree bot ZDDTree/BOT ) 
 
-( defn ^ZDDTree prefix  [ strings  ^ZDDTree treeSet ] ( ZDDTree/prefix strings treeSet ) )
-( defn ^ZDDTree path    [ & strings  ] ( ZDDTree/path strings ) )
-( defn ^ZDDTree product [ & treeSets ] ( ZDDTree/product treeSets ) ) 
-( defn ^ZDDTree sum     [ & treeSets ] ( ZDDTree/sum     treeSets ) ) 
+( defn ^ZDDTree prefix  [  ^Iterable strings  ^ZDDTree tree ] ( ZDDTree/prefix strings tree ) )
+( defn ^ZDDTree path    [ & strings  ] ( ZDDTree/path ^Iterable strings ) )
+( defn ^ZDDTree product [ & tree ] ( ZDDTree/product ^Collection tree ) ) 
+( defn ^ZDDTree sum     [ & tree ] ( ZDDTree/sum     ^Collection tree ) ) 
 
-( defn ^ZDD trees    [ ^ZDDTree t ] ( ZDDTree/trees    t ) )
-( defn ^ZDD subtrees [ ^ZDDTree t ] ( ZDDTree/subtrees t ) )
-
-( defn ^ZDDNumber number
-  [ ^long l ^ZDDTree t]
-  ( ZDDNumber/negabinary l ( ZDDTree/subtrees t ) )
-)
-
-( defn number-filter [ & ts ]
-  ( let [ ^ZDD z ( ZDDTree/unionTrees ts ) ]
-    ( fn [ ^long l ^ZDDTree t ] ( ZDDNumber/negabinary l ( ZDDTree/subtrees z t ) ) )
+( defn ^ZDDNumber subtrees
+  ( [ trees ]
+    ( let [ ^ZDD z ( ZDDTree/unionTrees trees ) ]
+      ( fn [ ^long l ^ZDDTree t ] ( ZDDNumber/negabinary l ( ZDDTree/subtrees z t ) ) )
+    )
+  )
+  ( [ ^long l ^ZDDTree t] ( ZDDNumber/negabinary l ( ZDDTree/subtrees t ) )
   )
 )
 
@@ -42,15 +38,22 @@
 )
 
 ( defn ^ZDDNumber add-subtrees
-  ( [ ^long l ^ZDDTree trees ^ZDDNumber zn ] ( ZDDNumber/addSubtrees l trees zn ) )
-  ( [ ^long l ^ZDDTree trees ^ZDD filter ^ZDDNumber zn ] ( ZDDNumber/addSubtrees l trees filter zn ) )
+  ( [ trees ]
+    ( let [ ^ZDD z ( ZDDTree/unionTrees trees ) ]
+      ( fn [ ^long l ^ZDDTree trees ^ZDD filter ^ZDDNumber zn ] ( ZDDNumber/addSubtrees l trees filter zn ) )
+    )
+  )
+  ( [ ^long l ^ZDDTree trees ^ZDDNumber zn ] ( ZDDNumber/addSubtrees l trees zn )
+  )
 )
 
-( defn ^long measure
-  [ ^ZDDNumber cube ^ZDD z ] ( ZDDNumber/negabinary cube z )
+( defn ^long count-trees [ ^ZDDTree tree ]
+  ( let [ ^ZDD z ( ZDDTree/trees tree ) ]
+    ( fn [ ^ZDDNumber n ] ( ZDDNumber/negabinary n z ) )
+  )
 )
 
-( defn ^ZDDNumber make-cube
+( defn ^ZDDNumber sum-subtrees
   [ long-trees ]
-  ( reduce ( fn [ zn [ l trees] ] ( add-subtrees l trees zn ) ) nil long-trees )
+  ( reduce ( fn [ zn [ long tree ] ] ( add-subtrees long tree zn ) ) nil long-trees )
 )
