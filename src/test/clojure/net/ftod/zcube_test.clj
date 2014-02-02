@@ -2,14 +2,35 @@
   ( :use net.ftod.zcube clojure.test )
 )
 
+( deftest test-sum
+)
+
 ( deftest test-sum-1
   ( is
     ( let [ zn ( sum-subtrees
-                 [ [  5 ( path "a" "b" "c" ) ]
-                   [ 10 ( path "a" "b" "d" ) ]
-                 ] ) ]
+               [ [ 1 ( product ( path "a" "b" ) ( path "a" "c" ) ) ] 
+               , [ 1 ( product ( path "a" "b" ) ( path "a" "d" ) ) ]
+               ] ) ]
       ( and
-        ( = 15 ( ( count-trees ( path "a" )         ) zn ) )
+        ( =  2 ( ( count-trees ( path "a" ) ) zn ) )
+        ( =  2 ( ( count-trees ( path "a" "b" ) ) zn ) )
+        ( =  1 ( ( count-trees ( path "a" "c" ) ) zn ) )
+        ( =  1 ( ( count-trees ( product ( path "a" "b" ) ( path "a" "c" ) ) ) zn ) )
+        ( =  1 ( ( count-trees ( path "a" "d" ) ) zn ) )
+        ( =  1 ( ( count-trees ( product ( path "a" "b" ) ( path "a" "d" ) ) ) zn ) )
+      )
+    )
+  )
+)
+
+( deftest test-sum-2
+  ( is
+    ( let [ zn ( sum-subtrees
+               [ [  5 ( path "a" "b" "c" ) ]
+                 [ 10 ( path "a" "b" "d" ) ]
+               ] ) ]
+    ( and
+      ( = 15 ( ( count-trees ( path "a" )         ) zn ) )
         ( = 15 ( ( count-trees ( path "a" "b" )     ) zn ) )
         ( =  5 ( ( count-trees ( path "a" "b" "c" ) ) zn ) )
         ( = 10 ( ( count-trees ( path "a" "b" "d" ) ) zn ) )
@@ -18,7 +39,7 @@
   )
 )
 
-( deftest test-sum-2
+( deftest test-sum-3
   ( is
     ( let [ zn ( sum-subtrees
                  [ [ 1 ( product
@@ -40,6 +61,6 @@
         ( = 2 ( ( count-trees ( path "www.company.com" "page1" ) ) zn ) )
         ( = 3 ( ( count-trees ( path "2014" "01" )               ) zn ) )
         ( = 2 ( ( count-trees ( path "gender" "female" )         ) zn ) )
-        ( = 2 ( ( count-trees  ( product ( path "gender" "female" ) ( path "2014" "01" ) ) ) zn ) )
-        ( = 1 ( ( count-trees  ( product ( path "gender" "female" ) ( path "2014" "01" "02" ) ) ) zn ) )
+        ( = 2 ( ( count-trees ( product ( path "gender" "female" ) ( path "2014" "01" ) ) ) zn ) )
+        ( = 1 ( ( count-trees ( product ( path "gender" "female" ) ( path "2014" "01" "02" ) ) ) zn ) )
       ) ) ) )
