@@ -40,4 +40,6 @@
         ( = 2 ( ( count-trees ( path "www.company.com" "page1" ) ) zn ) )
         ( = 3 ( ( count-trees ( path "2014" "01" )               ) zn ) )
         ( = 2 ( ( count-trees ( path "gender" "female" )         ) zn ) )
+        ( = 2 ( ( count-trees  ( product ( path "gender" "female" ) ( path "2014" "01" ) ) ) zn ) )
+        ( = 1 ( ( count-trees  ( product ( path "gender" "female" ) ( path "2014" "01" "02" ) ) ) zn ) )
       ) ) ) )
