@@ -1,12 +1,18 @@
 zcube - Counting trees for fun and profit
 =========================================
 
-_zcube_ is about counting trees, and aggregating the counts over the _subtrees_ of these trees.
+_zcube_ is about counting trees, and aggregating the counts over the _subtrees_ of these trees. The intent is to provide an analutical tool to compute aggregate sums over multiple hierrachical dimensions.
 
+The bulk of the library is written in Java, around immutable data structures. A thin Clojure layer provides for the public API of the library.
 
-# Introduction
+The rather simple API provides two styles of computing aggregate counts of subtrees :
 
-## About counting subtrees
+* An _accumulative style_ whereby, given a tree and a coefficient, occurrences of its subtrees are accumulated into an immutable _ZNumber_.
+* A _commutative associative_ style whereby a tree and a coefficient yield a _ZNumber_, and _ZNumber_ may be added.
+
+See [Add ALL the Things: Abstract Algebra Meets Analytics](http://www.infoq.com/presentations/abstract-algebra-analytics) for a good introduction to the power of associativity and commutativity.
+
+# Example 1
 
 As an example, consider the following pair of trees, and their respective decompositions into subtrees :
 
@@ -32,6 +38,31 @@ We can _symbolically_ sum the above decompositions as follows :
             =      +    /  +  \  +  / \  +  \  +  / \
                        b       c   b   c     d   b   d
 
+Using the _zcube_ Clojure API, this can be written :
+
+```clojure
+(ns net.ftod.zcube-test
+  ( :use net.ftod.zcube clojure.test )
+)
+
+
+( deftest test-sum-1
+  ( is
+    ( let [ zn ( sum-subtrees
+               [ [ 1 ( product ( path "a" "b" ) ( path "a" "c" ) ) ] 
+               , [ 1 ( product ( path "a" "b" ) ( path "a" "d" ) ) ]
+               ] ) ]
+      ( and
+        ( =  2 ( ( count-trees ( path "a" ) ) zn ) )
+        ( =  2 ( ( count-trees ( path "a" "b" ) ) zn ) )
+        ( =  1 ( ( count-trees ( path "a" "c" ) ) zn ) )
+        ( =  1 ( ( count-trees ( product ( path "a" "b" ) ( path "a" "c" ) ) ) zn ) )
+        ( =  1 ( ( count-trees ( path "a" "d" ) ) zn ) )
+        ( =  1 ( ( count-trees ( product ( path "a" "b" ) ( path "a" "d" ) ) ) zn ) )
+      ) ) ) )
+
+```
+
 This generalizes easily to multiple occurrences of trees, again, using a _multiplicative_ notation to suggest multiple occurrences, as follows :
 
       5*a      5*a     5*a   5*a     5*a                           
@@ -46,11 +77,32 @@ This generalizes easily to multiple occurrences of trees, again, using a _multip
             =      +    /  +    \  +  / \  +    \  +  / \
                        b         c   b   c       d   b   d
 
-Using a more compact algebraic-like notation for trees, we could _informally_ write this as follows :
+Again, in Clojure :
 
-      5*(a/(b+c))+3*(a/(b+d)) ~ 8*a + 8*a/b + 5*a/c + 3*a/d + 3*(a/(b+d))
 
-## Counting subtrees, what for ? Analytics !
+```clojure
+(ns net.ftod.zcube-test
+  ( :use net.ftod.zcube clojure.test )
+)
+
+
+( deftest test-sum-3 ; Branching trees example
+  ( is
+    ( let [ zn ( sum-subtrees
+               [ [ 5 ( product ( path "a" "b" ) ( path "a" "c" ) ) ] 
+               , [ 3 ( product ( path "a" "b" ) ( path "a" "d" ) ) ]
+               ] ) ]
+      ( and
+        ( =  8 ( ( count-trees ( path "a" ) ) zn ) )
+        ( =  8 ( ( count-trees ( path "a" "b" ) ) zn ) )
+        ( =  5 ( ( count-trees ( path "a" "c" ) ) zn ) )
+        ( =  5 ( ( count-trees ( product ( path "a" "b" ) ( path "a" "c" ) ) ) zn ) )
+        ( =  3 ( ( count-trees ( path "a" "d" ) ) zn ) )
+        ( =  3 ( ( count-trees ( product ( path "a" "b" ) ( path "a" "d" ) ) ) zn ) )
+      ) ) ) )
+```
+
+# Example 2 : Some Analytics
 
 Now, why in the world would you want to do such a thing, decomposing trees into subtrees, and counting their occurrences ?
 
