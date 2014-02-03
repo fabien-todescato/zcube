@@ -2,10 +2,20 @@
   ( :use net.ftod.zcube clojure.test )
 )
 
-( deftest test-sum
-)
+( deftest test-sum-1 ; Linear trees example
+  ( is
+    ( let [ zn ( sum-subtrees
+               [ [  5 ( path "a" "b" "c" ) ]
+                 [ 10 ( path "a" "b" "d" ) ]
+               ] ) ]
+    ( and
+      ( = 15 ( ( count-trees ( path "a" )         ) zn ) )
+      ( = 15 ( ( count-trees ( path "a" "b" )     ) zn ) )
+      ( =  5 ( ( count-trees ( path "a" "b" "c" ) ) zn ) )
+      ( = 10 ( ( count-trees ( path "a" "b" "d" ) ) zn ) )
+    ) ) ) )
 
-( deftest test-sum-1
+( deftest test-sum-2 ; Branching trees example
   ( is
     ( let [ zn ( sum-subtrees
                [ [ 1 ( product ( path "a" "b" ) ( path "a" "c" ) ) ] 
@@ -18,28 +28,24 @@
         ( =  1 ( ( count-trees ( product ( path "a" "b" ) ( path "a" "c" ) ) ) zn ) )
         ( =  1 ( ( count-trees ( path "a" "d" ) ) zn ) )
         ( =  1 ( ( count-trees ( product ( path "a" "b" ) ( path "a" "d" ) ) ) zn ) )
-      )
-    )
-  )
-)
+      ) ) ) )
 
-( deftest test-sum-2
+( deftest test-sum-3 ; Branching trees example
   ( is
     ( let [ zn ( sum-subtrees
-               [ [  5 ( path "a" "b" "c" ) ]
-                 [ 10 ( path "a" "b" "d" ) ]
+               [ [ 5 ( product ( path "a" "b" ) ( path "a" "c" ) ) ] 
+               , [ 3 ( product ( path "a" "b" ) ( path "a" "d" ) ) ]
                ] ) ]
-    ( and
-      ( = 15 ( ( count-trees ( path "a" )         ) zn ) )
-        ( = 15 ( ( count-trees ( path "a" "b" )     ) zn ) )
-        ( =  5 ( ( count-trees ( path "a" "b" "c" ) ) zn ) )
-        ( = 10 ( ( count-trees ( path "a" "b" "d" ) ) zn ) )
-      )
-    )
-  )
-)
+      ( and
+        ( =  8 ( ( count-trees ( path "a" ) ) zn ) )
+        ( =  8 ( ( count-trees ( path "a" "b" ) ) zn ) )
+        ( =  5 ( ( count-trees ( path "a" "c" ) ) zn ) )
+        ( =  5 ( ( count-trees ( product ( path "a" "b" ) ( path "a" "c" ) ) ) zn ) )
+        ( =  3 ( ( count-trees ( path "a" "d" ) ) zn ) )
+        ( =  3 ( ( count-trees ( product ( path "a" "b" ) ( path "a" "d" ) ) ) zn ) )
+      ) ) ) )
 
-( deftest test-sum-3
+( deftest test-sum-4 ; Analytics example
   ( is
     ( let [ zn ( sum-subtrees
                  [ [ 1 ( product
