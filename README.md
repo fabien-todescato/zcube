@@ -173,8 +173,10 @@ The data structures are immutable variants of _ZDD_ (zero-suppressed binary deci
 # Future Work
 
 * Use multiple hash functions to reduce collisions probability. Again, [Add ALL The Things][1] explains the idea neatly.
-* Implement max and min operations.
- 
+* More operations...
+  * Max and min.
+  * Multiplication and division.
+
 # Resources
 
 * [Add ALL the Things: Abstract Algebra Meets Analytics][1]
