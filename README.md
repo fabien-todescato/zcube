@@ -151,3 +151,20 @@ This translates as follows using the zcube API :
         ( = 1 ( ( count-trees ( product ( path "gender" "female" ) ( path "2014" "01" "02" ) ) ) zn ) )
       ) ) ) )
 ```
+
+# The Tree API
+
+**TODO**
+
+# The Accumulative API
+
+**TODO** Explain the idea of filtering.
+
+# The Associative/Commutative API
+
+**TODO**
+
+# Future Work
+
+* Use multiple hash functions to alleviate collisions probability.
+* Implement max and min operations.
