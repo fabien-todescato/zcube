@@ -211,13 +211,28 @@ A few algebraic identities hold :
     
 # The Associative/Commutative API
 
-The _associative commutative_ API deals with the 
+## Basic API 
+
+|Expression      |Description                                                  |
+|----------------|-------------------------------------------------------------|
+|nil             |The _ZDDNumber_ zero.                                        |
+|( subtrees l t )|Linear combination of l times the subtrees of the the tree t.|
+|( add z1 z2 )   |Sum of _ZDDNumbers_ z1, z2.                                  |
+|( sub z1 z2 )   |Difference of _ZDDNumbers_ z1, z2.                           |
+
+_add_ is _associative_ and _commutative_, and thus lends itself well to the concurrent execution of aggregation operations.   
+
+## Filtering
 
 **TODO**
 
 # The Accumulative API
 
-**TODO** Explain the idea of filtering.
+## Basic API
+
+## Filtering
+
+**TODO**
 
 # The Implementation
 
@@ -241,4 +256,3 @@ The data structures are immutable variants of _ZDD_ (zero-suppressed binary deci
 [2]: https://github.com/ftod/zcube/blob/master/papers/VSOP%20(Valued-Sum-Of-Products)%20Calculator%20Based%20on%20Zero-Suppressed%20BDDs.pdf?raw=true
 [3]: http://ashutoshmehra.net/blog/2008/12/notes-on-zdds/
 [4]: http://en.wikipedia.org/wiki/Bloom_filters
-
