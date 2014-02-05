@@ -1,9 +1,9 @@
 zcube - Counting trees for fun and profit
 =========================================
 
-_zcube_ is about counting trees, and aggregating the counts over the _subtrees_ of these trees. The intent is to provide an analutical tool to compute aggregate sums over multiple hierrachical dimensions.
+_zcube_ is about counting trees, and aggregating the counts of the _subtrees_ of these trees. The intent is to provide an analytical tool to compute aggregate sums over multiple hierarchical dimensions.
 
-The bulk of the library is written in Java, around immutable data structures. A thin Clojure layer provides for the public API of the library.
+The bulk of the library is written in Java, around hopefully efficient _immutable_ data structures. A thin Clojure layer provides for the public API of the library.
 
 The rather simple API provides two styles of computing aggregate counts of subtrees :
 
