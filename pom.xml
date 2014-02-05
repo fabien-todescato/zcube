@@ -17,7 +17,7 @@
 		<dependency>
 			<groupId>org.clojure</groupId>
 			<artifactId>clojure</artifactId>
-			<version>1.5.1</version>
+			<version>1.4.0</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -28,8 +28,8 @@
 				<version>3.1</version>
 				<configuration>
 					<compilerId>eclipse</compilerId>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.5</source>
+					<target>1.5</target>
 				</configuration>
 				<dependencies>
 					<dependency>
