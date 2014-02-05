@@ -45,7 +45,6 @@ Using the _zcube_ Clojure API, this can be written :
   ( :use net.ftod.zcube clojure.test )
 )
 
-
 ( deftest test-sum-1
   ( is
     ( let [ zn ( sum-subtrees
@@ -86,7 +85,6 @@ Nothing really new there :
   ( :use net.ftod.zcube clojure.test )
 )
 
-
 ( deftest test-sum-3 ; Branching trees example
   ( is
     ( let [ zn ( sum-subtrees
@@ -125,6 +123,10 @@ ie computing the subtree decomposition is tantamount to performing multidimensio
 This translates as follows using the zcube API :
 
 ```clojure
+(ns net.ftod.zcube-test
+  ( :use net.ftod.zcube clojure.test )
+)
+
 ( deftest test-analytics ; Analytics example
   ( is
     ( let [ zn ( sum-subtrees
