@@ -176,7 +176,4 @@ The data structures are immutable variants of _ZDD_ (zero-suppressed binary deci
 * Implement max and min operations.
  
 
-# References
-
 [1]: http://www.infoq.com/presentations/abstract-algebra-analytics "Add ALL the Things: Abstract Algebra Meets Analytics"
-
