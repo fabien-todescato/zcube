@@ -213,12 +213,12 @@ A few algebraic identities hold :
 
 ## Basic API 
 
-|Expression      |Description                                                  |
-|----------------|-------------------------------------------------------------|
-|nil             |The _ZDDNumber_ zero.                                        |
-|( subtrees l t )|Linear combination of l times the subtrees of the the tree t.|
-|( add z1 z2 )   |Sum of _ZDDNumbers_ z1, z2.                                  |
-|( sub z1 z2 )   |Difference of _ZDDNumbers_ z1, z2.                           |
+|Expression      |Description                                              |
+|----------------|---------------------------------------------------------|
+|nil             |The _ZDDNumber_ zero.                                    |
+|( subtrees l t )|Linear combination of l times the subtrees of the tree t.|
+|( add z1 z2 )   |Sum of _ZDDNumbers_ z1, z2.                              |
+|( sub z1 z2 )   |Difference of _ZDDNumbers_ z1, z2.                       |
 
 _add_ is _associative_ and _commutative_, and thus lends itself well to the concurrent execution of aggregation operations.   
 
