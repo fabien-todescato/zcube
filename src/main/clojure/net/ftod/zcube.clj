@@ -11,13 +11,28 @@
 ; The algebra of ZDD trees.
 ;
 
-( def ^ZDDTree top ZDDTree/TOP ) 
-( def ^ZDDTree bot ZDDTree/BOT ) 
+( def ^ZDDTree top ZDDTree/TOP ) ; The singleton set containing the empty tree. 
+( def ^ZDDTree bot ZDDTree/BOT ) ; The empty set of trees.
 
-( defn ^ZDDTree prefix  [  ^Iterable strings  ^ZDDTree tree ] ( ZDDTree/prefix strings tree ) )
-( defn ^ZDDTree path    [ & strings  ] ( ZDDTree/path ^Iterable strings ) )
-( defn ^ZDDTree product [ & tree ] ( ZDDTree/product ^Collection tree ) ) 
-( defn ^ZDDTree sum     [ & tree ] ( ZDDTree/sum     ^Collection tree ) ) 
+( defn ^ZDDTree prefix [ ^Iterable strings  ^ZDDTree tree ]
+  "Prefix a set of trees with a segment."
+  ( ZDDTree/prefix strings tree )
+)
+
+( defn ^ZDDTree path [ & strings ]
+  "Build a singleton containing a linear tree."
+  ( ZDDTree/path ^Iterable strings )
+)
+
+( defn ^ZDDTree cross [ & trees ]
+  "Generate new trees as the cross union of the trees in the treesets."
+  ( ZDDTree/cross ^Collection trees )
+)
+
+( defn ^ZDDTree sum [ & trees ]
+  "Take union of tree sets."
+  ( ZDDTree/sum ^Collection trees )
+) 
 
 ;
 ; The algebra of ZDD numbers.

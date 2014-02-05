@@ -4,7 +4,7 @@ import static net.ftod.zcube.zdd.ZDD.BOT;
 import static net.ftod.zcube.zdd.ZDD.TOP;
 import static net.ftod.zcube.zdd.ZDD.singleton;
 import static net.ftod.zcube.zdd.ZDDTree.path;
-import static net.ftod.zcube.zdd.ZDDTree.product;
+import static net.ftod.zcube.zdd.ZDDTree.cross;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -273,13 +273,13 @@ public class ZDDTest {
                 assertEquals(4L, subtrees(path("a", "b", "c")).s);
 
                 assertEquals(4L, trees(array("a", "b", "c"), array("a", "b", "c")).s);
-                assertEquals(4L, subtrees(product(path("a", "b", "c"), path("a", "b", "c"))).s);
+                assertEquals(4L, subtrees(cross(path("a", "b", "c"), path("a", "b", "c"))).s);
 
                 assertEquals(6L, trees(array("a", "b", "c"), array("a", "b", "d")).s);
-                assertEquals(6L, subtrees(product(path("a", "b", "c"), path("a", "b", "d"))).s);
+                assertEquals(6L, subtrees(cross(path("a", "b", "c"), path("a", "b", "d"))).s);
 
                 assertEquals(10L, trees(array("a", "b", "c"), array("a", "b", "d"), array("a", "b", "e")).s);
-                assertEquals(10L, subtrees(product(path("a", "b", "c"), path("a", "b", "d"), path("a", "b", "e"))).s);
+                assertEquals(10L, subtrees(cross(path("a", "b", "c"), path("a", "b", "d"), path("a", "b", "e"))).s);
 
                 return null;
             }

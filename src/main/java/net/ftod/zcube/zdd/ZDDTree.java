@@ -130,19 +130,19 @@ public abstract class ZDDTree {
     }
 
     /**
-     * <h3>Product of a sequence of {@link ZDDTree}</h3>
+     * <h3>Cross-product of a sequence of {@link ZDDTree}</h3>
      */
-    public static ZDDTree product(final ZDDTree... ts)
+    public static ZDDTree cross(final ZDDTree... ts)
     {
-        return new ZDDTreeProduct(ts);
+        return new ZDDTreeCross(ts);
     }
 
     /**
-     * <h3>Product of a {@link Collection} of {@link ZDDTree}</h3>
+     * <h3>Cross-product of a {@link Collection} of {@link ZDDTree}</h3>
      */
-    public static ZDDTree product(final Collection<ZDDTree> ts)
+    public static ZDDTree cross(final Collection<ZDDTree> ts)
     {
-        return product(array(ts));
+        return cross(array(ts));
     }
 
     /**
@@ -317,11 +317,11 @@ public abstract class ZDDTree {
                 return ZDDTreePrefix._read(dis);
             }
         },
-        Product {
+        Cross {
             @Override
             protected ZDDTree read(final DataInputStream dis) throws IOException
             {
-                return ZDDTreeProduct._read(dis);
+                return ZDDTreeCross._read(dis);
             }
         },
         Sum {
@@ -425,18 +425,18 @@ final class ZDDTreePrefix extends ZDDTree {
 
 }
 
-final class ZDDTreeProduct extends ZDDTree {
+final class ZDDTreeCross extends ZDDTree {
 
     private final ZDDTree[] ts;
 
-    ZDDTreeProduct(final ZDDTree[] ts) {
+    ZDDTreeCross(final ZDDTree[] ts) {
         super();
         this.ts = ts;
     }
 
-    static ZDDTreeProduct _read(final DataInputStream dis) throws IOException
+    static ZDDTreeCross _read(final DataInputStream dis) throws IOException
     {
-        return new ZDDTreeProduct(readArray(dis));
+        return new ZDDTreeCross(readArray(dis));
     }
 
     @Override
@@ -460,7 +460,7 @@ final class ZDDTreeProduct extends ZDDTree {
     @Override
     protected Type type()
     {
-        return Type.Product;
+        return Type.Cross;
     }
 
 }
