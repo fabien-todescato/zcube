@@ -5,10 +5,19 @@ _zcube_ is about counting trees, and aggregating the counts of the _subtrees_ of
 
 The bulk of the library is written in Java, around hopefully efficient _immutable_ data structures. A thin Clojure layer provides for the public API of the library.
 
+* A **ZDDNumber** represents a linear combination of sets of trees with integer coefficents.
+* A **ZDDTree** is a symbolic expression that represents a sets of trees.
+* A **ZDD** is a symbolic decision-diagram based representation of a set of trees.
+
+The _ZDD_ type is not exposed by the public Clojure API.     
+
 The rather simple API provides two styles of computing aggregate counts of subtrees :
 
-* An _accumulative style_ whereby, given a tree and a coefficient, occurrences of its subtrees are accumulated into an immutable _ZNumber_.
-* A _commutative associative_ style whereby a tree and a coefficient yield a _ZNumber_, and _ZNumber_ may be added.
+* An _accumulative style_ whereby :
+  * Given a tree and an integer coefficient, occurrences of its subtrees are accumulated into an immutable _ZDDNumber_.
+* A _commutative associative_ style whereby :
+  * A tree and an integer coefficient yield a _ZDDNumber_
+  * Sequences of _ZDDNumber_ may be added.
 
 See [Add ALL The Things][1] for a good introduction to the power of associativity and commutativity.
 
@@ -52,11 +61,11 @@ Using the _zcube_ Clojure API, this can be written :
                , [ 1 ( cross ( path "a" "b" ) ( path "a" "d" ) ) ]
                ] ) ]
       ( and
-        ( =  2 ( ( count-trees ( path "a" ) ) zn ) )
-        ( =  2 ( ( count-trees ( path "a" "b" ) ) zn ) )
-        ( =  1 ( ( count-trees ( path "a" "c" ) ) zn ) )
+        ( =  2 ( ( count-trees ( path "a" )                                ) zn ) )
+        ( =  2 ( ( count-trees ( path "a" "b" )                            ) zn ) )
+        ( =  1 ( ( count-trees ( path "a" "c" )                            ) zn ) )
         ( =  1 ( ( count-trees ( cross ( path "a" "b" ) ( path "a" "c" ) ) ) zn ) )
-        ( =  1 ( ( count-trees ( path "a" "d" ) ) zn ) )
+        ( =  1 ( ( count-trees ( path "a" "d" )                            ) zn ) )
         ( =  1 ( ( count-trees ( cross ( path "a" "b" ) ( path "a" "d" ) ) ) zn ) )
       ) ) ) )
 
@@ -92,11 +101,11 @@ Nothing really new there :
                , [ 3 ( cross ( path "a" "b" ) ( path "a" "d" ) ) ]
                ] ) ]
       ( and
-        ( =  8 ( ( count-trees ( path "a" ) ) zn ) )
-        ( =  8 ( ( count-trees ( path "a" "b" ) ) zn ) )
-        ( =  5 ( ( count-trees ( path "a" "c" ) ) zn ) )
+        ( =  8 ( ( count-trees ( path "a" )                                ) zn ) )
+        ( =  8 ( ( count-trees ( path "a" "b" )                            ) zn ) )
+        ( =  5 ( ( count-trees ( path "a" "c" )                            ) zn ) )
         ( =  5 ( ( count-trees ( cross ( path "a" "b" ) ( path "a" "c" ) ) ) zn ) )
-        ( =  3 ( ( count-trees ( path "a" "d" ) ) zn ) )
+        ( =  3 ( ( count-trees ( path "a" "d" )                            ) zn ) )
         ( =  3 ( ( count-trees ( cross ( path "a" "b" ) ( path "a" "d" ) ) ) zn ) )
       ) ) ) )
 ```
@@ -156,8 +165,6 @@ This translates as follows using the zcube API :
 
 # The Tree API
 
-**TODO**
-
 The _tree API_ is the part of the API that handles the construction of ...trees.
 
 In fact, the term _tree_ is a bit misleading, as the API rather provides for the construction of sets of trees :
@@ -172,6 +179,16 @@ In fact, the term _tree_ is a bit misleading, as the API rather provides for the
 |sum|Build the _cross product_ of set of trees, by taking the union of trees in each sets.|
 
 In the previous sections, I have glossed over this distinction between trees and sets of trees so as not to confuse the reader. Intuitively, a singleton set of trees can be identified with the only tree it contains.  
+
+The usual pattern for constructing trees is as follows, combining _paths_ with the _cross_ operator :
+
+```clojure
+( cross
+  ( path "www.company.com" "page1" )
+  ( path "gender" "male" )
+  ( path "2014" "01" "01" "10" "32" )
+)
+```
 
 ## The Tree Algebra
 
@@ -193,6 +210,8 @@ A few algebraic identities hold :
 **TODO** Represent overlapping hierarchical dimensions with the Tree Algebra.
     
 # The Associative/Commutative API
+
+The _associative commutative_ API deals with the 
 
 **TODO**
 
