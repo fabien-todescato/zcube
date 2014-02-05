@@ -171,7 +171,7 @@ In fact, the term _tree_ is a bit misleading, as the API rather provides for the
 |cross|Build the _cross product_ of set of trees, by taking the union of trees in each sets.|
 |sum|Build the _cross product_ of set of trees, by taking the union of trees in each sets.|
 
-In the previous sections, I have glossed over this so as not to confuse the reader. Intuitively, a singleton set of trees can be identified with the onlyb tree it contains.  
+In the previous sections, I have glossed over this distinction between trees and sets of trees so as not to confuse the reader. Intuitively, a singleton set of trees can be identified with the only tree it contains.  
 
 ## The Tree Algebra
 
