@@ -10,7 +10,7 @@ The rather simple API provides two styles of computing aggregate counts of subtr
 * An _accumulative style_ whereby, given a tree and a coefficient, occurrences of its subtrees are accumulated into an immutable _ZNumber_.
 * A _commutative associative_ style whereby a tree and a coefficient yield a _ZNumber_, and _ZNumber_ may be added.
 
-See [Add ALL the Things: Abstract Algebra Meets Analytics](http://www.infoq.com/presentations/abstract-algebra-analytics) for a good introduction to the power of associativity and commutativity.
+See [Add ALL The Things][1] for a good introduction to the power of associativity and commutativity.
 
 # Example 1 : About counting subtrees
 
@@ -174,3 +174,9 @@ The data structures are immutable variants of _ZDD_ (zero-suppressed binary deci
 
 * Use multiple hash functions to reduce collisions probability.
 * Implement max and min operations.
+ 
+
+# References
+
+[1]: http://www.infoq.com/presentations/abstract-algebra-analytics "Add ALL the Things: Abstract Algebra Meets Analytics"
+
