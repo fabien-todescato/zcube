@@ -177,8 +177,8 @@ The data structures are immutable variants of _ZDD_ (zero-suppressed binary deci
  
 # Resources
 
-[Add ALL the Things: Abstract Algebra Meets Analytics][1]
-[VSOP Calculator based on Zero-Suppressed Binary Decision Diagrams][2]
+* [Add ALL the Things: Abstract Algebra Meets Analytics][1]
+* [VSOP Calculator based on Zero-Suppressed Binary Decision Diagrams][2]
 
 [1]: http://www.infoq.com/presentations/abstract-algebra-analytics
 [2]: https://github.com/ftod/zcube/blob/master/papers/VSOP%20(Valued-Sum-Of-Products)%20Calculator%20Based%20on%20Zero-Suppressed%20BDDs.pdf?raw=true
