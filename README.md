@@ -158,13 +158,47 @@ This translates as follows using the zcube API :
 
 **TODO**
 
-# The Accumulative API
+The _tree API_ is the part of the API that handles the construction of ...trees.
 
-**TODO** Explain the idea of filtering.
+In fact, the term _tree_ is a bit misleading, as the API rather provides for the construction of sets of trees :
 
+|Name|Description|
+|----|-----------|
+|top|The _singleton_ set containing only the _empty_ tree.|
+|bot|The _empty_ set of trees.|
+|path|Build a _singleton_ set containing a _path_, ie a linear tree.|
+|prefix|Build a set of trees by prepending a segment to all trees in a set.|
+|cross|Build the _cross product_ of set of trees, by taking the union of trees in each sets.|
+|sum|Build the _cross product_ of set of trees, by taking the union of trees in each sets.|
+
+In the previous sections, I have glossed over this so as not to confuse the reader. Intuitively, a singleton set of trees can be identified with the onlyb tree it contains.  
+
+## The Tree Algebra
+
+A few algebraic identities hold :
+
+    path(a,b,c,...) = prefix(a,prefix(b,prefix(c,... top)))
+    sum(a,bot) = a
+    sum(a,b) = sum(b,a)
+    sum(a,sum(b,c)) = sum(sum(a,b),c)
+    cross(a,top) = a
+    cross(a,b) = cross(b,a)
+    cross(a,cross(b,c)) = cross(cross(a,b),c)
+    cross(sum(a,b),c) = sum(cross(a,c),cross(b,c))
+    prefix(x,cross(a,b,c,...)) = cross(prefix(x,a),prefix(x,b),prefix(x,c),...)
+    prefix(x,sum(a,b,c,...)) = sum(prefix(x,a),prefix(x,b),prefix(x,c),...)
+
+## Algebraic Tricks
+
+**TODO** Represent overlapping hierarchical dimensions with the Tree Algebra.
+    
 # The Associative/Commutative API
 
 **TODO**
+
+# The Accumulative API
+
+**TODO** Explain the idea of filtering.
 
 # The Implementation
 

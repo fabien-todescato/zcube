@@ -14,7 +14,7 @@
 ( def ^ZDDTree top ZDDTree/TOP ) ; The singleton set containing the empty tree. 
 ( def ^ZDDTree bot ZDDTree/BOT ) ; The empty set of trees.
 
-( defn ^ZDDTree prefix [ ^Iterable strings  ^ZDDTree tree ]
+( defn ^ZDDTree prefix [ ^Iterable strings ^ZDDTree tree ]
   "Prefix a set of trees with a segment."
   ( ZDDTree/prefix strings tree )
 )
