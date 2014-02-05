@@ -166,7 +166,11 @@ This translates as follows using the zcube API :
 
 **TODO**
 
+# The Implementation
+
+The data structures are immutable variants of _ZDD_ (zero-suppressed binary decision diagrams) and numerical representations based on on ZDD, taken from the work of pr. _Shin-Ichi Minato_. _ZDD_ offer a compressed representation of sets of sets as found in combinatorial problems, that usually suffer from exponential size explosion.
+
 # Future Work
 
-* Use multiple hash functions to alleviate collisions probability.
+* Use multiple hash functions to reduce collisions probability.
 * Implement max and min operations.
