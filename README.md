@@ -228,15 +228,21 @@ _add_ is _associative_ and _commutative_, and thus lends itself well to the conc
 
 # The Accumulative API
 
+The accumulative API conflates into single operations the computation of the subtrees of a tree, and their addition to a _ZDDNumber_. This allows these otherwise separate computations to share internal caches. The caches are allocated less often, and the sharing hopefully results in more cache hits.
+
 ## Basic API
+
+**TODO**
 
 ## Filtering
 
 **TODO**
 
-# The Implementation
+# Design and Implementation
 
-The data structures are immutable variants of _ZDD_ (zero-suppressed binary decision diagrams) and numerical representations based on on ZDD, taken from the work of pr. _Shin-Ichi Minato_. _ZDD_ offer a compressed representation of sets of sets as found in combinatorial problems, that usually suffer from exponential size explosion.
+The data structures are immutable variants of _ZDD_ (zero-suppressed binary decision diagrams) and numerical representations based on on _ZDD_, taken from the work of pr. _Shin-Ichi Minato_. _ZDD_ offer a compressed representation of sets of sets as found in combinatorial problems, that usually suffer from exponential size explosion.
+
+In the [VSOP Calculator][2] paper, _Minato et al_ explain how _ZDD_, and forests of shared _ZDD_ arranged in lists provide for an efficient representation of linear combinations of sets. We have adapted their representational trick to an _immutable_ settings.
 
 # Future Work
 
