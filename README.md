@@ -208,10 +208,10 @@ The _tree API_ handles the construction of __sets__ of trees. In the previous se
 |----|-----------|
 |top   |The _singleton_ set containing only the _empty_ tree.|
 |bot   |The _empty_ set of trees.|
-|path  |Build a _singleton_ set containing a _path_, ie a linear tree.|
-|prefix|Build a set of trees by prepending a path segment to all trees in a set.|
-|cross |Build the _cross product_ of set of trees, by taking the union of trees in each sets.|
-|sum   |Build the _union_ of set of trees, by taking the union of trees in each sets.|
+|path  |The _singleton_ set containing a _path_, ie a linear tree.|
+|prefix|Prepending a path segment to all trees in a set, yielding a new set.|
+|cross |Cross-product of two sets of trees, taking the union of trees in each product pair.|
+|sum   |Union of two sets of trees.|
 
 The usual pattern for constructing (sets of) trees is as follows, combining _paths_ with the _cross_ operator :
 
@@ -222,6 +222,22 @@ The usual pattern for constructing (sets of) trees is as follows, combining _pat
   ( path "2014" "01" "01" "10" "32" )
 )
 ```
+
+The _sum_ construct is useful to model overlapping hierarchical dimensions.
+
+For example, representing dates both as year/month/day-of-month, and year/week/day-of-week :
+ 
+```clojure
+( cross
+  ( path "www.company.com" "page1" )
+  ( path "gender" "male" )
+  ( sum ( path "ymd" "2014" "01" "01" "10" "32" )
+        ( path "ywd" "2014" "01" "1" )
+  )
+)
+```
+
+This trick relies on the distributivity of _cross_ over _sum_...  
 
 ## The Tree Algebra
 
@@ -238,10 +254,6 @@ A few algebraic identities hold :
     prefix(x,cross(a,b,c,...)) = cross(prefix(x,a),prefix(x,b),prefix(x,c),...)
     prefix(x,sum(a,b,c,...)) = sum(prefix(x,a),prefix(x,b),prefix(x,c),...)
 
-## Algebraic Tricks
-
-**TODO** Represent overlapping hierarchical dimensions with the Tree Algebra.
-    
 # The Associative/Commutative API
 
 ## Basic API 
@@ -257,7 +269,19 @@ _add_ is _associative_ and _commutative_, and thus lends itself well to the conc
 
 ## Filtering
 
-**TODO**
+The expansion of trees into their subtrees entails exponential complexity.
+
+When aggregating subtrees count for trees with numerous or deep branches, one may want to restrict the set of subtrees before aggregating.
+
+The arity 1 variant of the _subtrees_ function is an higher-order function that takes as parameter a set of trees acting as a filter.
+
+Thus :
+
+```clojure
+( ( subtrees filter ) 8 tree ) 
+```
+
+Will generate 8 occurrences of all the subtrees of _tree_, that are also in the set of trees expressed by _filter_. 
 
 # The Accumulative API
 
