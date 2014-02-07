@@ -147,7 +147,7 @@ Nothing really new there :
       ) ) ) )
 ```
 
-# Example 2 : Some Analytics
+# Example 2 : What for ? Analytics !
 
 Now, why in the world would you want to do such a thing, decomposing trees into subtrees, and counting their occurrences ?
 
@@ -300,6 +300,13 @@ The accumulative API conflates into single operations the computation of the sub
 The data structures are immutable variants of _ZDD_ (zero-suppressed binary decision diagrams) and numerical representations based on on _ZDD_, taken from the work of pr. _Shin-Ichi Minato_. _ZDD_ offer a compressed representation of sets of sets as found in combinatorial problems, that usually suffer from exponential size explosion.
 
 In the [VSOP Calculator][2] paper, _Minato et al_ explain how _ZDD_, and forests of shared _ZDD_ arranged in lists provide for an efficient representation of linear combinations of sets. We have adapted their representational trick to an _immutable_ settings.
+
+The representation of sets of trees as _ZDD_ works as follows :
+
+* A trees with branches labelled with strings is transformed into a tree with nodes labelled with integers, by hashing the paths to the nodes.
+* A tree is set represented as the set of its (integer) nodes ie a _ZDD_ holding a single set.
+* The subtrees of a tree are represented as a _ZDD_ holding a set of each subtree.
+
 
 # Future Work
 
