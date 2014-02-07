@@ -78,7 +78,7 @@ This generalizes easily to multiple occurrences of trees, using again a _multipl
        / \  =      +    /  +    \  +  / \                          
       b   c            b         c   b   c                         
             +                                                      
-      3*a      3*a     3*a                    3*       a
+      3*a      3*a     3*a                   3*a       a
        / \  =      +    /                  +    \  +  / \
       b   d            b                         d   b   d
      ------------------------------------------------------
@@ -174,9 +174,9 @@ In fact, the term _tree_ is a bit misleading, as the API rather provides for the
 |top|The _singleton_ set containing only the _empty_ tree.|
 |bot|The _empty_ set of trees.|
 |path|Build a _singleton_ set containing a _path_, ie a linear tree.|
-|prefix|Build a set of trees by prepending a segment to all trees in a set.|
+|prefix|Build a set of trees by prepending a path segment to all trees in a set.|
 |cross|Build the _cross product_ of set of trees, by taking the union of trees in each sets.|
-|sum|Build the _cross product_ of set of trees, by taking the union of trees in each sets.|
+|sum|Build the _union_ of set of trees, by taking the union of trees in each sets.|
 
 In the previous sections, I have glossed over this distinction between trees and sets of trees so as not to confuse the reader. Intuitively, a singleton set of trees can be identified with the only tree it contains.  
 
