@@ -46,6 +46,21 @@
         ( =  3 ( ( z/count-trees ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) ) zn ) )
       ) ) ) )
 
+( deftest test-sum-4 ; Branching trees example
+  ( is
+    ( let [ zn ( z/sum-subtrees
+               [ [  5 ( z/cross ( z/path "a" "b" ) ( z/path "a" "c" ) ) ] 
+               , [ -8 ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) ]
+               ] ) ]
+      ( and
+        ( = -3 ( ( z/count-trees ( z/path "a" )                                    ) zn ) )
+        ( = -3 ( ( z/count-trees ( z/path "a" "b" )                                ) zn ) )
+        ( =  5 ( ( z/count-trees ( z/path "a" "c" )                                ) zn ) )
+        ( =  5 ( ( z/count-trees ( z/cross ( z/path "a" "b" ) ( z/path "a" "c" ) ) ) zn ) )
+        ( = -8 ( ( z/count-trees ( z/path "a" "d" )                                ) zn ) )
+        ( = -8 ( ( z/count-trees ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) ) zn ) )
+      ) ) ) )
+
 ( deftest test-analytics ; Analytics example
   ( is
     ( let [ zn ( z/sum-subtrees
