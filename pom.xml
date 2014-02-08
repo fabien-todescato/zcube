@@ -4,6 +4,13 @@
 	<groupId>net.ftod</groupId>
 	<artifactId>zcube</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<developers>
+		<developer>
+			<id>ftod</id>
+			<name>Fabien Todescato</name>
+			<email>fabien.todescato@gmail.com</email>
+		</developer>
+	</developers>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
