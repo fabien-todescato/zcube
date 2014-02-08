@@ -1,5 +1,15 @@
 package net.ftod.zcube.zdd;
 
+/**
+ * <h1>Context of a computation over {@link ZDD}</h1>
+ * 
+ * <p>
+ * Embed the internal operations caches into a stateful object, so as to provide a fluent functional interface to express computations on {@link ZDD}, sharing
+ * the internal caches from end to end.
+ * </p>
+ * 
+ * @author Fabien Todescato
+ */
 public abstract class ZDDContext {
 
     private final ZDDPredicateCache _equ = new ZDDPredicateCache();
