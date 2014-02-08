@@ -4,17 +4,27 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * <h1>Zero-Suppressed Binary Decision Diagram Node</h1>
+ * <h1>Zero-Suppressed Binary Decision Diagrams</h1>
  * 
  * <p>
- * I chose not to implement the usual canonicalizing map, not to hinder concurrency.
+ * Representing sets of sets of <code>long</code> with <em>ZDD</em>.
+ * </p>
+ * <p>
+ * In that implementation, we have given up the standard canonicalizing map, a bottleneck for concurrency. The {@link ZDD} operations are implemented as static
+ * methods taking as arguments the caches alleviating the occurrences of repeated computation on shared sub {@link ZDD}.
  * </p>
  * 
  * @author <a href="mailto:fabien.todescato@gmail.com">Fabien Todescato</a>
  */
 public final class ZDD {
 
+    /**
+     * The empty set.
+     */
     public static final ZDD BOT = new ZDD(0L, null, null, 1, 0L);
+    /**
+     * The singleton set holding the empty set.
+     */
     public static final ZDD TOP = new ZDD(0L, null, null, 2, 1L);
 
     public final long x;
@@ -55,16 +65,39 @@ public final class ZDD {
         return new ZDD(x, b, t);
     }
 
+    /**
+     * <h3>Build a singleton set</h3>
+     * 
+     * @param x
+     *            the <code>long</code> element of the singleton set.
+     * @return the {@link ZDD} representing the singleton {x}.
+     */
     public static ZDD singleton(final long x)
     {
         return new ZDD(x, BOT, TOP);
     }
 
+    /**
+     * <h3>Build a set of elements</h3>
+     * 
+     * @param xs
+     *            a sequence of <code>long</code>.
+     * @return the {@link ZDD} representing the set of <code>long</code> in the sequence <code>xs</code>.
+     */
     public static ZDD set(final long... xs)
     {
         return set(new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache(), xs);
     }
 
+    /**
+     * <h3>Set inclusion predicate</h3>
+     * 
+     * @param zdd1
+     *            the {@link ZDD} included.
+     * @param zdd2
+     *            the {@link ZDD} including.
+     * @return <code>true</code> iff <b>all</b> sets in <code>zdd1</code> are in <code>zdd2</code>.
+     */
     public static boolean included(final ZDD zdd1, final ZDD zdd2)
     {
         return included(new ZDDPredicateCache(), new ZDDPredicateCache(), zdd1, zdd2);
@@ -125,16 +158,39 @@ public final class ZDD {
         return topIncluded(zdd.b);
     }
 
-    public static ZDD union(final ZDD... zdds)
-    {
-        return union(new ZDDPredicateCache(), new ZDDOperationCache(), zdds);
-    }
-
+    /**
+     * <h3>Set union</h3>
+     * 
+     * @param zdd1
+     *            a {@link ZDD}
+     * @param zdd2
+     *            a {@link ZDD}
+     * @return the {@link ZDD} union of zdd1 and zdd2 ie the set of sets that are in zdd1 or zdd2.
+     */
     public static ZDD union(final ZDD zdd1, final ZDD zdd2)
     {
         return union(new ZDDPredicateCache(), new ZDDOperationCache(), zdd1, zdd2);
     }
 
+    /**
+     * <h3>Set union</h3>
+     * 
+     * @param zdds
+     *            a sequence of {@link ZDD}.
+     * @return the {@link ZDD} union of the {@link ZDD} in the sequence.
+     */
+    public static ZDD union(final ZDD... zdds)
+    {
+        return union(new ZDDPredicateCache(), new ZDDOperationCache(), zdds);
+    }
+
+    /**
+     * <h3>Equality predicate</h3>
+     * 
+     * @param zdd1
+     * @param zdd2
+     * @return <code>true</code> if zdd1 and zdd2 represent the same set of sets.
+     */
     public static boolean equals(final ZDD zdd1, final ZDD zdd2)
     {
         return equals(new ZDDPredicateCache(), zdd1, zdd2);
@@ -347,6 +403,18 @@ public final class ZDD {
         return p;
     }
 
+    /**
+     * <h3>Hashing a {@link String}, starting from a <code>long</code> seed</h3>
+     * 
+     * <p>
+     * This hashing scheme is used to generate <code>long</code> identifiers for the nodes of the trees. The hash for a child node is computed by taking the
+     * hash of the father node and combining it with the label of the branch from the father node to the child node.
+     * </p>
+     * <p>
+     * See <a href="http://programmers.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed">Which hashing algorithm is
+     * best for uniqueness and speed</a> for an overview of hashing, and pointers on the <code>djb2</code> hash function.
+     * </p>
+     */
     private static long djb2(final long seed, final String string)
     {
         long hash = 5381L;

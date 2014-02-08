@@ -14,8 +14,6 @@ import java.util.Iterator;
  * Representation of sets of trees that support binary serialization, and functions to compute set of trees and set of subtrees as {@link ZDD}.
  * </p>
  * 
- * TODO Document sum and product operations.
- * 
  * @author <a href="mailto:fabien.todescato@gmail.com">Fabien Todescato</a>
  */
 public abstract class ZDDTree {
@@ -114,16 +112,25 @@ public abstract class ZDDTree {
         return t;
     }
 
+    /**
+     * Build a path, a linear tree, from a sequence of strings.
+     */
     public static ZDDTree path(final String... p)
     {
         return path(Arrays.asList(p));
     }
 
+    /**
+     * Build a path, a linear tree, from a sequence of strings.
+     */
     public static ZDDTree path(final Iterable<String> p)
     {
         return path(p.iterator());
     }
 
+    /**
+     * Build a path, a linear tree, from a sequence of strings.
+     */
     public static ZDDTree path(final Iterator<String> p)
     {
         return prefix(p, TOP);
@@ -337,11 +344,17 @@ public abstract class ZDDTree {
 
     protected abstract Type type();
 
+    /**
+     * <h3>Read back {@link ZDDTree} from {@link DataInputStream}</h3>
+     */
     public static ZDDTree read(final DataInputStream dis) throws IOException
     {
         return Type.values()[dis.readByte()].read(dis);
     }
 
+    /**
+     * <h3>Write a {@link ZDDTree} to a {@link DataOutputStream}</h3>
+     */
     public void write(final DataOutputStream dos) throws IOException
     {
         dos.writeByte(type().ordinal());
@@ -350,6 +363,9 @@ public abstract class ZDDTree {
 
     protected abstract void _write(DataOutputStream dos) throws IOException;
 
+    /**
+     * <h3>Read back an array of {@link ZDDTree} from a {@link DataInputStream}</h3>
+     */
     public static ZDDTree[] readArray(final DataInputStream dis) throws IOException
     {
         final int length = dis.readInt();
@@ -362,6 +378,9 @@ public abstract class ZDDTree {
         return array;
     }
 
+    /**
+     * <h3>Write an array of {@link ZDDTree} to a {@link DataOutputStream}</h3>
+     */
     public static void writeArray(final ZDDTree[] ts, final DataOutputStream dos) throws IOException
     {
         final int length = ts.length;
