@@ -334,8 +334,10 @@ The _ZDD_ type is not exposed by the public Clojure API.
 * [VSOP Calculator based on Zero-Suppressed Binary Decision Diagrams][2]
 * [Fun with ZDDs: Notes from Knuth's 14th Annual Christmas Tree Lecture][3]
 * [Bloom Filters][4]
+* [Which hashing algorithm is best for uniqueness and speed][5]
 
 [1]: http://www.infoq.com/presentations/abstract-algebra-analytics
 [2]: https://github.com/ftod/zcube/blob/master/papers/VSOP%20(Valued-Sum-Of-Products)%20Calculator%20Based%20on%20Zero-Suppressed%20BDDs.pdf?raw=true
 [3]: http://ashutoshmehra.net/blog/2008/12/notes-on-zdds/
 [4]: http://en.wikipedia.org/wiki/Bloom_filters
+[5]: http://programmers.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed
