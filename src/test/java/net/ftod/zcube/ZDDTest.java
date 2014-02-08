@@ -21,7 +21,7 @@ import org.junit.Test;
 /**
  * <h1>Unit test on {@link ZDD} operations</h1>
  * 
- * @author Fabien
+ * @author Fabien Todescato
  */
 public class ZDDTest {
 

@@ -5,13 +5,27 @@ import static net.ftod.zcube.zdd.ZDD.included;
 import java.util.Collection;
 
 /**
- * <h1>Representing integer polynomials over set of sets</h1>
+ * <h1>Representing linear combination of sets over integers with {@link ZDD}</h1>
  * 
- * @author Fabien
+ * <p>
+ * <em>Pr. Minato et Al</em> show how to represent linear combinations of sets with integer coefficients as a forest of shared {@link ZDD}. A <em>binary</em>
+ * representation can be used for unsigned integers, whereas signed integers may be represented in <em>negabinary</em>. Both representations are offered here.
+ * </p>
+ * <p>
+ * <em>Zero</em> is represented as <code>null</code>.
+ * </p>
+ * 
+ * @author Fabien Todescato
  */
 public final class ZDDNumber {
 
+    /**
+     * Lowest-order digit.
+     */
     public final ZDD digit;
+    /**
+     * Higher-order digits.
+     */
     public final ZDDNumber number;
 
     private ZDDNumber(final ZDD digit, final ZDDNumber number) {
@@ -35,17 +49,13 @@ public final class ZDDNumber {
     }
 
     /**
-     * <h3>Binary representation of a monomial</h3>
-     * 
-     * <p>
-     * Return the unsigned binary representation of a monomial with a positive coefficient.
-     * </p>
+     * <h3>Compute the <em>binary</em> representation of a {@link ZDD} multiplied by a <em>positive</em> <code>long</code></h3>
      * 
      * @param l
-     *            the <code>long</code> holding the positive coefficient.
+     *            the <code>long</code> holding the <em>positive</em> coefficient.
      * @param zdd
-     *            the {@link ZDD} representing the set of sets.
-     * @return the {@link ZDDNumber} representing the monomial.
+     *            the {@link ZDD} multiplicand.
+     * @return the {@link ZDDNumber} representing in binary <code>l</code> occurrences of <code>zdd</code>
      */
     public static ZDDNumber binary(final long l, final ZDD zdd)
     {
@@ -53,7 +63,7 @@ public final class ZDDNumber {
     }
 
     /**
-     * <h3>Projecting an unsigned binary {@link ZDDNumber} onto a {@link ZDD}</h3>
+     * <h3>Counting the occurrences of a {@link ZDD} in an unsigned binary {@link ZDDNumber}</h3>
      * 
      * <p>
      * Return the number of occurrences of a set of sets represented as a {@link ZDD} within a {@link ZDDNumber}.
@@ -76,7 +86,7 @@ public final class ZDDNumber {
     }
 
     /**
-     * <h3>Addition of two unsigned {@link ZDDNumber}</h3>
+     * <h3>Addition of two unsigned binary {@link ZDDNumber}</h3>
      * 
      * @param zddn1
      *            left operand {@link ZDDNumber}.
@@ -105,6 +115,15 @@ public final class ZDDNumber {
         return number(zddns.digit, binaryAdd(eq, in, un, di, zddns.number, zddnc));
     }
 
+    /**
+     * <h3>Compute the <em>negabinary</em> representation of a {@link ZDD} multiplied by a <em>signed</em> <code>long</code></h3>
+     * 
+     * @param l
+     *            the <code>long</code> holding the <em>signed</em> coefficient.
+     * @param zdd
+     *            the {@link ZDD} multiplicand.
+     * @return the {@link ZDDNumber} representing in negabinary <code>l</code> occurrences of <code>zdd</code>
+     */
     public static ZDDNumber negabinary(final long l, final ZDD zdd)
     {
         if (l == 0) {
@@ -131,6 +150,19 @@ public final class ZDDNumber {
         return number(digit, negabinary(l1, zdd));
     }
 
+    /**
+     * <h3>Counting the occurrences of a {@link ZDD} in a signed negabinary {@link ZDDNumber}</h3>
+     * 
+     * <p>
+     * Return the number of occurrences of a set of sets represented as a {@link ZDD} within a {@link ZDDNumber}.
+     * </p>
+     * 
+     * @param zddn
+     *            the {@link ZDDNumber} to be projected over the set of sets.
+     * @param zdd
+     *            the {@link ZDD} representing the set of sets.
+     * @return the <code>long</code> representing the number of occurrences of the set of sets within the {@link ZDDNumber}.
+     */
     public static long negabinary(final ZDDNumber zddn, final ZDD zdd)
     {
         return negabinary(new ZDDPredicateCache(), new ZDDPredicateCache(), zddn, zdd);
@@ -145,6 +177,15 @@ public final class ZDDNumber {
         return (included(eq, in, zdd, zddn.digit) ? 1L : 0L) + negabinary(eq, in, zddn.number, zdd) * -2L;
     }
 
+    /**
+     * <h3>Addition of two signed negabinary {@link ZDDNumber}</h3>
+     * 
+     * @param zddn1
+     *            left operand {@link ZDDNumber}.
+     * @param zddn2
+     *            right operand {@link ZDDNumber}.
+     * @return the {@link ZDDNumber} sum of the above.
+     */
     public static ZDDNumber negabinaryAdd(final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
         return negabinaryAdd(new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache(), new ZDDOperationCache(), zddn1, zddn2);
@@ -162,6 +203,15 @@ public final class ZDDNumber {
         return negabinarySub(eq, in, un, di, zddns, shift(zddnc));
     }
 
+    /**
+     * <h3>Subtraction of two signed negabinary {@link ZDDNumber}</h3>
+     * 
+     * @param zddn1
+     *            left operand {@link ZDDNumber}.
+     * @param zddn2
+     *            right operand {@link ZDDNumber}.
+     * @return the {@link ZDDNumber} difference of the above.
+     */
     public static ZDDNumber negabinarySub(final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
         return negabinarySub(new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache(), new ZDDOperationCache(), zddn1, zddn2);
