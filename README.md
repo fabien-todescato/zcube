@@ -3,6 +3,8 @@ zcube - Counting Trees for Fun and Profit
 
 _zcube_ is about counting trees, and aggregating the counts of the _subtrees_ of these trees. The intent is to provide an analytical tool to compute aggregate sums over multiple hierarchical dimensions.
 
+In the following, a _ZDDNumber_ is a linear combination of trees with long integer coefficients. 
+
 In a nutshell :
 
       5*a      5*a     5*a   5*a     5*a                           
@@ -39,18 +41,10 @@ In a nutshell :
       ) ) ) )
 ```
 
-The bulk of the library is written in Java, around hopefully efficient _immutable_ data structures. A thin Clojure layer provides for the public API of the library.
-
-* A **ZDDNumber** represents a linear combination of sets of trees with integer coefficients.
-* A **ZDDTree** is a symbolic expression that represents a sets of trees.
-* A **ZDD** is a symbolic decision-diagram based representation of a set of trees.
-
-The _ZDD_ type is not exposed by the public Clojure API.     
-
 The rather simple API provides two styles of computing aggregate counts of subtrees :
 
 * An _accumulative style_ whereby :
-  * Given a tree and an integer coefficient, occurrences of its subtrees are accumulated into an immutable _ZDDNumber_.
+  * Given a tree and a integer coefficient, occurrences of its subtrees are accumulated into an immutable _ZDDNumber_.
 * A _commutative associative_ style whereby :
   * A tree and an integer coefficient yield a _ZDDNumber_
   * Sequences of _ZDDNumber_ may be added.
@@ -210,7 +204,7 @@ The _tree API_ handles the construction of __sets__ of trees. In the previous se
 |bot   |The _empty_ set of trees.|
 |path  |The _singleton_ set containing a _path_, ie a linear tree.|
 |prefix|Prepending a path segment to all trees in a set, yielding a new set.|
-|cross |Cross-product of two sets of trees, taking the union of trees in each product pair.|
+|cross |Cross-product of two sets of trees, taking the union of both trees in each product pair.|
 |sum   |Union of two sets of trees.|
 
 The usual pattern for constructing (sets of) trees is as follows, combining _paths_ with the _cross_ operator :
@@ -224,7 +218,6 @@ The usual pattern for constructing (sets of) trees is as follows, combining _pat
 ```
 
 The _sum_ construct is useful to model overlapping hierarchical dimensions.
-
 For example, representing dates both as year/month/day-of-month, and year/week/day-of-week :
  
 ```clojure
@@ -258,48 +251,75 @@ A few algebraic identities hold :
 
 ## Basic API 
 
-|Expression      |Description                                              |
-|----------------|---------------------------------------------------------|
-|nil             |The _ZDDNumber_ zero.                                    |
-|( subtrees l t )|Linear combination of l times the subtrees of the tree t.|
-|( add z1 z2 )   |Sum of _ZDDNumbers_ z1, z2.                              |
-|( sub z1 z2 )   |Difference of _ZDDNumbers_ z1, z2.                       |
+|Expression      |Description|
+|----------------|-----------|
+|nil             |The _ZDDNumber_ zero.|
+|( subtrees l t )|Linear combination of _l_ times the subtrees of the tree _t_.|
+|( add z1 z2 )   |Sum of _ZDDNumbers_ _z1_, _z2_.                              |
+|( sub z1 z2 )   |Difference of _ZDDNumbers_ _z1_, _z2_.                       |
 
 _add_ is _associative_ and _commutative_, and thus lends itself well to the concurrent execution of aggregation operations.   
 
 ## Filtering
 
 The expansion of trees into their subtrees entails exponential complexity.
-
-When aggregating subtrees count for trees with numerous or deep branches, one may want to restrict the set of subtrees before aggregating.
-
+When counting subtrees for trees with numerous or deep branches, one may want to restrict the set of subtrees before aggregating.
 The arity 1 variant of the _subtrees_ function is an higher-order function that takes as parameter a set of trees acting as a filter.
 
 Thus :
 
 ```clojure
-( ( subtrees filter ) 8 tree ) 
+( ( subtrees filter ) l tree ) 
 ```
 
-Will generate 8 occurrences of all the subtrees of _tree_, that are also in the set of trees expressed by _filter_. 
+Will generate _l_ occurrences of all the subtrees of _tree_, that are also in the set of trees expressed by _filter_. 
 
 # The Accumulative API
 
-The accumulative API conflates into single operations the computation of the subtrees of a tree, and their addition to a _ZDDNumber_. This allows these otherwise separate computations to share internal caches. The caches are allocated less often, and the sharing hopefully results in more cache hits.
+The accumulative API conflates into a single operation the computation of the subtrees of a tree, and adding them into a _ZDDNumber_.
+This allows these otherwise separate computations to share internal caches.
+The caches are allocated less often, and the sharing hopefully results in more cache hits.
 
 ## Basic API
 
-**TODO**
+|Expression      |Description                                              |
+|----------------|---------------------------------------------------------|
+|nil             |The _ZDDNumber_ zero.                                    |
+|( add-subtrees l t z )|Add _l_ occurrences of the subtrees of the tree _t_ to the _ZDDNumber_ _z_.|
 
 ## Filtering
 
-**TODO**
+Again, filtering against a set of trees is taken care of by the following higher-order function :
+
+```clojure
+( ( add-subtrees filter ) l tree znumber ) 
+```
+
+Will add to _znumber_ _l_ occurrences of the subtrees of _tree_, that are also in _filter_.
+
+# Counting subtrees
+
+Eventually, counting occurrences of trees in a _ZDDNumber_ is done with the _count-trees_ higher-order function :
+
+```clojure
+( ( count-trees tree ) znumber ) 
+```
+
+When _tree_ is a singleton holding one tree, the result is the number of occurrences of that tree in _znumber_.
 
 # Design and Implementation
 
 The data structures are immutable variants of _ZDD_ (zero-suppressed binary decision diagrams) and numerical representations based on on _ZDD_, taken from the work of pr. _Shin-Ichi Minato_. _ZDD_ offer a compressed representation of sets of sets as found in combinatorial problems, that usually suffer from exponential size explosion.
 
 In the [VSOP Calculator][2] paper, _Minato et al_ explain how _ZDD_, and forests of shared _ZDD_ arranged in lists provide for an efficient representation of linear combinations of sets. We have adapted their representational trick to an _immutable_ settings.
+
+The bulk of the library is written in Java, around hopefully efficient _immutable_ data structures. A thin Clojure layer provides for the public API of the library.
+
+* A **ZDDNumber** represents a linear combination of sets of trees with integer coefficients.
+* A **ZDDTree** is a symbolic expression that represents a sets of trees.
+* A **ZDD** is a symbolic decision-diagram based representation of a set of trees.
+
+The _ZDD_ type is not exposed by the public Clojure API.     
 
 # Future Work
 
