@@ -108,7 +108,7 @@ This generalizes easily to multiple occurrences of trees, using again a _multipl
        / \  =      +    /  +    \  +  / \                          
       b   c            b         c   b   c                         
             +                                                      
-      3*a      3*a     3*a                   3*a       a
+      3*a      3*a     3*a                   3*a     3*a
        / \  =      +    /                  +    \  +  / \
       b   d            b                         d   b   d
      ------------------------------------------------------
@@ -141,7 +141,7 @@ Nothing really new there :
       ) ) ) )
 ```
 
-# Example 2 : Some Analytics
+# Example 2 : What for ? Analytics !
 
 Now, why in the world would you want to do such a thing, decomposing trees into subtrees, and counting their occurrences ?
 
