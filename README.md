@@ -39,6 +39,27 @@ In a nutshell :
       ) ) ) )
 ```
 
+Releases and Dependency Information
+========================================
+
+**FIXME** Not yet released ! Latest stable release: 0.0.1
+
+[Leiningen](https://github.com/technomancy/leiningen) dependency information:
+```clojure
+[net.ftod.zcube "0.0.1"]
+```
+[Maven](http://maven.apache.org/) dependency information:
+```xml
+<dependency>
+  <groupId>net.ftod</groupId>
+  <artifactId>zcube</artifactId>
+  <version>0.0.1</version>
+</dependency>
+```
+
+The API
+=======
+
 The rather simple API provides two styles of computing aggregate counts of subtrees :
 
 * An _accumulative style_ whereby :
@@ -49,7 +70,7 @@ The rather simple API provides two styles of computing aggregate counts of subtr
 
 See [Add ALL The Things][1] for a good introduction to the power of associativity and commutativity.
 
-# Example 1 : About counting subtrees
+## Example 1 : About counting subtrees
 
 As an example, consider the following pair of trees, and their respective decompositions into subtrees :
 
@@ -139,7 +160,7 @@ Nothing really new there :
       ) ) ) )
 ```
 
-# Example 2 : What for ? Analytics !
+## Example 2 : What for ? Analytics !
 
 Now, why in the world would you want to do such a thing, decomposing trees into subtrees, and counting their occurrences ?
 
@@ -192,7 +213,7 @@ This translates as follows using the zcube API :
       ) ) ) )
 ```
 
-# The Tree API
+## The Tree API
 
 The _tree API_ handles the construction of __sets__ of trees. In the previous sections, we have glossed over this subtlety, happlily confusing trees with singleton sets of trees.  
 
@@ -230,7 +251,7 @@ For example, representing dates both as year/month/day-of-month, and year/week/d
 
 This trick relies on the distributivity of _cross_ over _sum_...  
 
-## The Tree Algebra
+### The Tree Algebra
 
 A few algebraic identities hold :
 
@@ -245,9 +266,9 @@ A few algebraic identities hold :
     prefix(x,cross(a,b,c,...)) = cross(prefix(x,a),prefix(x,b),prefix(x,c),...)
     prefix(x,sum(a,b,c,...)) = sum(prefix(x,a),prefix(x,b),prefix(x,c),...)
 
-# The Associative/Commutative API
+## The Associative/Commutative API
 
-## Basic API 
+### Basic API 
 
 |Expression      |Description|
 |----------------|-----------|
@@ -258,7 +279,7 @@ A few algebraic identities hold :
 
 _add_ is _associative_ and _commutative_, and thus lends itself well to the concurrent execution of aggregation operations.   
 
-## Filtering
+### Filtering
 
 The expansion of trees into their subtrees entails exponential complexity.
 When counting subtrees for trees with numerous or deep branches, one may want to restrict the set of subtrees before aggregating.
@@ -272,20 +293,20 @@ Thus :
 
 Will generate _l_ occurrences of all the subtrees of _tree_, that are also in the set of trees expressed by _filter_. 
 
-# The Accumulative API
+## The Accumulative API
 
 The accumulative API conflates into a single operation the computation of the subtrees of a tree, and adding them into a _ZDDNumber_.
 This allows these otherwise separate computations to share internal caches.
 The caches are allocated less often, and the sharing hopefully results in more cache hits.
 
-## Basic API
+### Basic API
 
 |Expression      |Description                                              |
 |----------------|---------------------------------------------------------|
 |nil             |The _ZDDNumber_ zero.                                    |
 |( add-subtrees l t z )|Add _l_ occurrences of the subtrees of the tree _t_ to the _ZDDNumber_ _z_.|
 
-## Filtering
+### Filtering
 
 Again, filtering against a set of trees is taken care of by the following higher-order function :
 
@@ -295,7 +316,7 @@ Again, filtering against a set of trees is taken care of by the following higher
 
 Will add to _znumber_ _l_ occurrences of the subtrees of _tree_, that are also in _filter_.
 
-# Counting subtrees
+## Counting subtrees
 
 Eventually, counting occurrences of trees in a _ZDDNumber_ is done with the _count-trees_ higher-order function :
 
