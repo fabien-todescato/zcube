@@ -3,8 +3,6 @@ Counting Trees for Fun and Profit with _zcube_
 
 _zcube_ is about counting trees, and aggregating the counts of the _subtrees_ of these trees. The intent is to provide an analytical tool to compute aggregate sums over multiple hierarchical dimensions.
 
-In the following, a _ZDDNumber_ is a linear combination of trees with long integer coefficients. 
-
 In a nutshell :
 
       5*a      5*a     5*a   5*a     5*a                           
@@ -319,7 +317,15 @@ The bulk of the library is written in Java, around hopefully efficient _immutabl
 * A **ZDDTree** is a symbolic expression that represents a sets of trees.
 * A **ZDD** is a symbolic decision-diagram based representation of a set of trees.
 
-The _ZDD_ type is not exposed by the public Clojure API.     
+The _ZDD_ type is not exposed by the public Clojure API.
+
+The overall algorithmic organization is as follows :
+
+* A _ZDDTree_ represents a set of trees the branch of which are labelled by strings.
+* A hashing scheme based on the _djb2_ hash functions transforms these labelled trees into trees with 64 bits integer nodes.
+* A tree can be represented as the set of its integer nodes.
+* The subtrees of a tree can be represented as a set of sets of integers, ie a _ZDD_.
+* A list of shared _ZDD_ then represents occurrences of trees.        
 
 # Future Work
 
