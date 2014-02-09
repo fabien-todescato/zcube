@@ -419,6 +419,10 @@ public final class ZDD {
     {
         long hash = 5381L;
 
+        hash = 33L * hash ^ seed >>> 56 & 0xFF;
+        hash = 33L * hash ^ seed >>> 48 & 0xFF;
+        hash = 33L * hash ^ seed >>> 40 & 0xFF;
+        hash = 33L * hash ^ seed >>> 32 & 0xFF;
         hash = 33L * hash ^ seed >>> 24 & 0xFF;
         hash = 33L * hash ^ seed >>> 16 & 0xFF;
         hash = 33L * hash ^ seed >>> 8 & 0xFF;
