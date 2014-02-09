@@ -347,3 +347,13 @@ The overall algorithmic organization is as follows :
 [3]: http://ashutoshmehra.net/blog/2008/12/notes-on-zdds/
 [4]: http://en.wikipedia.org/wiki/Bloom_filters
 [5]: http://programmers.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed
+
+License
+=======
+
+The use and distribution terms for this software are covered by the Eclipse Public
+License 1.0 (http://opensource.org/licenses/eclipse-1.0.php) which can
+be found in the file epl-v10.html at the root of this distribution.
+By using this software in any fashion, you are agreeing to be bound by
+the terms of this license.  You must not remove this notice, or any
+other, from this software.
