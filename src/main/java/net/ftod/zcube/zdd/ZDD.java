@@ -415,7 +415,7 @@ public final class ZDD {
      * best for uniqueness and speed</a> for an overview of hashing, and pointers on the <code>djb2</code> hash function.
      * </p>
      */
-    private static long djb2(final long seed, final String string)
+    static long djb2(final long seed, final String string)
     {
         long hash = 5381L;
 
