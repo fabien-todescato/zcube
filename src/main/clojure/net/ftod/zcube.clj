@@ -35,23 +35,7 @@
 ) 
 
 ;
-; The algebra of ZDD numbers.
-;
-
-( defn ^ZDDNumber add
-  "Add two signed ZDD numbers. Associative and commutative, nil is the zero element."
-  [ ^ZDDNumber zn1 ^ZDDNumber zn2 ]
-  ( ZDDNumber/negabinaryAdd zn1 zn2 )
-)
-
-( defn ^ZDDNumber sub
-  "Subtract two signed ZDD numbers."
-  [ ^ZDDNumber zn1 ^ZDDNumber zn2 ]
-  ( ZDDNumber/negabinarySub zn1 zn2 )
-)
-
-;
-; Constructing ZDD numbers from ZDD trees.
+; The associative/commutative API
 ;
 
 ( defn ^ZDDNumber subtrees
@@ -68,18 +52,34 @@
   )
 )
 
+( defn ^ZDDNumber add
+  "Add two signed ZDD numbers. Associative and commutative, nil is the zero element."
+  [ ^ZDDNumber zn1 ^ZDDNumber zn2 ]
+  ( ZDDNumber/negabinaryAdd zn1 zn2 )
+)
+
+( defn ^ZDDNumber sub
+  "Subtract two signed ZDD numbers."
+  [ ^ZDDNumber zn1 ^ZDDNumber zn2 ]
+  ( ZDDNumber/negabinarySub zn1 zn2 )
+)
+
+;
+; The accumulative API
+;
+
 ( defn ^ZDDNumber add-subtrees
-  "Add occurrences of subtrees to a ZDD number.
+"Add occurrences of subtrees to a ZDD number.
    The higher-order one-argument version takes a filter expressed a sequence of trees,
    and yields the corresponding adder function.
   "
-  ( [ trees ]
-    ( let [ ^ZDD z ( ZDDTree/unionTrees trees ) ] ; Pay the ZDD computation once...
-      ( fn [ ^long l ^ZDDTree trees ^ZDD filter ^ZDDNumber zn ] ( ZDDNumber/addSubtrees l trees filter zn ) ) ; ...possibly apply multiple times over ZDD numbers.
-    )
+( [ trees ]
+  ( let [ ^ZDD z ( ZDDTree/unionTrees trees ) ] ; Pay the ZDD computation once...
+    ( fn [ ^long l ^ZDDTree trees ^ZDD filter ^ZDDNumber zn ] ( ZDDNumber/addSubtrees l trees filter zn ) ) ; ...possibly apply multiple times over ZDD numbers.
   )
-  ( [ ^long l ^ZDDTree trees ^ZDDNumber zn ] ( ZDDNumber/addSubtrees l trees zn )
   )
+( [ ^long l ^ZDDTree trees ^ZDDNumber zn ] ( ZDDNumber/addSubtrees l trees zn )
+)
 )
 
 ( defn ^ZDDNumber sum-subtrees
@@ -105,4 +105,3 @@
     ( fn [ ^ZDDNumber n ] ( ZDDNumber/negabinary n z ) ) ; ...possibly apply multiple times over ZDD numbers.
   )
 )
-

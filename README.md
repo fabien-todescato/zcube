@@ -46,7 +46,7 @@ Releases and Dependency Information
 
 [Leiningen](https://github.com/technomancy/leiningen) dependency information:
 ```clojure
-[net.ftod.zcube "0.0.1"]
+[ net.ftod/zcube "0.0.1" ]
 ```
 [Maven](http://maven.apache.org/) dependency information:
 ```xml
@@ -305,6 +305,20 @@ The caches are allocated less often, and the sharing hopefully results in more c
 |----------------|---------------------------------------------------------|
 |nil             |The _ZDDNumber_ zero.                                    |
 |( add-subtrees l t z )|Add _l_ occurrences of the subtrees of the tree _t_ to the _ZDDNumber_ _z_.|
+|( sum-subtrees lts )|Reduce a sequence of pairs of longs and trees, adding up the occurrences of their subtrees into a _ZDDNumber_.[
+
+_sum-subtrees_ is a simple convenience function :
+
+```clojure
+( defn sum-subtrees [ long-trees ]
+  ( reduce
+    ( fn [ zn [ long tree ] ] ( add-subtrees long tree zn ) )
+    nil 
+    long-trees
+  )
+)
+```
+
 
 ### Filtering
 
