@@ -42,7 +42,7 @@ In a nutshell :
 Releases and Dependency Information
 ========================================
 
-**FIXME** Not yet released ! Latest stable release: 0.0.1
+Latest stable release: 0.0.1
 
 [Leiningen](https://github.com/technomancy/leiningen) dependency information:
 ```clojure
