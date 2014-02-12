@@ -11,16 +11,16 @@
 			<email>fabien.todescato@gmail.com</email>
 		</developer>
 	</developers>
-    <url>https://github.com/ftod/zcube</url>
-    <name>zcube</name>
-    <description>A data processing library for Clojure.</description>
-    <licenses>
-        <license>
-            <name>Eclipse Public License 1.0</name>
-            <url>http://opensource.org/licenses/eclipse-1.0.php</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+	<url>https://github.com/ftod/zcube</url>
+	<name>zcube</name>
+	<description>A data processing library for Clojure.</description>
+	<licenses>
+		<license>
+			<name>Eclipse Public License 1.0</name>
+			<url>http://opensource.org/licenses/eclipse-1.0.php</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -93,4 +93,10 @@
 			<url>http://clojars.org/repo/</url>
 		</repository>
 	</repositories>
+	<distributionManagement>
+		<repository>
+			<id>clojars.org</id>
+			<url>http://clojars.org/repo</url>
+		</repository>
+	</distributionManagement>
 </project>
