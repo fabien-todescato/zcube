@@ -1,8 +1,8 @@
 ANN zcube 0.0.1
 
-zcube[1] is a Clojure library about counting trees for analytical purposes.
+zcube[1] is a Clojure library four counting trees for analytical purposes.
 
-The intent is to compute aggregate sums over multiple hierarchical dimensions, based on the (old) algorithmic ideas exposed in [2] by Pr. Minato et Al implemented in an immutable setting suitable for concurrent and functional programming.
+The intent is to compute aggregate sums over multiple hierarchical dimensions, based on the (old) algorithmic ideas exposed in [2] by Pr. Minato et Al, and implemented in an immutable setting suitable for concurrent and functional programming.
 
 [1]https://github.com/ftod/zcube
 [2]http://www-alg.ist.hokudai.ac.jp/~thomas/TCSTR/tcstr_05_3/tcstr_05_3.pdf
