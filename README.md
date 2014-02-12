@@ -1,5 +1,6 @@
-Counting Trees for Fun and Profit with _zcube_
+_net.ftod/zcube_
 ==============================================
+Counting Trees for Fun and Profit
 
 _zcube_ is about counting trees, and aggregating the counts of the _subtrees_ of these trees. The intent is to provide an analytical tool to compute aggregate sums over multiple hierarchical dimensions.
 
