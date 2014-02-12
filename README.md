@@ -42,13 +42,17 @@ In a nutshell :
 Releases and Dependency Information
 ========================================
 
-Latest stable release: 0.0.1
+Releases published on [Clojars].
 
-[Leiningen](https://github.com/technomancy/leiningen) dependency information:
+Latest stable is **0.0.1**
+
+
+[Leiningen] dependency information:
 ```clojure
 [ net.ftod/zcube "0.0.1" ]
 ```
-[Maven](http://maven.apache.org/) dependency information:
+
+[Maven] dependency information:
 ```xml
 <dependency>
   <groupId>net.ftod</groupId>
@@ -56,6 +60,18 @@ Latest stable release: 0.0.1
   <version>0.0.1</version>
 </dependency>
 ```
+
+[Maven] repository information:
+```xml
+<repository>
+  <id>clojars.org</id>
+  <url>http://clojars.org/repo</url>
+</repository>
+```
+    
+[Clojars]: http://clojars.org/
+[Leiningen]: http://leiningen.org/
+[Maven]: http://maven.apache.org/
 
 The API
 =======
