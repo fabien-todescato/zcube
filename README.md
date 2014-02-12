@@ -1,5 +1,6 @@
-Counting Trees for Fun and Profit with _zcube_
+_net.ftod/zcube_
 ==============================================
+Counting Trees for Fun and Profit
 
 _zcube_ is about counting trees, and aggregating the counts of the _subtrees_ of these trees. The intent is to provide an analytical tool to compute aggregate sums over multiple hierarchical dimensions.
 
@@ -42,13 +43,17 @@ In a nutshell :
 Releases and Dependency Information
 ========================================
 
-Latest stable release: 0.0.1
+Releases published on [Clojars].
 
-[Leiningen](https://github.com/technomancy/leiningen) dependency information:
+Latest stable is **0.0.1**
+
+
+[Leiningen] dependency information:
 ```clojure
 [ net.ftod/zcube "0.0.1" ]
 ```
-[Maven](http://maven.apache.org/) dependency information:
+
+[Maven] dependency information:
 ```xml
 <dependency>
   <groupId>net.ftod</groupId>
@@ -56,6 +61,18 @@ Latest stable release: 0.0.1
   <version>0.0.1</version>
 </dependency>
 ```
+
+[Maven] repository information:
+```xml
+<repository>
+  <id>clojars.org</id>
+  <url>http://clojars.org/repo</url>
+</repository>
+```
+    
+[Clojars]: http://clojars.org/
+[Leiningen]: http://leiningen.org/
+[Maven]: http://maven.apache.org/
 
 The API
 =======
