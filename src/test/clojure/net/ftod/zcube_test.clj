@@ -5,9 +5,9 @@
 
 ( deftest test-sum-1 ; Linear trees example
   ( is
-    ( let [ zn ( z/sum-subtrees
-               [ [  5 ( z/path "a" "b" "c" ) ]
-                 [ 10 ( z/path "a" "b" "d" ) ]
+    ( let [ zn ( z/sum-subtrees-2
+               [ ( z/times  5 ( z/path "a" "b" "c" ) )
+               , ( z/times 10 ( z/path "a" "b" "d" ) )
                ] ) ]
     ( and
       ( = 15 ( ( z/count-trees ( z/path "a" )         ) zn ) )
@@ -18,9 +18,9 @@
 
 ( deftest test-sum-2 ; Branching trees example
   ( is
-    ( let [ zn ( z/sum-subtrees
-               [ [ 1 ( z/cross ( z/path "a" "b" ) ( z/path "a" "c" ) ) ] 
-               , [ 1 ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) ]
+    ( let [ zn ( z/sum-subtrees-2
+               [ ( z/times 1 ( z/cross ( z/path "a" "b" ) ( z/path "a" "c" ) ) ) 
+               , ( z/times 1 ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) )
                ] ) ]
       ( and
         ( =  2 ( ( z/count-trees ( z/path "a" ) ) zn ) )
@@ -33,9 +33,9 @@
 
 ( deftest test-sum-3 ; Branching trees example
   ( is
-    ( let [ zn ( z/sum-subtrees
-               [ [ 5 ( z/cross ( z/path "a" "b" ) ( z/path "a" "c" ) ) ] 
-               , [ 3 ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) ]
+    ( let [ zn ( z/sum-subtrees-2
+               [ ( z/times 5 ( z/cross ( z/path "a" "b" ) ( z/path "a" "c" ) ) )
+               , ( z/times 3 ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) )
                ] ) ]
       ( and
         ( =  8 ( ( z/count-trees ( z/path "a" )                                    ) zn ) )
@@ -48,9 +48,9 @@
 
 ( deftest test-sum-4 ; Branching trees example
   ( is
-    ( let [ zn ( z/sum-subtrees
-               [ [  5 ( z/cross ( z/path "a" "b" ) ( z/path "a" "c" ) ) ] 
-               , [ -8 ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) ]
+    ( let [ zn ( z/sum-subtrees-2
+               [ ( z/times  5 ( z/cross ( z/path "a" "b" ) ( z/path "a" "c" ) ) ) 
+               , ( z/times -8 ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) )
                ] ) ]
       ( and
         ( = -3 ( ( z/count-trees ( z/path "a" )                                    ) zn ) )
@@ -63,19 +63,19 @@
 
 ( deftest test-analytics ; Analytics example
   ( is
-    ( let [ zn ( z/sum-subtrees
-                 [ [ 1 ( z/cross
-                         ( z/path "www.company.com" "page1" )
-                         ( z/path "gender" "male" )
-                         ( z/path "2014" "01" "01" "10" "32" ) ) ]
-                 , [ 1 ( z/cross
-                         ( z/path "www.company.com" "page2" )
-                         ( z/path "gender" "female" )
-                         ( z/path "2014" "01" "02" "11" "35" ) ) ]
-                 , [ 1 ( z/cross
-                         ( z/path "www.company.com" "page1" )
-                         ( z/path "gender" "female" )
-                         ( z/path "2014" "01" "03" "08" "15" ) ) ]
+    ( let [ zn ( z/sum-subtrees-2
+                 [ ( z/times 1 ( z/cross
+                                 ( z/path "www.company.com" "page1" )
+                                 ( z/path "gender" "male" )
+                                 ( z/path "2014" "01" "01" "10" "32" ) ) )
+                 , ( z/times 1 ( z/cross
+                                 ( z/path "www.company.com" "page2" )
+                                 ( z/path "gender" "female" )
+                                 ( z/path "2014" "01" "02" "11" "35" ) ) )
+                 , ( z/times 1 ( z/cross
+                                 ( z/path "www.company.com" "page1" )
+                                 ( z/path "gender" "female" )
+                                 ( z/path "2014" "01" "03" "08" "15" ) ) )
                  ]
                ) ]
       ( and
