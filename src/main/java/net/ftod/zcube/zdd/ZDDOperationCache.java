@@ -11,7 +11,7 @@ package net.ftod.zcube.zdd;
  */
 final class ZDDOperationCache {
 
-    private static final int POWER = 8;
+    private static final int POWER = 4;
     private static final int SIZE = 1 << POWER;
     private static final int MAX = SIZE - 1;
 
