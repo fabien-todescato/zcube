@@ -11,7 +11,7 @@ package net.ftod.zcube.zdd;
  */
 final class ZDDPredicateCache {
 
-    private static final int POWER = 4;
+    private static final int POWER = 5;
     private static final int SIZE = 1 << POWER;
     private static final int MAX = SIZE - 1;
 
