@@ -920,6 +920,10 @@ public final class ZDD {
             return true;
         }
 
+        if (zdd1.h != zdd2.h) {
+            return false;
+        }
+
         final Boolean cached = eq.get(zdd1, zdd2);
 
         if (cached != null) {
@@ -928,9 +932,7 @@ public final class ZDD {
 
         boolean equal;
 
-        if (zdd1.h != zdd2.h) {
-            equal = false;
-        } else if (zdd1.x != zdd2.x) {
+        if (zdd1.x != zdd2.x) {
             equal = false;
         } else if (!equals(eq, zdd1.b, zdd2.b)) {
             equal = false;
