@@ -919,18 +919,6 @@ public final class ZDD {
         if (zdd1 == zdd2) {
             return true;
         }
-        if (zdd1 == BOT) {
-            return zdd2 == BOT;
-        }
-        if (zdd1 == TOP) {
-            return zdd2 == TOP;
-        }
-        if (zdd2 == BOT) {
-            return zdd1 == BOT;
-        }
-        if (zdd2 == TOP) {
-            return zdd1 == TOP;
-        }
 
         final Boolean cached = eq.get(zdd1, zdd2);
 
