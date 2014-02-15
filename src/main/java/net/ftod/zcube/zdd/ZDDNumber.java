@@ -3,6 +3,7 @@ package net.ftod.zcube.zdd;
 import static net.ftod.zcube.zdd.ZDD.included;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * <h1>Representing linear combination of sets over integers with {@link ZDD}</h1>
@@ -189,6 +190,27 @@ public final class ZDDNumber {
     public static ZDDNumber negabinaryAdd(final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
         return negabinaryAdd(new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache(), new ZDDOperationCache(), zddn1, zddn2);
+    }
+
+    public static ZDDNumber negabinaryAdd(final Iterable<ZDDNumber> i)
+    {
+        return negabinaryAdd(i.iterator());
+    }
+
+    public static ZDDNumber negabinaryAdd(final Iterator<ZDDNumber> i)
+    {
+        final ZDDPredicateCache eq = new ZDDPredicateCache();
+        final ZDDOperationCache in = new ZDDOperationCache();
+        final ZDDOperationCache un = new ZDDOperationCache();
+        final ZDDOperationCache di = new ZDDOperationCache();
+
+        ZDDNumber zn = null;
+
+        while (i.hasNext()) {
+            zn = negabinaryAdd(eq, in, un, di, zn, i.next());
+        }
+
+        return zn;
     }
 
     static ZDDNumber negabinaryAdd(final ZDDPredicateCache eq, final ZDDOperationCache in, final ZDDOperationCache un, final ZDDOperationCache di, final ZDDNumber zddn1, final ZDDNumber zddn2)

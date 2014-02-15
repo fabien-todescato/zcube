@@ -86,3 +86,31 @@
         ( = 2 ( ( z/count-trees ( z/cross ( z/path "gender" "female" ) ( z/path "2014" "01" ) )      ) zn ) )
         ( = 1 ( ( z/count-trees ( z/cross ( z/path "gender" "female" ) ( z/path "2014" "01" "02" ) ) ) zn ) )
       ) ) ) )
+
+( deftest p-test-analytics ; Analytics example, parallel
+  ( is
+    ( let [ n 65536
+          , zn ( z/p-sum-subtrees
+                 ( flatten ( repeat n
+                   [ ( z/times 1 ( z/cross
+                                   ( z/path "www.company.com" "page1" )
+                                   ( z/path "gender" "male" )
+                                   ( z/path "2014" "01" "01" "10" "32" ) ) )
+                   , ( z/times 1 ( z/cross
+                                   ( z/path "www.company.com" "page2" )
+                                   ( z/path "gender" "female" )
+                                   ( z/path "2014" "01" "02" "11" "35" ) ) )
+                   , ( z/times 1 ( z/cross
+                                   ( z/path "www.company.com" "page1" )
+                                   ( z/path "gender" "female" )
+                                   ( z/path "2014" "01" "03" "08" "15" ) ) )
+                   ] ) )
+               ) ]
+      ( and
+        ( = ( * 3 n ) ( ( z/count-trees ( z/path "www.company.com" )                                         ) zn ) )
+        ( = ( * 2 n ) ( ( z/count-trees ( z/path "www.company.com" "page1" )                                 ) zn ) )
+        ( = ( * 3 n ) ( ( z/count-trees ( z/path "2014" "01" )                                               ) zn ) )
+        ( = ( * 2 n ) ( ( z/count-trees ( z/path "gender" "female" )                                         ) zn ) )
+        ( = ( * 2 n ) ( ( z/count-trees ( z/cross ( z/path "gender" "female" ) ( z/path "2014" "01" ) )      ) zn ) )
+        ( = ( * 1 n ) ( ( z/count-trees ( z/cross ( z/path "gender" "female" ) ( z/path "2014" "01" "02" ) ) ) zn ) )
+      ) ) ) )
