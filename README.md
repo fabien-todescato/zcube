@@ -373,7 +373,7 @@ The _ZDD_ type is not exposed by the public Clojure API.
 
 The overall algorithmic organization is as follows :
 
-* A _ZDDTree_ represents a set of trees the branch of which are labelled by strings.
+* A _ZDDTree_ represents a set of trees the branches of which are labelled by strings.
 * A hashing scheme based on the _djb2_ hash functions transforms these labelled trees into trees with 64 bits integer nodes.
 * A tree can be represented as the set of its integer nodes.
 * The subtrees of a tree can be represented as a set of sets of integers, ie a _ZDD_.
