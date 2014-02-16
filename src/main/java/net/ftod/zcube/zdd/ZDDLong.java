@@ -197,7 +197,7 @@ final class PSumTask implements Runnable {
             pSum.addSubtrees(zl);
             sumQueue.put(pSum);
         } catch (final InterruptedException e) {
-            e.printStackTrace(); // FIXME
+            throw new RuntimeException(e);
         }
     }
 
