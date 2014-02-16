@@ -56,45 +56,4 @@ public final class ZDDLong {
         return new ZDDLong(l, t);
     }
 
-    public static ZDDNumber sumSubtrees(final Iterable<ZDDLong> i)
-    {
-        return sumSubtrees(i.iterator());
-    }
-
-    public static ZDDNumber sumSubtrees(final Iterator<ZDDLong> i)
-    {
-        final ZDDCachePredicate _equ = new ZDDCachePredicate();
-        final ZDDCacheOperation _cru = new ZDDCacheOperation();
-        final ZDDCacheOperation _uni = new ZDDCacheOperation();
-        final ZDDCacheOperation _int = new ZDDCacheOperation();
-        final ZDDCacheOperation _dif = new ZDDCacheOperation();
-
-        ZDDNumber zn = null;
-
-        while (i.hasNext()) {
-            final ZDDLong zl = i.next();
-            zn = ZDDNumber.addSubtrees(zl.l, zl.t, zn, _equ, _cru, _uni, _int, _dif);
-        }
-
-        return zn;
-    }
-
-    public static ZDDNumber sumSubtrees(final ZDD filter, final Iterator<ZDDLong> i)
-    {
-        final ZDDCachePredicate _equ = new ZDDCachePredicate();
-        final ZDDCacheOperation _cru = new ZDDCacheOperation();
-        final ZDDCacheOperation _uni = new ZDDCacheOperation();
-        final ZDDCacheOperation _int = new ZDDCacheOperation();
-        final ZDDCacheOperation _dif = new ZDDCacheOperation();
-
-        ZDDNumber zn = null;
-
-        while (i.hasNext()) {
-            final ZDDLong zl = i.next();
-            zn = ZDDNumber.addSubtrees(zl.l, zl.t, filter, zn, _equ, _cru, _uni, _int, _dif);
-        }
-
-        return zn;
-    }
-
 }
