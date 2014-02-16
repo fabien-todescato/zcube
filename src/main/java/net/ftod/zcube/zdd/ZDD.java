@@ -64,14 +64,29 @@ public final class ZDD {
 
     public static long size(final ZDD z)
     {
+        return size(new ZDDCacheLong(), z);
+    }
+
+    static long size(final ZDDCacheLong _cl, final ZDD z)
+    {
         if (z == BOT) {
             return 0L;
         }
         if (z == TOP) {
             return 1L;
         }
-        // TODO Cache size computation for shared subgraphs...
-        return size(z.b) + size(z.t);
+
+        final Long cached = _cl.get(z);
+
+        if (cached != null) {
+            return cached.longValue();
+        }
+
+        final long s = size(_cl, z.b) + size(_cl, z.t);
+
+        _cl.put(z, s);
+
+        return s;
     }
 
     /**
@@ -95,7 +110,7 @@ public final class ZDD {
      */
     public static ZDD set(final long... xs)
     {
-        return set(new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache(), xs);
+        return set(new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation(), xs);
     }
 
     /**
@@ -109,10 +124,10 @@ public final class ZDD {
      */
     public static boolean included(final ZDD zdd1, final ZDD zdd2)
     {
-        return included(new ZDDPredicateCache(), new ZDDPredicateCache(), zdd1, zdd2);
+        return included(new ZDDCachePredicate(), new ZDDCachePredicate(), zdd1, zdd2);
     }
 
-    static boolean included(final ZDDPredicateCache eq, final ZDDPredicateCache in, final ZDD zdd1, final ZDD zdd2)
+    static boolean included(final ZDDCachePredicate eq, final ZDDCachePredicate in, final ZDD zdd1, final ZDD zdd2)
     {
         if (equals(eq, zdd1, zdd2)) {
             return true;
@@ -178,7 +193,7 @@ public final class ZDD {
      */
     public static ZDD union(final ZDD zdd1, final ZDD zdd2)
     {
-        return union(new ZDDPredicateCache(), new ZDDOperationCache(), zdd1, zdd2);
+        return union(new ZDDCachePredicate(), new ZDDCacheOperation(), zdd1, zdd2);
     }
 
     /**
@@ -190,7 +205,7 @@ public final class ZDD {
      */
     public static ZDD union(final ZDD... zdds)
     {
-        return union(new ZDDPredicateCache(), new ZDDOperationCache(), zdds);
+        return union(new ZDDCachePredicate(), new ZDDCacheOperation(), zdds);
     }
 
     /**
@@ -202,15 +217,15 @@ public final class ZDD {
      */
     public static boolean equals(final ZDD zdd1, final ZDD zdd2)
     {
-        return equals(new ZDDPredicateCache(), zdd1, zdd2);
+        return equals(new ZDDCachePredicate(), zdd1, zdd2);
     }
 
     public static ZDD trees(final String[][]... a)
     {
-        return trees(new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache(), a);
+        return trees(new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation(), a);
     }
 
-    static ZDD trees(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final String[][]... a)
+    static ZDD trees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final String[][]... a)
     {
         final int n = a.length;
         final ZDD[] trees = new ZDD[n];
@@ -224,10 +239,10 @@ public final class ZDD {
 
     public static ZDD trees(final String[]... a)
     {
-        return trees(new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache(), a);
+        return trees(new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation(), a);
     }
 
-    static ZDD trees(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final String[]... a)
+    static ZDD trees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final String[]... a)
     {
         final int n = a.length;
         final ZDD[] trees = new ZDD[n];
@@ -241,15 +256,15 @@ public final class ZDD {
 
     public static ZDD trees(final String... a)
     {
-        return trees(new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache(), a);
+        return trees(new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation(), a);
     }
 
-    static ZDD trees(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final String... a)
+    static ZDD trees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final String... a)
     {
         return trees(eq, cu, un, 1L, 0, a);
     }
 
-    private static ZDD trees(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final long h, final int i, final String[] a)
+    private static ZDD trees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h, final int i, final String[] a)
     {
         if (i == a.length) {
             return TOP;
@@ -262,14 +277,14 @@ public final class ZDD {
 
     public static ZDD trees(final Collection<Collection<Collection<String>>> i3)
     {
-        final ZDDPredicateCache eq = new ZDDPredicateCache();
-        final ZDDOperationCache cu = new ZDDOperationCache();
-        final ZDDOperationCache un = new ZDDOperationCache();
+        final ZDDCachePredicate eq = new ZDDCachePredicate();
+        final ZDDCacheOperation cu = new ZDDCacheOperation();
+        final ZDDCacheOperation un = new ZDDCacheOperation();
 
         return trees3(eq, cu, un, i3);
     }
 
-    static ZDD trees3(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final Collection<Collection<Collection<String>>> i3)
+    static ZDD trees3(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final Collection<Collection<Collection<String>>> i3)
     {
         final ZDD[] zs = new ZDD[i3.size()];
 
@@ -282,7 +297,7 @@ public final class ZDD {
         return union(eq, un, zs);
     }
 
-    private static ZDD trees2(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final Collection<Collection<String>> i2)
+    private static ZDD trees2(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final Collection<Collection<String>> i2)
     {
         final ZDD[] zs = new ZDD[i2.size()];
 
@@ -295,12 +310,12 @@ public final class ZDD {
         return crossUnion(eq, cu, un, zs);
     }
 
-    private static ZDD trees1(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final Collection<String> i)
+    private static ZDD trees1(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final Collection<String> i)
     {
         return trees1(eq, cu, un, 1L, i.iterator());
     }
 
-    private static ZDD trees1(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final long h, final Iterator<String> i)
+    private static ZDD trees1(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h, final Iterator<String> i)
     {
         if (i.hasNext()) {
             final long h1 = djb2(h, i.next());
@@ -312,32 +327,32 @@ public final class ZDD {
 
     public static ZDD tree(final Collection<Collection<Collection<String>>> i3)
     {
-        final ZDDPredicateCache eq = new ZDDPredicateCache();
-        final ZDDOperationCache cu = new ZDDOperationCache();
-        final ZDDOperationCache un = new ZDDOperationCache();
+        final ZDDCachePredicate eq = new ZDDCachePredicate();
+        final ZDDCacheOperation cu = new ZDDCacheOperation();
+        final ZDDCacheOperation un = new ZDDCacheOperation();
 
         return tree3(eq, cu, un, i3);
     }
 
     public static ZDD tree2(final Collection<Collection<String>> i2)
     {
-        final ZDDPredicateCache eq = new ZDDPredicateCache();
-        final ZDDOperationCache cu = new ZDDOperationCache();
-        final ZDDOperationCache un = new ZDDOperationCache();
+        final ZDDCachePredicate eq = new ZDDCachePredicate();
+        final ZDDCacheOperation cu = new ZDDCacheOperation();
+        final ZDDCacheOperation un = new ZDDCacheOperation();
 
         return tree2(eq, cu, un, i2);
     }
 
     public static ZDD tree1(final Collection<String> i)
     {
-        final ZDDPredicateCache eq = new ZDDPredicateCache();
-        final ZDDOperationCache cu = new ZDDOperationCache();
-        final ZDDOperationCache un = new ZDDOperationCache();
+        final ZDDCachePredicate eq = new ZDDCachePredicate();
+        final ZDDCacheOperation cu = new ZDDCacheOperation();
+        final ZDDCacheOperation un = new ZDDCacheOperation();
 
         return tree1(eq, cu, un, i);
     }
 
-    private static ZDD tree3(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final Collection<Collection<Collection<String>>> i3)
+    private static ZDD tree3(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final Collection<Collection<Collection<String>>> i3)
     {
         final ZDD[] zs = new ZDD[i3.size()];
 
@@ -350,7 +365,7 @@ public final class ZDD {
         return union(eq, un, zs);
     }
 
-    private static ZDD tree2(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final Collection<Collection<String>> i2)
+    private static ZDD tree2(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final Collection<Collection<String>> i2)
     {
         final ZDD[] zs = new ZDD[i2.size()];
 
@@ -363,7 +378,7 @@ public final class ZDD {
         return crossUnion(eq, cu, un, zs);
     }
 
-    private static ZDD tree1(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final Collection<String> i)
+    private static ZDD tree1(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final Collection<String> i)
     {
         final ZDD[] zs = new ZDD[i.size()];
 
@@ -379,15 +394,15 @@ public final class ZDD {
 
     public static ZDD tree(final String[]... a)
     {
-        return tree(new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache(), a);
+        return tree(new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation(), a);
     }
 
     public static ZDD tree(final String... a)
     {
-        return tree(new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache(), a);
+        return tree(new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation(), a);
     }
 
-    static ZDD tree(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final String[]... a)
+    static ZDD tree(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final String[]... a)
     {
         final int n = a.length;
         final ZDD[] trees = new ZDD[n];
@@ -399,7 +414,7 @@ public final class ZDD {
         return crossUnion(eq, cu, un, trees);
     }
 
-    static ZDD tree(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final String... a)
+    static ZDD tree(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final String... a)
     {
         long h = 1L;
         ZDD p = TOP;
@@ -487,7 +502,7 @@ public final class ZDD {
         return builder.toString();
     }
 
-    static ZDD union(final ZDDPredicateCache eq, final ZDDOperationCache un, final ZDD... zdds)
+    static ZDD union(final ZDDCachePredicate eq, final ZDDCacheOperation un, final ZDD... zdds)
     {
         final int l = zdds.length;
 
@@ -514,7 +529,7 @@ public final class ZDD {
         return BOT;
     }
 
-    static ZDD union(final ZDDPredicateCache eq, final ZDDOperationCache un, final ZDD zdd1, final ZDD zdd2)
+    static ZDD union(final ZDDCachePredicate eq, final ZDDCacheOperation un, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return zdd2;
@@ -555,7 +570,7 @@ public final class ZDD {
         return zdd;
     }
 
-    private static ZDD unionTop(final ZDDOperationCache un, final ZDD zdd1)
+    private static ZDD unionTop(final ZDDCacheOperation un, final ZDD zdd1)
     {
         if (zdd1 == BOT) {
             return TOP;
@@ -575,7 +590,7 @@ public final class ZDD {
         return zdd;
     }
 
-    static ZDD intersection(final ZDDPredicateCache eq, final ZDDOperationCache in, final ZDD... zdds)
+    static ZDD intersection(final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDD... zdds)
     {
         final int l = zdds.length;
 
@@ -600,7 +615,7 @@ public final class ZDD {
         return BOT;
     }
 
-    static ZDD intersection(final ZDDPredicateCache eq, final ZDDOperationCache in, final ZDD zdd1, final ZDD zdd2)
+    static ZDD intersection(final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -641,7 +656,7 @@ public final class ZDD {
         return zdd;
     }
 
-    private static ZDD intersectionTop(final ZDDOperationCache in, final ZDD zdd1)
+    private static ZDD intersectionTop(final ZDDCacheOperation in, final ZDD zdd1)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -661,7 +676,7 @@ public final class ZDD {
         return zdd;
     }
 
-    static ZDD difference(final ZDDPredicateCache eq, final ZDDOperationCache di, final ZDD zdd1, final ZDD zdd2)
+    static ZDD difference(final ZDDCachePredicate eq, final ZDDCacheOperation di, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -703,7 +718,7 @@ public final class ZDD {
         return zdd;
     }
 
-    private static ZDD differenceTop(final ZDDOperationCache di, final ZDD zdd1)
+    private static ZDD differenceTop(final ZDDCacheOperation di, final ZDD zdd1)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -723,7 +738,7 @@ public final class ZDD {
         return zdd;
     }
 
-    private static ZDD topDifference(final ZDDOperationCache di, final ZDD zdd2)
+    private static ZDD topDifference(final ZDDCacheOperation di, final ZDD zdd2)
     {
         if (zdd2 == BOT) {
             return TOP;
@@ -743,7 +758,7 @@ public final class ZDD {
         return zdd;
     }
 
-    static ZDD crossUnion(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final ZDD... zdds)
+    static ZDD crossUnion(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final ZDD... zdds)
     {
         final int l = zdds.length;
 
@@ -768,7 +783,7 @@ public final class ZDD {
         return TOP;
     }
 
-    static ZDD crossUnion(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final ZDD zdd1, final ZDD zdd2)
+    static ZDD crossUnion(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -807,7 +822,7 @@ public final class ZDD {
         return zdd;
     }
 
-    static ZDD set(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final long... xs)
+    static ZDD set(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long... xs)
     {
         final ZDD[] zdd = new ZDD[xs.length];
 
@@ -818,7 +833,7 @@ public final class ZDD {
         return crossUnion(eq, cu, un, zdd);
     }
 
-    static ZDD crossIntersection(final ZDDPredicateCache eq, final ZDDOperationCache ci, final ZDDOperationCache un, final ZDD... zdds)
+    static ZDD crossIntersection(final ZDDCachePredicate eq, final ZDDCacheOperation ci, final ZDDCacheOperation un, final ZDD... zdds)
     {
         final int l = zdds.length;
 
@@ -843,7 +858,7 @@ public final class ZDD {
         return TOP;
     }
 
-    static ZDD crossIntersection(final ZDDPredicateCache eq, final ZDDOperationCache ci, final ZDDOperationCache un, final ZDD zdd1, final ZDD zdd2)
+    static ZDD crossIntersection(final ZDDCachePredicate eq, final ZDDCacheOperation ci, final ZDDCacheOperation un, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -882,7 +897,7 @@ public final class ZDD {
         return zdd;
     }
 
-    static ZDD crossDifference(final ZDDPredicateCache eq, final ZDDOperationCache cd, final ZDDOperationCache un, final ZDD zdd1, final ZDD zdd2)
+    static ZDD crossDifference(final ZDDCachePredicate eq, final ZDDCacheOperation cd, final ZDDCacheOperation un, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -921,7 +936,7 @@ public final class ZDD {
         return zdd;
     }
 
-    static boolean equals(final ZDDPredicateCache eq, final ZDD zdd1, final ZDD zdd2)
+    static boolean equals(final ZDDCachePredicate eq, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == zdd2) {
             return true;

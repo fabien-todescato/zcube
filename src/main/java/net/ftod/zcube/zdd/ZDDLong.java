@@ -68,11 +68,11 @@ public final class ZDDLong {
 
     public static ZDDNumber sumSubtrees(final Iterator<ZDDLong> i)
     {
-        final ZDDPredicateCache _equ = new ZDDPredicateCache();
-        final ZDDOperationCache _cru = new ZDDOperationCache();
-        final ZDDOperationCache _uni = new ZDDOperationCache();
-        final ZDDOperationCache _int = new ZDDOperationCache();
-        final ZDDOperationCache _dif = new ZDDOperationCache();
+        final ZDDCachePredicate _equ = new ZDDCachePredicate();
+        final ZDDCacheOperation _cru = new ZDDCacheOperation();
+        final ZDDCacheOperation _uni = new ZDDCacheOperation();
+        final ZDDCacheOperation _int = new ZDDCacheOperation();
+        final ZDDCacheOperation _dif = new ZDDCacheOperation();
 
         ZDDNumber zn = null;
 
@@ -86,11 +86,11 @@ public final class ZDDLong {
 
     public static ZDDNumber sumSubtrees(final ZDD filter, final Iterator<ZDDLong> i)
     {
-        final ZDDPredicateCache _equ = new ZDDPredicateCache();
-        final ZDDOperationCache _cru = new ZDDOperationCache();
-        final ZDDOperationCache _uni = new ZDDOperationCache();
-        final ZDDOperationCache _int = new ZDDOperationCache();
-        final ZDDOperationCache _dif = new ZDDOperationCache();
+        final ZDDCachePredicate _equ = new ZDDCachePredicate();
+        final ZDDCacheOperation _cru = new ZDDCacheOperation();
+        final ZDDCacheOperation _uni = new ZDDCacheOperation();
+        final ZDDCacheOperation _int = new ZDDCacheOperation();
+        final ZDDCacheOperation _dif = new ZDDCacheOperation();
 
         ZDDNumber zn = null;
 
@@ -159,11 +159,11 @@ public final class ZDDLong {
 
 final class PSum {
 
-    private final ZDDPredicateCache _equ = new ZDDPredicateCache();
-    private final ZDDOperationCache _cru = new ZDDOperationCache();
-    private final ZDDOperationCache _uni = new ZDDOperationCache();
-    private final ZDDOperationCache _int = new ZDDOperationCache();
-    private final ZDDOperationCache _dif = new ZDDOperationCache();
+    private final ZDDCachePredicate _equ = new ZDDCachePredicate();
+    private final ZDDCacheOperation _cru = new ZDDCacheOperation();
+    private final ZDDCacheOperation _uni = new ZDDCacheOperation();
+    private final ZDDCacheOperation _int = new ZDDCacheOperation();
+    private final ZDDCacheOperation _dif = new ZDDCacheOperation();
 
     ZDDNumber zn = null;
 

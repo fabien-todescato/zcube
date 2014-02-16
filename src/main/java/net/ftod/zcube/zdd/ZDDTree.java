@@ -24,13 +24,13 @@ public abstract class ZDDTree {
     public static final ZDDTree BOT = new ZDDTree() {
 
         @Override
-        protected ZDD trees(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final long h)
+        protected ZDD trees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
         {
             return ZDD.BOT;
         }
 
         @Override
-        protected ZDD subtrees(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final long h)
+        protected ZDD subtrees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
         {
             return ZDD.BOT;
         }
@@ -53,13 +53,13 @@ public abstract class ZDDTree {
     public static final ZDDTree TOP = new ZDDTree() {
 
         @Override
-        protected ZDD trees(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final long h)
+        protected ZDD trees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
         {
             return ZDD.TOP;
         }
 
         @Override
-        protected ZDD subtrees(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final long h)
+        protected ZDD subtrees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
         {
             return ZDD.TOP;
         }
@@ -177,10 +177,10 @@ public abstract class ZDDTree {
      */
     public static ZDD trees(final ZDDTree t)
     {
-        return trees(t, new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache());
+        return trees(t, new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation());
     }
 
-    static ZDD trees(final ZDDTree t, final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un)
+    static ZDD trees(final ZDDTree t, final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un)
     {
         return t.trees(eq, cu, un, 1L);
     }
@@ -198,10 +198,10 @@ public abstract class ZDDTree {
      */
     public static ZDD unionTrees(final Collection<ZDDTree> ts)
     {
-        return unionTrees(ts, new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache());
+        return unionTrees(ts, new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation());
     }
 
-    static ZDD unionTrees(final Collection<ZDDTree> ts, final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un)
+    static ZDD unionTrees(final Collection<ZDDTree> ts, final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un)
     {
         final int n = ts.size();
         final ZDD[] zs = new ZDD[n];
@@ -224,10 +224,10 @@ public abstract class ZDDTree {
      */
     public static ZDD subtrees(final ZDDTree t)
     {
-        return subtrees(t, new ZDDPredicateCache(), new ZDDOperationCache(), new ZDDOperationCache());
+        return subtrees(t, new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation());
     }
 
-    static ZDD subtrees(final ZDDTree t, final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un)
+    static ZDD subtrees(final ZDDTree t, final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un)
     {
         return t.subtrees(eq, cu, un, 1L);
     }
@@ -243,19 +243,19 @@ public abstract class ZDDTree {
      */
     public static ZDD subtrees(final ZDD z, final ZDDTree t)
     {
-        final ZDDPredicateCache eq = new ZDDPredicateCache();
-        final ZDDOperationCache cu = new ZDDOperationCache();
-        final ZDDOperationCache un = new ZDDOperationCache();
-        final ZDDOperationCache in = new ZDDOperationCache();
+        final ZDDCachePredicate eq = new ZDDCachePredicate();
+        final ZDDCacheOperation cu = new ZDDCacheOperation();
+        final ZDDCacheOperation un = new ZDDCacheOperation();
+        final ZDDCacheOperation in = new ZDDCacheOperation();
 
         return ZDD.intersection(eq, in, z, subtrees(t, eq, cu, un));
     }
 
-    protected abstract ZDD trees(ZDDPredicateCache eq, ZDDOperationCache cu, ZDDOperationCache un, long h);
+    protected abstract ZDD trees(ZDDCachePredicate eq, ZDDCacheOperation cu, ZDDCacheOperation un, long h);
 
-    protected abstract ZDD subtrees(ZDDPredicateCache eq, ZDDOperationCache cu, ZDDOperationCache un, long h);
+    protected abstract ZDD subtrees(ZDDCachePredicate eq, ZDDCacheOperation cu, ZDDCacheOperation un, long h);
 
-    protected static final ZDD[] mapTrees(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final long h, final ZDDTree[] ts)
+    protected static final ZDD[] mapTrees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h, final ZDDTree[] ts)
     {
         final int n = ts.length;
         final ZDD[] zdds = new ZDD[n];
@@ -267,7 +267,7 @@ public abstract class ZDDTree {
         return zdds;
     }
 
-    protected static final ZDD[] mapSubtrees(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final long h, final ZDDTree[] ts)
+    protected static final ZDD[] mapSubtrees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h, final ZDDTree[] ts)
     {
         final int n = ts.length;
         final ZDD[] zdds = new ZDD[n];
@@ -405,7 +405,7 @@ final class ZDDTreePrefix extends ZDDTree {
     }
 
     @Override
-    protected ZDD trees(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final long h)
+    protected ZDD trees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
     {
         final long h1 = ZDD.djb2(h, prefix);
 
@@ -413,7 +413,7 @@ final class ZDDTreePrefix extends ZDDTree {
     }
 
     @Override
-    protected ZDD subtrees(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final long h)
+    protected ZDD subtrees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
     {
         final long h1 = ZDD.djb2(h, prefix);
 
@@ -449,13 +449,13 @@ final class ZDDTreeCross extends ZDDTree {
     }
 
     @Override
-    protected ZDD trees(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final long h)
+    protected ZDD trees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
     {
         return ZDD.crossUnion(eq, cu, un, mapTrees(eq, cu, un, h, ts));
     }
 
     @Override
-    protected ZDD subtrees(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final long h)
+    protected ZDD subtrees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
     {
         return ZDD.crossUnion(eq, cu, un, mapSubtrees(eq, cu, un, h, ts));
     }
@@ -489,13 +489,13 @@ final class ZDDTreeSum extends ZDDTree {
     }
 
     @Override
-    protected ZDD trees(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final long h)
+    protected ZDD trees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
     {
         return ZDD.union(eq, un, mapTrees(eq, cu, un, h, ts));
     }
 
     @Override
-    protected ZDD subtrees(final ZDDPredicateCache eq, final ZDDOperationCache cu, final ZDDOperationCache un, final long h)
+    protected ZDD subtrees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
     {
         return ZDD.union(eq, un, mapSubtrees(eq, cu, un, h, ts));
     }

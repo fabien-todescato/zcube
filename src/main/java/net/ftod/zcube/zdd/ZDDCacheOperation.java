@@ -9,7 +9,7 @@ package net.ftod.zcube.zdd;
  * 
  * @author <a href="mailto:fabien.todescato@gmail.com">Fabien Todescato</a>
  */
-final class ZDDOperationCache {
+final class ZDDCacheOperation {
 
     private static final int POWER = 5;
     private static final int SIZE = 1 << POWER;
@@ -27,7 +27,7 @@ final class ZDDOperationCache {
         return 1 + 31 * (zdd1.h + 31 * zdd2.h) & MAX;
     }
 
-    ZDDOperationCache() {
+    ZDDCacheOperation() {
         super();
     }
 
