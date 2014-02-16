@@ -9,12 +9,12 @@ import java.util.concurrent.TimeUnit;
 
 public final class ZDDLongPSum {
 
-    public static ZDDNumber reduce(final Iterable<ZDDLong> i)
+    public static ZDDNumber sumSubtrees(final Iterable<ZDDLong> i)
     {
-        return reduce(i.iterator());
+        return sumSubtrees(i.iterator());
     }
 
-    public static ZDDNumber reduce(final Iterator<ZDDLong> i)
+    public static ZDDNumber sumSubtrees(final Iterator<ZDDLong> i)
     {
         final int processors = Runtime.getRuntime().availableProcessors();
         final int sums = 2 * processors;
@@ -29,52 +29,122 @@ public final class ZDDLongPSum {
         try {
 
             while (i.hasNext()) {
-                threadPool.submit(new Runnable() {
-
-                    private final ZDDLongPSum pSum = pSumQueue.take();
-                    private final ZDDLong zl = i.next();
-
-                    @Override
-                    public void run()
-                    {
-                        pSum.addSubtrees(zl);
-                        try {
-                            pSumQueue.put(pSum);
-                        } catch (final InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
+                threadPool.submit(sumTask(pSumQueue, i.next()));
             }
 
             threadPool.shutdown();
             threadPool.awaitTermination(100L, TimeUnit.MILLISECONDS);
 
-            return ZDDNumber.negabinaryAdd(new Iterator<ZDDNumber>() {
-
-                private final Iterator<ZDDLongPSum> i = pSumQueue.iterator();
-
-                @Override
-                public boolean hasNext()
-                {
-                    return i.hasNext();
-                }
-
-                @Override
-                public ZDDNumber next()
-                {
-                    return i.next().zn;
-                }
-
-                @Override
-                public void remove()
-                {
-                    throw new UnsupportedOperationException();
-                }
-            });
+            return sum(pSumQueue);
         } catch (final InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static Runnable sumTask(final BlockingQueue<ZDDLongPSum> pSumQueue, final ZDDLong zl)
+    {
+        final ZDDLongPSum pSum;
+
+        try {
+            pSum = pSumQueue.take();
+        } catch (final InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return new Runnable() {
+            @Override
+            public void run()
+            {
+                pSum.addSubtrees(zl);
+                try {
+                    pSumQueue.put(pSum);
+                } catch (final InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+    }
+
+    public static ZDDNumber sumSubtrees(final ZDD filter, final Iterable<ZDDLong> i)
+    {
+        return sumSubtrees(filter, i.iterator());
+    }
+
+    public static ZDDNumber sumSubtrees(final ZDD filter, final Iterator<ZDDLong> i)
+    {
+        final int processors = Runtime.getRuntime().availableProcessors();
+        final int sums = 2 * processors;
+
+        final ExecutorService threadPool = Executors.newFixedThreadPool(processors);
+        final BlockingQueue<ZDDLongPSum> pSumQueue = new ArrayBlockingQueue<ZDDLongPSum>(sums);
+
+        for (int j = 0; j < sums; ++j) {
+            pSumQueue.offer(new ZDDLongPSum());
+        }
+
+        try {
+
+            while (i.hasNext()) {
+                threadPool.submit(sumTask(filter, pSumQueue, i.next()));
+            }
+
+            threadPool.shutdown();
+            threadPool.awaitTermination(100L, TimeUnit.MILLISECONDS);
+
+            return sum(pSumQueue);
+        } catch (final InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Runnable sumTask(final ZDD filter, final BlockingQueue<ZDDLongPSum> pSumQueue, final ZDDLong zl)
+    {
+        final ZDDLongPSum pSum;
+
+        try {
+            pSum = pSumQueue.take();
+        } catch (final InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return new Runnable() {
+            @Override
+            public void run()
+            {
+                pSum.addSubtrees(filter, zl);
+                try {
+                    pSumQueue.put(pSum);
+                } catch (final InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+    }
+
+    private static ZDDNumber sum(final BlockingQueue<ZDDLongPSum> pSumQueue)
+    {
+        final Iterator<ZDDLongPSum> i = pSumQueue.iterator();
+
+        return ZDDNumber.negabinaryAdd(new Iterator<ZDDNumber>() {
+
+            @Override
+            public boolean hasNext()
+            {
+                return i.hasNext();
+            }
+
+            @Override
+            public ZDDNumber next()
+            {
+                return i.next().zn;
+            }
+
+            @Override
+            public void remove()
+            {
+                throw new UnsupportedOperationException();
+            }
+        });
     }
 
     private final ZDDCachePredicate _equ = new ZDDCachePredicate();
@@ -92,6 +162,11 @@ public final class ZDDLongPSum {
     private void addSubtrees(final ZDDLong zl)
     {
         zn = ZDDNumber.addSubtrees(zl.l, zl.t, zn, _equ, _cru, _uni, _int, _dif);
+    }
+
+    private void addSubtrees(final ZDD filter, final ZDDLong zl)
+    {
+        zn = ZDDNumber.addSubtrees(zl.l, zl.t, filter, zn, _equ, _cru, _uni, _int, _dif);
     }
 
 }
