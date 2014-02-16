@@ -370,18 +370,4 @@ public final class ZDDNumber {
         return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(l, ZDD.intersection(_equ, _int, filter, ZDD.trees(_equ, _cru, _uni, trees))), zn);
     }
 
-    public static String sizes(final ZDDNumber n)
-    {
-        final StringBuilder sb = new StringBuilder();
-        sb.append('[');
-        if (n != null) {
-            sb.append(n.digit.s);
-            for (ZDDNumber n1 = n.number; n1 != null; n1 = n1.number) {
-                sb.append(',');
-                sb.append(n1.digit.s);
-            }
-        }
-        sb.append(']');
-        return sb.toString();
-    }
 }
