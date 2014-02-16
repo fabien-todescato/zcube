@@ -3,8 +3,8 @@ package net.ftod.zcube;
 import static net.ftod.zcube.zdd.ZDD.BOT;
 import static net.ftod.zcube.zdd.ZDD.TOP;
 import static net.ftod.zcube.zdd.ZDD.singleton;
-import static net.ftod.zcube.zdd.ZDDTree.path;
 import static net.ftod.zcube.zdd.ZDDTree.cross;
+import static net.ftod.zcube.zdd.ZDDTree.path;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -261,25 +261,25 @@ public class ZDDTest {
             @Override
             protected <Void> Void expression()
             {
-                assertEquals(1L, trees(new String[] {}).s);
-                assertEquals(1L, subtrees(ZDDTree.TOP).s);
+                assertEquals(1L, ZDD.size(trees(new String[] {})));
+                assertEquals(1L, ZDD.size(subtrees(ZDDTree.TOP)));
 
-                assertEquals(2L, trees("a").s);
-                assertEquals(2L, subtrees(path("a")).s);
-                assertEquals(3L, trees("a", "b").s);
-                assertEquals(3L, subtrees(path("a", "b")).s);
+                assertEquals(2L, ZDD.size(trees("a")));
+                assertEquals(2L, ZDD.size(subtrees(path("a"))));
+                assertEquals(3L, ZDD.size(trees("a", "b")));
+                assertEquals(3L, ZDD.size(subtrees(path("a", "b"))));
 
-                assertEquals(4L, trees("a", "b", "c").s);
-                assertEquals(4L, subtrees(path("a", "b", "c")).s);
+                assertEquals(4L, ZDD.size(trees("a", "b", "c")));
+                assertEquals(4L, ZDD.size(subtrees(path("a", "b", "c"))));
 
-                assertEquals(4L, trees(array("a", "b", "c"), array("a", "b", "c")).s);
-                assertEquals(4L, subtrees(cross(path("a", "b", "c"), path("a", "b", "c"))).s);
+                assertEquals(4L, ZDD.size(trees(array("a", "b", "c"), array("a", "b", "c"))));
+                assertEquals(4L, ZDD.size(subtrees(cross(path("a", "b", "c"), path("a", "b", "c")))));
 
-                assertEquals(6L, trees(array("a", "b", "c"), array("a", "b", "d")).s);
-                assertEquals(6L, subtrees(cross(path("a", "b", "c"), path("a", "b", "d"))).s);
+                assertEquals(6L, ZDD.size(trees(array("a", "b", "c"), array("a", "b", "d"))));
+                assertEquals(6L, ZDD.size(subtrees(cross(path("a", "b", "c"), path("a", "b", "d")))));
 
-                assertEquals(10L, trees(array("a", "b", "c"), array("a", "b", "d"), array("a", "b", "e")).s);
-                assertEquals(10L, subtrees(cross(path("a", "b", "c"), path("a", "b", "d"), path("a", "b", "e"))).s);
+                assertEquals(10L, ZDD.size(trees(array("a", "b", "c"), array("a", "b", "d"), array("a", "b", "e"))));
+                assertEquals(10L, ZDD.size(subtrees(cross(path("a", "b", "c"), path("a", "b", "d"), path("a", "b", "e")))));
 
                 return null;
             }

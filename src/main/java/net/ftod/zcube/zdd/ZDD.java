@@ -21,30 +21,27 @@ public final class ZDD {
     /**
      * The empty set.
      */
-    public static final ZDD BOT = new ZDD(0L, null, null, 1, 0L);
+    public static final ZDD BOT = new ZDD(0L, null, null, 1);
     /**
      * The singleton set holding the empty set.
      */
-    public static final ZDD TOP = new ZDD(0L, null, null, 2, 1L);
+    public static final ZDD TOP = new ZDD(0L, null, null, 2);
 
     public final long x;
     public final ZDD b;
     public final ZDD t;
-
     public final int h;
-    public final long s;
 
-    private ZDD(final long x, final ZDD b, final ZDD t, final int h, final long s) {
+    private ZDD(final long x, final ZDD b, final ZDD t, final int h) {
         super();
         this.x = x;
         this.b = b;
         this.t = t;
         this.h = h;
-        this.s = s;
     }
 
     private ZDD(final long x, final ZDD b, final ZDD t) {
-        this(x, b, t, hash(x, b, t), b.s + t.s);
+        this(x, b, t, hash(x, b, t));
     }
 
     private static int hash(final long x, final ZDD b, final ZDD t)
@@ -63,6 +60,18 @@ public final class ZDD {
         }
 
         return new ZDD(x, b, t);
+    }
+
+    public static long size(final ZDD z)
+    {
+        if (z == BOT) {
+            return 0L;
+        }
+        if (z == TOP) {
+            return 1L;
+        }
+        // TODO Cache size computation for shared subgraphs...
+        return size(z.b) + size(z.t);
     }
 
     /**
@@ -474,8 +483,6 @@ public final class ZDD {
         }
         builder.append("h=");
         builder.append(h);
-        builder.append(", s=");
-        builder.append(s);
         builder.append("]");
         return builder.toString();
     }
