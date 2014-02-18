@@ -1,5 +1,7 @@
 package net.ftod.zcube.zdd;
 
+import static net.ftod.zcube.zdd.ZDD.CACHE_SIZE;
+
 /**
  * <h3>Caching binary predicates</h3>
  * 
@@ -11,20 +13,16 @@ package net.ftod.zcube.zdd;
  */
 final class ZDDCachePredicate {
 
-    private static final int POWER = 5;
-    private static final int SIZE = 1 << POWER;
-    private static final int MAX = SIZE - 1;
-
     private long hit = 0;
     private long miss = 0;
 
-    private final ZDD[] _zdd1 = new ZDD[SIZE];
-    private final ZDD[] _zdd2 = new ZDD[SIZE];
-    private final Boolean[] _bool = new Boolean[SIZE];
+    private final ZDD[] _zdd1 = new ZDD[CACHE_SIZE];
+    private final ZDD[] _zdd2 = new ZDD[CACHE_SIZE];
+    private final boolean[] _bool = new boolean[CACHE_SIZE];
 
     private static int index(final ZDD zdd1, final ZDD zdd2)
     {
-        return 1 + 31 * (zdd1.h + 31 * zdd2.h) & MAX;
+        return 1 + 31 * (zdd1.h + 31 * zdd2.h) & ZDD.CACHE_MAX;
     }
 
     ZDDCachePredicate() {
@@ -41,7 +39,7 @@ final class ZDDCachePredicate {
         }
 
         ++hit;
-        return _bool[index];
+        return Boolean.valueOf(_bool[index]);
     }
 
     void put(final ZDD zdd1, final ZDD zdd2, final boolean zdd3)
@@ -50,7 +48,7 @@ final class ZDDCachePredicate {
 
         _zdd1[index] = zdd1;
         _zdd2[index] = zdd2;
-        _bool[index] = Boolean.valueOf(zdd3);
+        _bool[index] = zdd3;
     }
 
     long hit()

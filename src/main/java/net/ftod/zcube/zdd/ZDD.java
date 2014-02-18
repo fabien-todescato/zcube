@@ -18,6 +18,10 @@ import java.util.Iterator;
  */
 public final class ZDD {
 
+    static final int CACHE_POWER = 5;
+    static final int CACHE_SIZE = 1 << CACHE_POWER;
+    static final int CACHE_MAX = CACHE_SIZE - 1;
+
     /**
      * The empty set.
      */

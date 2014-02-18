@@ -1,5 +1,8 @@
 package net.ftod.zcube.zdd;
 
+import static net.ftod.zcube.zdd.ZDD.CACHE_MAX;
+import static net.ftod.zcube.zdd.ZDD.CACHE_SIZE;
+
 /**
  * <h3>Caching <code>ZDD->long</code> functions</h3>
  * 
@@ -11,19 +14,15 @@ package net.ftod.zcube.zdd;
  */
 final class ZDDCacheLong {
 
-    private static final int POWER = 5;
-    private static final int SIZE = 1 << POWER;
-    private static final int MAX = SIZE - 1;
-
     private long hit = 0;
     private long miss = 0;
 
-    private final ZDD[] _z = new ZDD[SIZE];
-    private final long[] _l = new long[SIZE];
+    private final ZDD[] _z = new ZDD[CACHE_SIZE];
+    private final long[] _l = new long[CACHE_SIZE];
 
     private static int index(final ZDD z)
     {
-        return z.h & MAX;
+        return z.h & CACHE_MAX;
     }
 
     ZDDCacheLong() {

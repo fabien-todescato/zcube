@@ -1,5 +1,8 @@
 package net.ftod.zcube.zdd;
 
+import static net.ftod.zcube.zdd.ZDD.CACHE_MAX;
+import static net.ftod.zcube.zdd.ZDD.CACHE_SIZE;
+
 /**
  * <h3>Caching binary operations</h3>
  * 
@@ -11,20 +14,16 @@ package net.ftod.zcube.zdd;
  */
 final class ZDDCacheOperation {
 
-    private static final int POWER = 5;
-    private static final int SIZE = 1 << POWER;
-    private static final int MAX = SIZE - 1;
-
     private long hit = 0;
     private long miss = 0;
 
-    private final ZDD[] _zdd1 = new ZDD[SIZE];
-    private final ZDD[] _zdd2 = new ZDD[SIZE];
-    private final ZDD[] _zdd3 = new ZDD[SIZE];
+    private final ZDD[] _zdd1 = new ZDD[CACHE_SIZE];
+    private final ZDD[] _zdd2 = new ZDD[CACHE_SIZE];
+    private final ZDD[] _zdd3 = new ZDD[CACHE_SIZE];
 
     private static int index(final ZDD zdd1, final ZDD zdd2)
     {
-        return 1 + 31 * (zdd1.h + 31 * zdd2.h) & MAX;
+        return 1 + 31 * (zdd1.h + 31 * zdd2.h) & CACHE_MAX;
     }
 
     ZDDCacheOperation() {
