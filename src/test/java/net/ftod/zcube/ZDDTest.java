@@ -178,10 +178,10 @@ public class ZDDTest {
                 assertEqual("Idempotent", set(1L, 2L), intersection(set(1L, 2L), set(1L, 2L)));
                 assertEqual("Idempotent", set(1L, 2L, 3L), intersection(set(1L, 2L, 3L), set(1L, 2L, 3L)));
 
-                assertEqual("Absoption", union(TOP, set(1L)), intersection(union(set(1L), set(2L), TOP), union(set(1L), set(3L), TOP)));
-                assertEqual("Absoption", set(1L), intersection(union(set(1L), set(2L)), union(set(1L), set(3L))));
-                assertEqual("Absoption", set(2L), intersection(union(set(1L), set(2L)), union(set(2L), set(3L))));
-                assertEqual("Absoption", set(1L, 2L), intersection(union(set(1L, 2L), set(2L, 3L)), union(set(1L, 2L), set(3L, 4L))));
+                assertEqual("Absorption", union(TOP, set(1L)), intersection(union(set(1L), set(2L), TOP), union(set(1L), set(3L), TOP)));
+                assertEqual("Absorption", set(1L), intersection(union(set(1L), set(2L)), union(set(1L), set(3L))));
+                assertEqual("Absorption", set(2L), intersection(union(set(1L), set(2L)), union(set(2L), set(3L))));
+                assertEqual("Absorption", set(1L, 2L), intersection(union(set(1L, 2L), set(2L, 3L)), union(set(1L, 2L), set(3L, 4L))));
 
                 assertEqual("Disjoint", BOT, intersection(union(set(1L, 2L), set(2L, 3L)), union(set(3L, 4L), set(5L, 6L))));
 

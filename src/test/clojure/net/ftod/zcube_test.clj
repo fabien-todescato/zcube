@@ -16,6 +16,22 @@
       ( = 10 ( ( z/count-trees ( z/path "a" "b" "d" ) ) zn ) )
     ) ) ) )
 
+( deftest test-p-sum-group-by-1 ; Linear trees example
+  ( is
+    ( =
+      ( z/p-sum-group-by
+        [ ( z/path "a" ) ;  15
+        , ( z/path "a" "b" ) ; 15 
+        , ( z/path "a" "b" "c" ) ; 5
+        , ( z/path "a" "b" "d" ) ; 10
+        ]
+        [ ( z/times  5 ( z/path "a" "b" "c" ) )
+        , ( z/times 10 ( z/path "a" "b" "d" ) )
+        ]
+      )
+      [ 15 15 5 10 ]
+    ) ) )
+
 ( deftest test-sum-2 ; Branching trees example
   ( is
     ( let [ zn ( z/sum-subtrees
@@ -23,11 +39,11 @@
                , ( z/times 1 ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) )
                ] ) ]
       ( and
-        ( =  2 ( ( z/count-trees ( z/path "a" ) ) zn ) )
-        ( =  2 ( ( z/count-trees ( z/path "a" "b" ) ) zn ) )
-        ( =  1 ( ( z/count-trees ( z/path "a" "c" ) ) zn ) )
+        ( =  2 ( ( z/count-trees ( z/path "a" )                                    ) zn ) )
+        ( =  2 ( ( z/count-trees ( z/path "a" "b" )                                ) zn ) )
+        ( =  1 ( ( z/count-trees ( z/path "a" "c" )                                ) zn ) )
         ( =  1 ( ( z/count-trees ( z/cross ( z/path "a" "b" ) ( z/path "a" "c" ) ) ) zn ) )
-        ( =  1 ( ( z/count-trees ( z/path "a" "d" ) ) zn ) )
+        ( =  1 ( ( z/count-trees ( z/path "a" "d" )                                ) zn ) )
         ( =  1 ( ( z/count-trees ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) ) zn ) )
       ) ) ) )
 

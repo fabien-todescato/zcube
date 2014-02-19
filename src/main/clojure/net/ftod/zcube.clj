@@ -119,3 +119,9 @@
   [ zls ]
   ( ZDDCube/pSumSubtrees ^Iterable zls )
 )
+
+( defn p-sum-group-by
+  "Sum a sequence of ZDDLong, silmultaneously grouping by a sequence of trees."
+  [ ts zls ]
+  ( seq ( ZDDCube/pSumGroupBy ( into-array ZDDTree ts ) ^Iterable zls ) )
+)

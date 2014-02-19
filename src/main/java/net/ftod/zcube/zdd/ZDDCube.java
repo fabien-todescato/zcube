@@ -9,6 +9,34 @@ import java.util.concurrent.TimeUnit;
 
 public final class ZDDCube {
 
+    public static long[] pSumGroupBy(final ZDDTree[] ts, final Iterable<ZDDLong> i)
+    {
+        final int n = ts.length;
+        final ZDD[] zs = new ZDD[n];
+        final ZDD u;
+        {
+            final ZDDCachePredicate eq = new ZDDCachePredicate();
+            final ZDDCacheOperation cu = new ZDDCacheOperation();
+            final ZDDCacheOperation un = new ZDDCacheOperation();
+
+            for (int j = 0; j < n; ++j) {
+                zs[j] = ZDDTree.trees(ts[j], eq, cu, un);
+            }
+
+            u = ZDD.union(eq, un, zs);
+        }
+
+        final ZDDNumber zn = pSumSubtrees(u, i);
+
+        final long[] ls = new long[n];
+
+        for (int j = 0; j < n; ++j) {
+            ls[j] = ZDDNumber.negabinary(zn, zs[j]);
+        }
+
+        return ls;
+    }
+
     public static ZDDNumber pSumSubtrees(final Iterable<ZDDLong> i)
     {
         return pSumSubtrees(i.iterator());
@@ -159,6 +187,12 @@ public final class ZDDCube {
 
     private ZDDNumber _sumSubtrees(final Iterator<ZDDLong> i)
     {
+        final ZDDCachePredicate _equ = new ZDDCachePredicate();
+        final ZDDCacheOperation _cru = new ZDDCacheOperation();
+        final ZDDCacheOperation _uni = new ZDDCacheOperation();
+        final ZDDCacheOperation _int = new ZDDCacheOperation();
+        final ZDDCacheOperation _dif = new ZDDCacheOperation();
+
         ZDDNumber zn = null;
 
         while (i.hasNext()) {
@@ -181,6 +215,12 @@ public final class ZDDCube {
 
     private ZDDNumber _sumSubtrees(final ZDD filter, final Iterator<ZDDLong> i)
     {
+        final ZDDCachePredicate _equ = new ZDDCachePredicate();
+        final ZDDCacheOperation _cru = new ZDDCacheOperation();
+        final ZDDCacheOperation _uni = new ZDDCacheOperation();
+        final ZDDCacheOperation _int = new ZDDCacheOperation();
+        final ZDDCacheOperation _dif = new ZDDCacheOperation();
+
         ZDDNumber zn = null;
 
         while (i.hasNext()) {
@@ -191,12 +231,6 @@ public final class ZDDCube {
         return zn;
     }
 
-    private final ZDDCachePredicate _equ = new ZDDCachePredicate();
-    private final ZDDCacheOperation _cru = new ZDDCacheOperation();
-    private final ZDDCacheOperation _uni = new ZDDCacheOperation();
-    private final ZDDCacheOperation _int = new ZDDCacheOperation();
-    private final ZDDCacheOperation _dif = new ZDDCacheOperation();
-
     private ZDDNumber zn = null;
 
     private ZDDCube() {
@@ -205,11 +239,23 @@ public final class ZDDCube {
 
     private void addSubtrees(final ZDDLong zl)
     {
+        final ZDDCachePredicate _equ = new ZDDCachePredicate();
+        final ZDDCacheOperation _cru = new ZDDCacheOperation();
+        final ZDDCacheOperation _uni = new ZDDCacheOperation();
+        final ZDDCacheOperation _int = new ZDDCacheOperation();
+        final ZDDCacheOperation _dif = new ZDDCacheOperation();
+
         zn = ZDDNumber.addSubtrees(zl.l, zl.t, zn, _equ, _cru, _uni, _int, _dif);
     }
 
     private void addSubtrees(final ZDD filter, final ZDDLong zl)
     {
+        final ZDDCachePredicate _equ = new ZDDCachePredicate();
+        final ZDDCacheOperation _cru = new ZDDCacheOperation();
+        final ZDDCacheOperation _uni = new ZDDCacheOperation();
+        final ZDDCacheOperation _int = new ZDDCacheOperation();
+        final ZDDCacheOperation _dif = new ZDDCacheOperation();
+
         zn = ZDDNumber.addSubtrees(zl.l, zl.t, filter, zn, _equ, _cru, _uni, _int, _dif);
     }
 

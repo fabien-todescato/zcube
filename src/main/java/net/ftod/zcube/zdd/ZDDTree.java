@@ -196,20 +196,18 @@ public abstract class ZDDTree {
      *            the {@link Collection} of {@link ZDDTree}
      * @return the set of the trees represented as a {@link ZDD}
      */
-    public static ZDD unionTrees(final Collection<ZDDTree> ts)
+    public static ZDD unionTrees(final ZDDTree... ts)
     {
         return unionTrees(ts, new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation());
     }
 
-    static ZDD unionTrees(final Collection<ZDDTree> ts, final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un)
+    static ZDD unionTrees(final ZDDTree[] ts, final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un)
     {
-        final int n = ts.size();
+        final int n = ts.length;
         final ZDD[] zs = new ZDD[n];
 
-        int i = 0;
-
-        for (final ZDDTree t : ts) {
-            zs[i++] = trees(t, eq, cu, un);
+        for (int i = 0; i < n; ++i) {
+            zs[i] = trees(ts[i], eq, cu, un);
         }
 
         return ZDD.union(eq, un, zs);

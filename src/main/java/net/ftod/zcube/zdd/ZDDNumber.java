@@ -323,7 +323,7 @@ public final class ZDDNumber {
 
     static ZDDNumber addSubtrees(final long l, final ZDDTree trees, final ZDD filter, final ZDDNumber zn, final ZDDCachePredicate _equ, final ZDDCacheOperation _cru, final ZDDCacheOperation _uni, final ZDDCacheOperation _int, final ZDDCacheOperation _dif)
     {
-        return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(l, ZDD.intersection(_equ, _int, filter, ZDDTree.trees(trees, _equ, _cru, _uni))), zn);
+        return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(l, ZDD.intersection(_equ, _int, filter, ZDDTree.subtrees(trees, _equ, _cru, _uni))), zn);
     }
 
     public static ZDDNumber addSubtrees(final long l, final Collection<Collection<Collection<String>>> trees, final ZDDNumber zn)
