@@ -261,24 +261,12 @@ public class ZDDTest {
             @Override
             protected <Void> Void expression()
             {
-                assertEquals(1L, ZDD.size(trees(new String[] {})));
                 assertEquals(1L, ZDD.size(subtrees(ZDDTree.TOP)));
-
-                assertEquals(2L, ZDD.size(trees("a")));
                 assertEquals(2L, ZDD.size(subtrees(path("a"))));
-                assertEquals(3L, ZDD.size(trees("a", "b")));
                 assertEquals(3L, ZDD.size(subtrees(path("a", "b"))));
-
-                assertEquals(4L, ZDD.size(trees("a", "b", "c")));
                 assertEquals(4L, ZDD.size(subtrees(path("a", "b", "c"))));
-
-                assertEquals(4L, ZDD.size(trees(array("a", "b", "c"), array("a", "b", "c"))));
                 assertEquals(4L, ZDD.size(subtrees(cross(path("a", "b", "c"), path("a", "b", "c")))));
-
-                assertEquals(6L, ZDD.size(trees(array("a", "b", "c"), array("a", "b", "d"))));
                 assertEquals(6L, ZDD.size(subtrees(cross(path("a", "b", "c"), path("a", "b", "d")))));
-
-                assertEquals(10L, ZDD.size(trees(array("a", "b", "c"), array("a", "b", "d"), array("a", "b", "e"))));
                 assertEquals(10L, ZDD.size(subtrees(cross(path("a", "b", "c"), path("a", "b", "d"), path("a", "b", "e")))));
 
                 return null;
@@ -295,10 +283,10 @@ public class ZDDTest {
             protected <Void> Void expression()
             {
                 {
-                    final ZDD z0 = trees(array("a", "b"), array("a", "c"));
-                    final ZDD z1 = trees("a");
-                    final ZDD z2 = trees("a", "b");
-                    final ZDD z3 = trees("a", "c");
+                    final ZDD z0 = subtrees(cross(path("a", "b"), path("a", "c")));
+                    final ZDD z1 = trees(path("a"));
+                    final ZDD z2 = trees(path("a", "b"));
+                    final ZDD z3 = trees(path("a", "c"));
 
                     ZDDNumber zn = ZDDNumber.ZERO;
                     long n = 0L;
@@ -315,11 +303,11 @@ public class ZDDTest {
                 }
 
                 {
-                    final ZDD zab = trees("a", "b");
-                    final ZDD zac = trees("a", "c");
-                    final ZDD zad = trees("a", "d");
-                    final ZDD zae = trees("a", "e");
-                    final ZDD zaf = trees("a", "f");
+                    final ZDD zab = subtrees(path("a", "b"));
+                    final ZDD zac = subtrees(path("a", "c"));
+                    final ZDD zad = subtrees(path("a", "d"));
+                    final ZDD zae = subtrees(path("a", "e"));
+                    final ZDD zaf = subtrees(path("a", "f"));
 
                     ZDDNumber zn = ZDDNumber.ZERO;
                     long n = 0L;
@@ -333,12 +321,12 @@ public class ZDDTest {
                         zn = binaryAdd(zn, binary(i, zaf));
                     }
 
-                    assertEquals(5L * n, binary(zn, tree("a")));
-                    assertEquals(n, binary(zn, tree("a", "b")));
-                    assertEquals(n, binary(zn, tree("a", "c")));
-                    assertEquals(n, binary(zn, tree("a", "d")));
-                    assertEquals(n, binary(zn, tree("a", "e")));
-                    assertEquals(n, binary(zn, tree("a", "f")));
+                    assertEquals(5L * n, binary(zn, trees(path("a"))));
+                    assertEquals(n, binary(zn, trees(path("a", "b"))));
+                    assertEquals(n, binary(zn, trees(path("a", "c"))));
+                    assertEquals(n, binary(zn, trees(path("a", "d"))));
+                    assertEquals(n, binary(zn, trees(path("a", "e"))));
+                    assertEquals(n, binary(zn, trees(path("a", "f"))));
                 }
 
                 return null;
