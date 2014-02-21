@@ -343,10 +343,10 @@ public class ZDDTest {
             protected <Void> Void expression()
             {
                 {
-                    final ZDD z0 = trees(array("a", "b"), array("a", "c"));
-                    final ZDD z1 = trees("a");
-                    final ZDD z2 = trees("a", "b");
-                    final ZDD z3 = trees("a", "c");
+                    final ZDD z0 = subtrees(cross(path("a", "b"), path("a", "c")));
+                    final ZDD z1 = subtrees(path("a"));
+                    final ZDD z2 = subtrees(path("a", "b"));
+                    final ZDD z3 = subtrees(path("a", "c"));
 
                     ZDDNumber zn = ZDDNumber.ZERO;
                     long n = 0L;
@@ -363,11 +363,11 @@ public class ZDDTest {
                 }
 
                 {
-                    final ZDD zab = trees("a", "b");
-                    final ZDD zac = trees("a", "c");
-                    final ZDD zad = trees("a", "d");
-                    final ZDD zae = trees("a", "e");
-                    final ZDD zaf = trees("a", "f");
+                    final ZDD zab = subtrees(path("a", "b"));
+                    final ZDD zac = subtrees(path("a", "c"));
+                    final ZDD zad = subtrees(path("a", "d"));
+                    final ZDD zae = subtrees(path("a", "e"));
+                    final ZDD zaf = subtrees(path("a", "f"));
 
                     ZDDNumber zn = ZDDNumber.ZERO;
                     long n = 0L;
@@ -381,12 +381,12 @@ public class ZDDTest {
                         zn = negabinaryAdd(zn, negabinary(i, zaf));
                     }
 
-                    assertEquals(5L * n, negabinary(zn, tree("a")));
-                    assertEquals(n, negabinary(zn, tree("a", "b")));
-                    assertEquals(n, negabinary(zn, tree("a", "c")));
-                    assertEquals(n, negabinary(zn, tree("a", "d")));
-                    assertEquals(n, negabinary(zn, tree("a", "e")));
-                    assertEquals(n, negabinary(zn, tree("a", "f")));
+                    assertEquals(5L * n, negabinary(zn, trees(path("a"))));
+                    assertEquals(n, negabinary(zn, trees(path("a", "b"))));
+                    assertEquals(n, negabinary(zn, trees(path("a", "c"))));
+                    assertEquals(n, negabinary(zn, trees(path("a", "d"))));
+                    assertEquals(n, negabinary(zn, trees(path("a", "e"))));
+                    assertEquals(n, negabinary(zn, trees(path("a", "f"))));
                 }
 
                 return null;
@@ -523,10 +523,5 @@ public class ZDDTest {
                 return null;
             }
         }.eval();
-    }
-
-    private static <T> T[] array(final T... ts)
-    {
-        return ts;
     }
 }
