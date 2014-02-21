@@ -4,6 +4,11 @@ import static net.ftod.zcube.zdd.ZDD.included;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <h1>Representing linear combination of sets over integers with {@link ZDD}</h1>
@@ -369,6 +374,190 @@ public final class ZDDNumber {
         final ZDDCacheOperation _dif = new ZDDCacheOperation();
 
         return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(l, ZDD.intersection(_equ, _int, filter, ZDD.trees(_equ, _cru, _uni, trees))), zn);
+    }
+
+    public static long[] pSumGroupBy(final ZDDTree[] ts, final Iterable<ZDDLong> i)
+    {
+        final int n = ts.length;
+        final ZDD[] zs = new ZDD[n];
+        final ZDD u;
+        {
+            final ZDDCachePredicate eq = new ZDDCachePredicate();
+            final ZDDCacheOperation cu = new ZDDCacheOperation();
+            final ZDDCacheOperation un = new ZDDCacheOperation();
+
+            for (int j = 0; j < n; ++j) {
+                zs[j] = ZDDTree.trees(ts[j], eq, cu, un);
+            }
+
+            u = ZDD.union(eq, un, zs);
+        }
+
+        final ZDDNumber zn = pSumSubtrees(u, i);
+
+        final long[] ls = new long[n];
+
+        for (int j = 0; j < n; ++j) {
+            ls[j] = negabinary(zn, zs[j]);
+        }
+
+        return ls;
+    }
+
+    public static ZDDNumber pSumSubtrees(final Iterable<ZDDLong> i)
+    {
+        return pSumSubtrees(i.iterator());
+    }
+
+    public static ZDDNumber pSumSubtrees(final Iterator<ZDDLong> i)
+    {
+        final int processors = Runtime.getRuntime().availableProcessors();
+        final int sums = 2 * processors;
+
+        final ExecutorService threads = Executors.newFixedThreadPool(processors);
+        final BlockingQueue<ZDDNumber> zns = new ArrayBlockingQueue<ZDDNumber>(sums);
+
+        for (int j = 0; j < sums; ++j) {
+            zns.offer(ZERO);
+        }
+
+        try {
+
+            while (i.hasNext()) {
+                threads.submit(sumTask(zns, i.next()));
+            }
+
+            threads.shutdown();
+            threads.awaitTermination(100L, TimeUnit.MILLISECONDS);
+
+            return negabinaryAdd(zns);
+        } catch (final InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Runnable sumTask(final BlockingQueue<ZDDNumber> zns, final ZDDLong zl)
+    {
+        final ZDDNumber zn;
+
+        try {
+            zn = zns.take();
+        } catch (final InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return new Runnable() {
+            @Override
+            public void run()
+            {
+                try {
+                    zns.put(addSubtrees(zl, zn));
+                } catch (final InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+    }
+
+    public static ZDDNumber pSumSubtrees(final ZDD filter, final Iterable<ZDDLong> i)
+    {
+        return pSumSubtrees(filter, i.iterator());
+    }
+
+    public static ZDDNumber pSumSubtrees(final ZDD filter, final Iterator<ZDDLong> i)
+    {
+        final int processors = Runtime.getRuntime().availableProcessors();
+        final int sums = 2 * processors;
+
+        final ExecutorService threads = Executors.newFixedThreadPool(processors);
+        final BlockingQueue<ZDDNumber> zns = new ArrayBlockingQueue<ZDDNumber>(sums);
+
+        for (int j = 0; j < sums; ++j) {
+            zns.offer(ZERO);
+        }
+
+        try {
+
+            while (i.hasNext()) {
+                threads.submit(sumTask(filter, zns, i.next()));
+            }
+
+            threads.shutdown();
+            threads.awaitTermination(100L, TimeUnit.MILLISECONDS);
+
+            return negabinaryAdd(zns);
+        } catch (final InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Runnable sumTask(final ZDD filter, final BlockingQueue<ZDDNumber> zns, final ZDDLong zl)
+    {
+        final ZDDNumber zn;
+
+        try {
+            zn = zns.take();
+        } catch (final InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return new Runnable() {
+            @Override
+            public void run()
+            {
+                try {
+                    zns.put(addSubtrees(zl, filter, zn));
+                } catch (final InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+    }
+
+    public static ZDDNumber sumSubtrees(final Iterable<ZDDLong> i)
+    {
+        return sumSubtrees(i.iterator());
+    }
+
+    public static ZDDNumber sumSubtrees(final Iterator<ZDDLong> i)
+    {
+        final ZDDCachePredicate _equ = new ZDDCachePredicate();
+        final ZDDCacheOperation _cru = new ZDDCacheOperation();
+        final ZDDCacheOperation _uni = new ZDDCacheOperation();
+        final ZDDCacheOperation _int = new ZDDCacheOperation();
+        final ZDDCacheOperation _dif = new ZDDCacheOperation();
+
+        ZDDNumber zn = ZERO;
+
+        while (i.hasNext()) {
+            final ZDDLong zl = i.next();
+            zn = addSubtrees(zl.l, zl.t, zn, _equ, _cru, _uni, _int, _dif);
+        }
+
+        return zn;
+    }
+
+    public static ZDDNumber sumSubtrees(final ZDD filter, final Iterable<ZDDLong> i)
+    {
+        return sumSubtrees(filter, i.iterator());
+    }
+
+    public static ZDDNumber sumSubtrees(final ZDD filter, final Iterator<ZDDLong> i)
+    {
+        final ZDDCachePredicate _equ = new ZDDCachePredicate();
+        final ZDDCacheOperation _cru = new ZDDCacheOperation();
+        final ZDDCacheOperation _uni = new ZDDCacheOperation();
+        final ZDDCacheOperation _int = new ZDDCacheOperation();
+        final ZDDCacheOperation _dif = new ZDDCacheOperation();
+
+        ZDDNumber zn = ZERO;
+
+        while (i.hasNext()) {
+            final ZDDLong zl = i.next();
+            zn = addSubtrees(zl.l, zl.t, filter, zn, _equ, _cru, _uni, _int, _dif);
+        }
+
+        return zn;
     }
 
 }
