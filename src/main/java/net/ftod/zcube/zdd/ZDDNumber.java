@@ -12,9 +12,6 @@ import java.util.Iterator;
  * <em>Pr. Minato et Al</em> show how to represent linear combinations of sets with integer coefficients as a forest of shared {@link ZDD}. A <em>binary</em>
  * representation can be used for unsigned integers, whereas signed integers may be represented in <em>negabinary</em>. Both representations are offered here.
  * </p>
- * <p>
- * <em>Zero</em> is represented as <code>null</code>.
- * </p>
  * 
  * @author Fabien Todescato
  */
@@ -28,6 +25,10 @@ public final class ZDDNumber {
      * Higher-order digits.
      */
     public final ZDDNumber number;
+    /**
+     * The <em>zero</em> {@link ZDDNumber}.
+     */
+    public static final ZDDNumber ZERO = new ZDDNumber(null, null);
 
     private ZDDNumber(final ZDD digit, final ZDDNumber number) {
         super();
@@ -37,8 +38,8 @@ public final class ZDDNumber {
 
     private static ZDDNumber number(final ZDD digit, final ZDDNumber number)
     {
-        if (digit == ZDD.BOT && number == null) {
-            return null;
+        if (digit == ZDD.BOT && number == ZERO) {
+            return ZERO;
         }
 
         return new ZDDNumber(digit, number);
@@ -60,7 +61,7 @@ public final class ZDDNumber {
      */
     public static ZDDNumber binary(final long l, final ZDD zdd)
     {
-        return l == 0L ? null : number(l % 2L == 0 ? ZDD.BOT : zdd, binary(l >> 1, zdd));
+        return l == 0L ? ZERO : number(l % 2L == 0 ? ZDD.BOT : zdd, binary(l >> 1, zdd));
     }
 
     /**
@@ -83,7 +84,7 @@ public final class ZDDNumber {
 
     static long binary(final ZDDCachePredicate eq, final ZDDCachePredicate in, final ZDDNumber zddn, final ZDD zdd)
     {
-        return zddn == null ? 0L : (included(eq, in, zdd, zddn.digit) ? 1L : 0L) + (binary(eq, in, zddn.number, zdd) << 1);
+        return zddn == ZERO ? 0L : (included(eq, in, zdd, zddn.digit) ? 1L : 0L) + (binary(eq, in, zddn.number, zdd) << 1);
     }
 
     /**
@@ -105,11 +106,11 @@ public final class ZDDNumber {
         final ZDDNumber zddnc = intersection(eq, in, zddn1, zddn2);
         final ZDDNumber zddns = difference(eq, di, union(eq, un, zddn1, zddn2), zddnc);
 
-        if (zddnc == null) {
+        if (zddnc == ZERO) {
             return zddns;
         }
 
-        if (zddns == null) {
+        if (zddns == ZERO) {
             return new ZDDNumber(ZDD.BOT, zddnc);
         }
 
@@ -128,7 +129,7 @@ public final class ZDDNumber {
     public static ZDDNumber negabinary(final long l, final ZDD zdd)
     {
         if (l == 0) {
-            return null;
+            return ZERO;
         }
 
         final long q = l / -2L;
@@ -171,7 +172,7 @@ public final class ZDDNumber {
 
     static long negabinary(final ZDDCachePredicate eq, final ZDDCachePredicate in, final ZDDNumber zddn, final ZDD zdd)
     {
-        if (zddn == null) {
+        if (zddn == ZERO) {
             return 0L;
         }
 
@@ -204,7 +205,7 @@ public final class ZDDNumber {
         final ZDDCacheOperation un = new ZDDCacheOperation();
         final ZDDCacheOperation di = new ZDDCacheOperation();
 
-        ZDDNumber zn = null;
+        ZDDNumber zn = ZERO;
 
         while (i.hasNext()) {
             zn = negabinaryAdd(eq, in, un, di, zn, i.next());
@@ -218,7 +219,7 @@ public final class ZDDNumber {
         final ZDDNumber zddnc = intersection(eq, in, zddn1, zddn2);
         final ZDDNumber zddns = difference(eq, di, union(eq, un, zddn1, zddn2), zddnc);
 
-        if (zddnc == null) {
+        if (zddnc == ZERO) {
             return zddns;
         }
 
@@ -244,7 +245,7 @@ public final class ZDDNumber {
         final ZDDNumber zddnb = difference(eq, di, zddn2, zddn1);
         final ZDDNumber zddnd = union(eq, un, difference(eq, di, zddn1, zddn2), zddnb);
 
-        if (zddnb == null) {
+        if (zddnb == ZERO) {
             return zddnd;
         }
 
@@ -253,21 +254,21 @@ public final class ZDDNumber {
 
     private static ZDDNumber intersection(final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
-        if (zddn1 == null) {
-            return null;
+        if (zddn1 == ZERO) {
+            return ZERO;
         }
-        if (zddn2 == null) {
-            return null;
+        if (zddn2 == ZERO) {
+            return ZERO;
         }
         return number(ZDD.intersection(eq, in, zddn1.digit, zddn2.digit), intersection(eq, in, zddn1.number, zddn2.number));
     }
 
     private static ZDDNumber union(final ZDDCachePredicate eq, final ZDDCacheOperation un, final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
-        if (zddn1 == null) {
+        if (zddn1 == ZERO) {
             return zddn2;
         }
-        if (zddn2 == null) {
+        if (zddn2 == ZERO) {
             return zddn1;
         }
         return number(ZDD.union(eq, un, zddn1.digit, zddn2.digit), union(eq, un, zddn1.number, zddn2.number));
@@ -275,10 +276,10 @@ public final class ZDDNumber {
 
     private static ZDDNumber difference(final ZDDCachePredicate eq, final ZDDCacheOperation di, final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
-        if (zddn1 == null) {
-            return null;
+        if (zddn1 == ZERO) {
+            return ZERO;
         }
-        if (zddn2 == null) {
+        if (zddn2 == ZERO) {
             return zddn1;
         }
         return number(ZDD.difference(eq, di, zddn1.digit, zddn2.digit), difference(eq, di, zddn1.number, zddn2.number));

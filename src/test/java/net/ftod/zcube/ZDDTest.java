@@ -300,7 +300,7 @@ public class ZDDTest {
                     final ZDD z2 = trees("a", "b");
                     final ZDD z3 = trees("a", "c");
 
-                    ZDDNumber zn = null;
+                    ZDDNumber zn = ZDDNumber.ZERO;
                     long n = 0L;
 
                     for (int i = 0; i < _N; ++i) {
@@ -321,7 +321,7 @@ public class ZDDTest {
                     final ZDD zae = trees("a", "e");
                     final ZDD zaf = trees("a", "f");
 
-                    ZDDNumber zn = null;
+                    ZDDNumber zn = ZDDNumber.ZERO;
                     long n = 0L;
 
                     for (int i = 0; i < _N; ++i) {
@@ -360,7 +360,7 @@ public class ZDDTest {
                     final ZDD z2 = trees("a", "b");
                     final ZDD z3 = trees("a", "c");
 
-                    ZDDNumber zn = null;
+                    ZDDNumber zn = ZDDNumber.ZERO;
                     long n = 0L;
 
                     for (int i = 0; i < _N; ++i) {
@@ -381,7 +381,7 @@ public class ZDDTest {
                     final ZDD zae = trees("a", "e");
                     final ZDD zaf = trees("a", "f");
 
-                    ZDDNumber zn = null;
+                    ZDDNumber zn = ZDDNumber.ZERO;
                     long n = 0L;
 
                     for (int i = 0; i < _N; ++i) {

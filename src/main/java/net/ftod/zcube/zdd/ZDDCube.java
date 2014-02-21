@@ -193,7 +193,7 @@ public final class ZDDCube {
         final ZDDCacheOperation _int = new ZDDCacheOperation();
         final ZDDCacheOperation _dif = new ZDDCacheOperation();
 
-        ZDDNumber zn = null;
+        ZDDNumber zn = ZDDNumber.ZERO;
 
         while (i.hasNext()) {
             final ZDDLong zl = i.next();
@@ -221,7 +221,7 @@ public final class ZDDCube {
         final ZDDCacheOperation _int = new ZDDCacheOperation();
         final ZDDCacheOperation _dif = new ZDDCacheOperation();
 
-        ZDDNumber zn = null;
+        ZDDNumber zn = ZDDNumber.ZERO;
 
         while (i.hasNext()) {
             final ZDDLong zl = i.next();
@@ -231,7 +231,7 @@ public final class ZDDCube {
         return zn;
     }
 
-    private ZDDNumber zn = null;
+    private ZDDNumber zn = ZDDNumber.ZERO;
 
     private ZDDCube() {
         super();
