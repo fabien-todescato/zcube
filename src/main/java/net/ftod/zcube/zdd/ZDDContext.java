@@ -90,31 +90,6 @@ public abstract class ZDDContext {
         return ZDD.included(_equ, _inc, zdd1, zdd2);
     }
 
-    final public ZDD trees(final String[][]... a)
-    {
-        return ZDD.trees(_equ, _cru, _uni, a);
-    }
-
-    final public ZDD trees(final String[]... a)
-    {
-        return ZDD.trees(_equ, _cru, _uni, a);
-    }
-
-    final public ZDD trees(final String... a)
-    {
-        return ZDD.trees(_equ, _cru, _uni, a);
-    }
-
-    final public ZDD tree(final String[]... a)
-    {
-        return ZDD.tree(_equ, _cru, _uni, a);
-    }
-
-    final public ZDD tree(final String... a)
-    {
-        return ZDD.tree(_equ, _cru, _uni, a);
-    }
-
     final public long binary(final ZDDNumber zddn, final ZDD zdd)
     {
         return ZDDNumber.binary(_equ, _inc, zddn, zdd);

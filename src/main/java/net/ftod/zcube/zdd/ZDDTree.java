@@ -405,7 +405,7 @@ final class ZDDTreePrefix extends ZDDTree {
     @Override
     protected ZDD trees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
     {
-        final long h1 = ZDD.djb2(h, prefix);
+        final long h1 = ZDDTreePrefix.djb2(h, prefix);
 
         return ZDD.crossUnion(eq, cu, un, ZDD.singleton(h1), treeSet.trees(eq, cu, un, h1));
     }
@@ -413,7 +413,7 @@ final class ZDDTreePrefix extends ZDDTree {
     @Override
     protected ZDD subtrees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
     {
-        final long h1 = ZDD.djb2(h, prefix);
+        final long h1 = ZDDTreePrefix.djb2(h, prefix);
 
         return ZDD.union(eq, un, ZDD.TOP, ZDD.crossUnion(eq, cu, un, ZDD.singleton(h1), treeSet.subtrees(eq, cu, un, h1)));
     }
@@ -422,6 +422,38 @@ final class ZDDTreePrefix extends ZDDTree {
     protected Type type()
     {
         return Type.Prefix;
+    }
+
+    /**
+     * <h3>Hashing a {@link String}, starting from a <code>long</code> seed</h3>
+     * 
+     * <p>
+     * This hashing scheme is used to generate <code>long</code> identifiers for the nodes of the trees. The hash for a child node is computed by taking the
+     * hash of the father node and combining it with the label of the branch from the father node to the child node.
+     * </p>
+     * <p>
+     * See <a href="http://programmers.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed">Which hashing algorithm is
+     * best for uniqueness and speed</a> for an overview of hashing, and pointers on the <code>djb2</code> hash function.
+     * </p>
+     */
+    private static long djb2(final long seed, final String string)
+    {
+        long hash = 5381L;
+
+        hash = 33L * hash ^ seed >>> 56 & 0xFF;
+        hash = 33L * hash ^ seed >>> 48 & 0xFF;
+        hash = 33L * hash ^ seed >>> 40 & 0xFF;
+        hash = 33L * hash ^ seed >>> 32 & 0xFF;
+        hash = 33L * hash ^ seed >>> 24 & 0xFF;
+        hash = 33L * hash ^ seed >>> 16 & 0xFF;
+        hash = 33L * hash ^ seed >>> 8 & 0xFF;
+        hash = 33L * hash ^ seed & 0xFF;
+
+        for (int i = 0; i < string.length(); ++i) {
+            hash = 33L * hash ^ string.charAt(i);
+        }
+
+        return hash;
     }
 
 }
