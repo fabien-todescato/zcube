@@ -56,4 +56,9 @@ public final class ZDDLong {
         return new ZDDLong(l, t);
     }
 
+    @Override
+    public String toString()
+    {
+        return new StringBuilder().append("( times ").append(l).append(' ').append(t).append(" )").toString();
+    }
 }

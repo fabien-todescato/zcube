@@ -45,6 +45,12 @@ public abstract class ZDDTree {
         protected void _write(final DataOutputStream dos) throws IOException
         {
         }
+
+        @Override
+        public String toString()
+        {
+            return "bot";
+        };
     };
 
     /**
@@ -67,13 +73,19 @@ public abstract class ZDDTree {
         @Override
         protected Type type()
         {
-            return Type.BOT;
+            return Type.TOP;
         }
 
         @Override
         protected void _write(final DataOutputStream dos) throws IOException
         {
         }
+
+        @Override
+        public String toString()
+        {
+            return "top";
+        };
     };
 
     /**
@@ -456,6 +468,12 @@ final class ZDDTreePrefix extends ZDDTree {
         return hash;
     }
 
+    @Override
+    public String toString()
+    {
+        return new StringBuilder().append("( prefix \"").append(prefix).append("\" ").append(treeSet).append(" )").toString();
+    }
+
 }
 
 final class ZDDTreeCross extends ZDDTree {
@@ -496,6 +514,20 @@ final class ZDDTreeCross extends ZDDTree {
         return Type.Cross;
     }
 
+    @Override
+    public String toString()
+    {
+        final StringBuilder sb = new StringBuilder();
+
+        sb.append("( cross");
+        for (final ZDDTree element : ts) {
+            sb.append(' ').append(element);
+        }
+        sb.append(" )");
+
+        return sb.toString();
+    }
+
 }
 
 final class ZDDTreeSum extends ZDDTree {
@@ -534,6 +566,20 @@ final class ZDDTreeSum extends ZDDTree {
     protected Type type()
     {
         return Type.Sum;
+    }
+
+    @Override
+    public String toString()
+    {
+        final StringBuilder sb = new StringBuilder();
+
+        sb.append("( sum");
+        for (final ZDDTree element : ts) {
+            sb.append(' ').append(element);
+        }
+        sb.append(" )");
+
+        return sb.toString();
     }
 
 }
