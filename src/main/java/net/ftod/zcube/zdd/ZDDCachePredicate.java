@@ -13,9 +13,6 @@ import static net.ftod.zcube.zdd.ZDD.CACHE_SIZE;
  */
 final class ZDDCachePredicate {
 
-    private long hit = 0;
-    private long miss = 0;
-
     private final ZDD[] _zdd1 = new ZDD[CACHE_SIZE];
     private final ZDD[] _zdd2 = new ZDD[CACHE_SIZE];
     private final boolean[] _bool = new boolean[CACHE_SIZE];
@@ -34,11 +31,9 @@ final class ZDDCachePredicate {
         final int index = index(zdd1, zdd2);
 
         if (zdd1 != _zdd1[index] || zdd2 != _zdd2[index]) {
-            ++miss;
             return null;
         }
 
-        ++hit;
         return Boolean.valueOf(_bool[index]);
     }
 
@@ -51,13 +46,4 @@ final class ZDDCachePredicate {
         _bool[index] = zdd3;
     }
 
-    long hit()
-    {
-        return hit;
-    }
-
-    long miss()
-    {
-        return miss;
-    }
 }

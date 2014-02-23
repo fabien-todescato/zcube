@@ -14,9 +14,6 @@ import static net.ftod.zcube.zdd.ZDD.CACHE_SIZE;
  */
 final class ZDDCacheOperation {
 
-    private long hit = 0;
-    private long miss = 0;
-
     private final ZDD[] _zdd1 = new ZDD[CACHE_SIZE];
     private final ZDD[] _zdd2 = new ZDD[CACHE_SIZE];
     private final ZDD[] _zdd3 = new ZDD[CACHE_SIZE];
@@ -35,11 +32,9 @@ final class ZDDCacheOperation {
         final int index = index(zdd1, zdd2);
 
         if (zdd1 != _zdd1[index] || zdd2 != _zdd2[index]) {
-            ++miss;
             return null;
         }
 
-        ++hit;
         return _zdd3[index];
     }
 
@@ -52,13 +47,4 @@ final class ZDDCacheOperation {
         _zdd3[index] = zdd3;
     }
 
-    long hit()
-    {
-        return hit;
-    }
-
-    long miss()
-    {
-        return miss;
-    }
 }
