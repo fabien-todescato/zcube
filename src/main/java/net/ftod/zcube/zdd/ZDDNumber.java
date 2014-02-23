@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
  */
 public final class ZDDNumber {
 
+    private static final int PROCESSOR_SPREAD = 8;
     /**
      * Lowest-order digit.
      */
@@ -372,7 +373,7 @@ public final class ZDDNumber {
     public static ZDDNumber pSumSubtrees(final Iterator<ZDDLong> i)
     {
         final int processors = Runtime.getRuntime().availableProcessors();
-        final int sums = 2 * processors;
+        final int sums = PROCESSOR_SPREAD * processors;
 
         final ExecutorService threads = Executors.newFixedThreadPool(processors);
         final BlockingQueue<ZDDNumber> zns = new ArrayBlockingQueue<ZDDNumber>(sums);
@@ -427,7 +428,7 @@ public final class ZDDNumber {
     public static ZDDNumber pSumSubtrees(final ZDD filter, final Iterator<ZDDLong> i)
     {
         final int processors = Runtime.getRuntime().availableProcessors();
-        final int sums = 2 * processors;
+        final int sums = PROCESSOR_SPREAD * processors;
 
         final ExecutorService threads = Executors.newFixedThreadPool(processors);
         final BlockingQueue<ZDDNumber> zns = new ArrayBlockingQueue<ZDDNumber>(sums);
