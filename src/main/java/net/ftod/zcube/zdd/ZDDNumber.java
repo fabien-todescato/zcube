@@ -2,11 +2,14 @@ package net.ftod.zcube.zdd;
 
 import static net.ftod.zcube.zdd.ZDD.included;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -106,7 +109,13 @@ public final class ZDDNumber {
         return binaryAdd(new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation(), new ZDDCacheOperation(), zddn1, zddn2);
     }
 
-    static ZDDNumber binaryAdd(final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDDCacheOperation un, final ZDDCacheOperation di, final ZDDNumber zddn1, final ZDDNumber zddn2)
+    static ZDDNumber binaryAdd(
+            final ZDDCachePredicate eq,
+            final ZDDCacheOperation in,
+            final ZDDCacheOperation un,
+            final ZDDCacheOperation di,
+            final ZDDNumber zddn1,
+            final ZDDNumber zddn2)
     {
         final ZDDNumber zddnc = intersection(eq, in, zddn1, zddn2);
         final ZDDNumber zddns = difference(eq, di, union(eq, un, zddn1, zddn2), zddnc);
@@ -219,7 +228,13 @@ public final class ZDDNumber {
         return zn;
     }
 
-    static ZDDNumber negabinaryAdd(final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDDCacheOperation un, final ZDDCacheOperation di, final ZDDNumber zddn1, final ZDDNumber zddn2)
+    static ZDDNumber negabinaryAdd(
+            final ZDDCachePredicate eq,
+            final ZDDCacheOperation in,
+            final ZDDCacheOperation un,
+            final ZDDCacheOperation di,
+            final ZDDNumber zddn1,
+            final ZDDNumber zddn2)
     {
         final ZDDNumber zddnc = intersection(eq, in, zddn1, zddn2);
         final ZDDNumber zddns = difference(eq, di, union(eq, un, zddn1, zddn2), zddnc);
@@ -245,7 +260,13 @@ public final class ZDDNumber {
         return negabinarySub(new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation(), new ZDDCacheOperation(), zddn1, zddn2);
     }
 
-    static ZDDNumber negabinarySub(final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDDCacheOperation un, final ZDDCacheOperation di, final ZDDNumber zddn1, final ZDDNumber zddn2)
+    static ZDDNumber negabinarySub(
+            final ZDDCachePredicate eq,
+            final ZDDCacheOperation in,
+            final ZDDCacheOperation un,
+            final ZDDCacheOperation di,
+            final ZDDNumber zddn1,
+            final ZDDNumber zddn2)
     {
         final ZDDNumber zddnb = difference(eq, di, zddn2, zddn1);
         final ZDDNumber zddnd = union(eq, un, difference(eq, di, zddn1, zddn2), zddnb);
@@ -295,7 +316,14 @@ public final class ZDDNumber {
         return addSubtrees(zl.l, zl.t, zn);
     }
 
-    static ZDDNumber addSubtrees(final ZDDLong zl, final ZDDNumber zn, final ZDDCachePredicate _equ, final ZDDCacheOperation _cru, final ZDDCacheOperation _uni, final ZDDCacheOperation _int, final ZDDCacheOperation _dif)
+    static ZDDNumber addSubtrees(
+            final ZDDLong zl,
+            final ZDDNumber zn,
+            final ZDDCachePredicate _equ,
+            final ZDDCacheOperation _cru,
+            final ZDDCacheOperation _uni,
+            final ZDDCacheOperation _int,
+            final ZDDCacheOperation _dif)
     {
         return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(zl.l, ZDDTree.subtrees(zl.t, _equ, _cru, _uni)), zn);
     }
@@ -311,7 +339,15 @@ public final class ZDDNumber {
         return addSubtrees(l, trees, zn, _equ, _cru, _uni, _int, _dif);
     }
 
-    static ZDDNumber addSubtrees(final long l, final ZDDTree trees, final ZDDNumber zn, final ZDDCachePredicate _equ, final ZDDCacheOperation _cru, final ZDDCacheOperation _uni, final ZDDCacheOperation _int, final ZDDCacheOperation _dif)
+    static ZDDNumber addSubtrees(
+            final long l,
+            final ZDDTree trees,
+            final ZDDNumber zn,
+            final ZDDCachePredicate _equ,
+            final ZDDCacheOperation _cru,
+            final ZDDCacheOperation _uni,
+            final ZDDCacheOperation _int,
+            final ZDDCacheOperation _dif)
     {
         return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(l, ZDDTree.subtrees(trees, _equ, _cru, _uni)), zn);
     }
@@ -332,7 +368,16 @@ public final class ZDDNumber {
         return addSubtrees(l, trees, filter, zn, _equ, _cru, _uni, _int, _dif);
     }
 
-    static ZDDNumber addSubtrees(final long l, final ZDDTree trees, final ZDD filter, final ZDDNumber zn, final ZDDCachePredicate _equ, final ZDDCacheOperation _cru, final ZDDCacheOperation _uni, final ZDDCacheOperation _int, final ZDDCacheOperation _dif)
+    static ZDDNumber addSubtrees(
+            final long l,
+            final ZDDTree trees,
+            final ZDD filter,
+            final ZDDNumber zn,
+            final ZDDCachePredicate _equ,
+            final ZDDCacheOperation _cru,
+            final ZDDCacheOperation _uni,
+            final ZDDCacheOperation _int,
+            final ZDDCacheOperation _dif)
     {
         return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(l, ZDD.intersection(_equ, _int, filter, ZDDTree.subtrees(trees, _equ, _cru, _uni))), zn);
     }
@@ -391,7 +436,7 @@ public final class ZDDNumber {
             threads.shutdown();
             threads.awaitTermination(100L, TimeUnit.MILLISECONDS);
 
-            return negabinaryAdd(zns);
+            return pSumSubtrees(processors, zns);
         } catch (final InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -446,10 +491,53 @@ public final class ZDDNumber {
             threads.shutdown();
             threads.awaitTermination(100L, TimeUnit.MILLISECONDS);
 
-            return negabinaryAdd(zns);
+            return pSumSubtrees(processors, zns);
         } catch (final InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static ZDDNumber pSumSubtrees(final int processors, final Collection<ZDDNumber> zns)
+    {
+        final ZDDNumber[] zna = new ZDDNumber[zns.size()];
+        zns.toArray(zna);
+        return new ForkJoinPool(processors).invoke(recursiveSumTask(zna, 0, zna.length));
+    }
+
+    private static RecursiveTask<ZDDNumber> recursiveSumTask(final ZDDNumber[] zns, final int begin, final int end)
+    {
+        return new RecursiveTask<ZDDNumber>() {
+
+            private static final long serialVersionUID = 9099502138482957070L;
+
+            @Override
+            protected ZDDNumber compute()
+            {
+                final int length = end - begin;
+
+                if (length > 2) {
+
+                    final int middle = begin + length >> 1;
+
+                    final RecursiveTask<ZDDNumber> t1 = recursiveSumTask(zns, begin, middle);
+                    final RecursiveTask<ZDDNumber> t2 = recursiveSumTask(zns, middle, end);
+
+                    invokeAll(t1, t2);
+
+                    return ZDDNumber.negabinaryAdd(t1.join(), t2.join());
+                }
+
+                if (length > 1) {
+                    return ZDDNumber.negabinaryAdd(zns[begin], zns[begin + 1]);
+                }
+
+                if (length > 0) {
+                    return zns[begin];
+                }
+
+                return ZDDNumber.ZERO;
+            }
+        };
     }
 
     private static Runnable sumTask(final ZDD filter, final BlockingQueue<ZDDNumber> zns, final ZDDLong zl)
