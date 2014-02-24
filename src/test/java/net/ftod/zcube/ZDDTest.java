@@ -9,6 +9,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import net.ftod.zcube.zdd.ZDD;
@@ -380,6 +381,48 @@ public class ZDDTest {
                         zn = negabinaryAdd(zn, negabinary(i, zae));
                         zn = negabinaryAdd(zn, negabinary(i, zaf));
                     }
+
+                    assertEquals(5L * n, negabinary(zn, trees(path("a"))));
+                    assertEquals(n, negabinary(zn, trees(path("a", "b"))));
+                    assertEquals(n, negabinary(zn, trees(path("a", "c"))));
+                    assertEquals(n, negabinary(zn, trees(path("a", "d"))));
+                    assertEquals(n, negabinary(zn, trees(path("a", "e"))));
+                    assertEquals(n, negabinary(zn, trees(path("a", "f"))));
+                }
+
+                return null;
+            }
+
+        }.eval();
+    }
+
+    @Test
+    public void treesNegabinaryParallel()
+    {
+        new ZDDContextTest() {
+            @Override
+            protected <Void> Void expression()
+            {
+                {
+                    final ZDD zab = subtrees(path("a", "b"));
+                    final ZDD zac = subtrees(path("a", "c"));
+                    final ZDD zad = subtrees(path("a", "d"));
+                    final ZDD zae = subtrees(path("a", "e"));
+                    final ZDD zaf = subtrees(path("a", "f"));
+
+                    final ArrayList<ZDDNumber> znList = new ArrayList<ZDDNumber>();
+                    long n = 0L;
+
+                    for (int i = 0; i < _N; ++i) {
+                        n += i;
+                        znList.add(negabinary(i, zab));
+                        znList.add(negabinary(i, zac));
+                        znList.add(negabinary(i, zad));
+                        znList.add(negabinary(i, zae));
+                        znList.add(negabinary(i, zaf));
+                    }
+
+                    final ZDDNumber zn = ZDDNumber.pSum(znList);
 
                     assertEquals(5L * n, negabinary(zn, trees(path("a"))));
                     assertEquals(n, negabinary(zn, trees(path("a", "b"))));

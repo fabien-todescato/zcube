@@ -436,7 +436,7 @@ public final class ZDDNumber {
             threads.shutdown();
             threads.awaitTermination(100L, TimeUnit.MILLISECONDS);
 
-            return pSumSubtrees(processors, zns);
+            return pSum(processors, zns);
         } catch (final InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -491,17 +491,33 @@ public final class ZDDNumber {
             threads.shutdown();
             threads.awaitTermination(100L, TimeUnit.MILLISECONDS);
 
-            return pSumSubtrees(processors, zns);
+            return pSum(processors, zns);
         } catch (final InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static ZDDNumber pSumSubtrees(final int processors, final Collection<ZDDNumber> zns)
+    public static ZDDNumber pSum(final Collection<ZDDNumber> zns)
+    {
+        return pSum(Runtime.getRuntime().availableProcessors(), zns);
+    }
+
+    private static ZDDNumber pSum(final int processors, final Collection<ZDDNumber> zns)
     {
         final ZDDNumber[] zna = new ZDDNumber[zns.size()];
         zns.toArray(zna);
-        return new ForkJoinPool(processors).invoke(recursiveSumTask(zna, 0, zna.length));
+        return pSum(processors, zna);
+    }
+
+    private static ZDDNumber pSum(final int processors, final ZDDNumber[] zna)
+    {
+        final ForkJoinPool forkJoinPool = new ForkJoinPool(processors);
+
+        try {
+            return forkJoinPool.invoke(recursiveSumTask(zna, 0, zna.length));
+        } finally {
+            forkJoinPool.shutdown();
+        }
     }
 
     private static RecursiveTask<ZDDNumber> recursiveSumTask(final ZDDNumber[] zns, final int begin, final int end)
@@ -517,7 +533,7 @@ public final class ZDDNumber {
 
                 if (length > 2) {
 
-                    final int middle = begin + length >> 1;
+                    final int middle = begin + (length >> 1);
 
                     final RecursiveTask<ZDDNumber> t1 = recursiveSumTask(zns, begin, middle);
                     final RecursiveTask<ZDDNumber> t2 = recursiveSumTask(zns, middle, end);
