@@ -266,26 +266,22 @@ public final class ZDD {
 
     static ZDD union(final ZDDCachePredicate eq, final ZDDCacheOperation un, final ZDD... zdds)
     {
-        final int l = zdds.length;
+        return union(eq, un, 0, zdds.length, zdds);
+    }
 
-        if (l > 2) {
+    static ZDD union(final ZDDCachePredicate eq, final ZDDCacheOperation un, final int begin, final int end, final ZDD[] zdda)
+    {
+        final int length = end - begin;
 
-            final int l1 = l >> 1;
-            final int l2 = l - l1;
-
-            final ZDD[] zdds1 = new ZDD[l1];
-            final ZDD[] zdds2 = new ZDD[l2];
-
-            System.arraycopy(zdds, 0, zdds1, 0, l1);
-            System.arraycopy(zdds, l1, zdds2, 0, l2);
-
-            return union(eq, un, union(eq, un, zdds1), union(eq, un, zdds2));
+        if (length > 2) {
+            final int middle = begin + (length >> 1);
+            return union(eq, un, union(eq, un, begin, middle, zdda), union(eq, un, middle, end, zdda));
         }
-        if (l > 1) {
-            return union(eq, un, zdds[0], zdds[1]);
+        if (length > 1) {
+            return union(eq, un, zdda[begin], zdda[begin + 1]);
         }
-        if (l > 0) {
-            return zdds[0];
+        if (length > 0) {
+            return zdda[begin];
         }
 
         return BOT;
@@ -354,24 +350,20 @@ public final class ZDD {
 
     static ZDD intersection(final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDD... zdds)
     {
-        final int l = zdds.length;
+        return intersection(eq, in, 0, zdds.length, zdds);
+    }
 
-        if (l > 2) {
+    static ZDD intersection(final ZDDCachePredicate eq, final ZDDCacheOperation in, final int begin, final int end, final ZDD[] zdda)
+    {
+        final int length = end - begin;
 
-            final int l1 = l >> 1;
-            final int l2 = l - l1;
-
-            final ZDD[] zdds1 = new ZDD[l1];
-            final ZDD[] zdds2 = new ZDD[l2];
-
-            System.arraycopy(zdds, 0, zdds1, 0, l1);
-            System.arraycopy(zdds, l1, zdds2, 0, l2);
-
-            return intersection(eq, in, intersection(eq, in, zdds1), intersection(eq, in, zdds2));
-        } else if (l > 1) {
-            return intersection(eq, in, zdds[0], zdds[1]);
-        } else if (l > 0) {
-            return zdds[0];
+        if (length > 2) {
+            final int middle = begin + (length >> 1);
+            return intersection(eq, in, intersection(eq, in, begin, middle, zdda), intersection(eq, in, middle, end, zdda));
+        } else if (length > 1) {
+            return intersection(eq, in, zdda[begin], zdda[begin + 1]);
+        } else if (length > 0) {
+            return zdda[begin];
         }
 
         return BOT;
@@ -522,24 +514,20 @@ public final class ZDD {
 
     static ZDD crossUnion(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final ZDD... zdds)
     {
-        final int l = zdds.length;
+        return crossUnion(eq, cu, un, 0, zdds.length, zdds);
+    }
 
-        if (l > 2) {
+    static ZDD crossUnion(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final int begin, final int end, final ZDD[] zdda)
+    {
+        final int length = end - begin;
 
-            final int l1 = l >> 1;
-            final int l2 = l - l1;
-
-            final ZDD[] zdds1 = new ZDD[l1];
-            final ZDD[] zdds2 = new ZDD[l2];
-
-            System.arraycopy(zdds, 0, zdds1, 0, l1);
-            System.arraycopy(zdds, l1, zdds2, 0, l2);
-
-            return crossUnion(eq, cu, un, crossUnion(eq, cu, un, zdds1), crossUnion(eq, cu, un, zdds2));
-        } else if (l > 1) {
-            return crossUnion(eq, cu, un, zdds[0], zdds[1]);
-        } else if (l > 0) {
-            return zdds[0];
+        if (length > 2) {
+            final int middle = begin + (length >> 1);
+            return crossUnion(eq, cu, un, crossUnion(eq, cu, un, begin, middle, zdda), crossUnion(eq, cu, un, middle, end, zdda));
+        } else if (length > 1) {
+            return crossUnion(eq, cu, un, zdda[begin], zdda[begin + 1]);
+        } else if (length > 0) {
+            return zdda[begin];
         }
 
         return TOP;
@@ -575,7 +563,8 @@ public final class ZDD {
             } else if (x1 > x2) {
                 zdd = zdd(x2, crossUnion(eq, cu, un, zdd1, zdd2.b), crossUnion(eq, cu, un, zdd1, zdd2.t));
             } else {
-                zdd = zdd(x1, crossUnion(eq, cu, un, zdd1.b, zdd2.b), union(eq, un, crossUnion(eq, cu, un, zdd1.t, zdd2.t), union(eq, un, crossUnion(eq, cu, un, zdd1.t, zdd2.b), crossUnion(eq, cu, un, zdd1.b, zdd2.t))));
+                zdd = zdd(x1, crossUnion(eq, cu, un, zdd1.b, zdd2.b), union(eq, un, crossUnion(eq, cu, un, zdd1.t, zdd2.t), union(eq, un, crossUnion(eq, cu, un, zdd1.t, zdd2.b),
+                        crossUnion(eq, cu, un, zdd1.b, zdd2.t))));
             }
 
             cu.put(zdd1, zdd2, zdd);
@@ -597,24 +586,20 @@ public final class ZDD {
 
     static ZDD crossIntersection(final ZDDCachePredicate eq, final ZDDCacheOperation ci, final ZDDCacheOperation un, final ZDD... zdds)
     {
-        final int l = zdds.length;
+        return crossIntersection(eq, ci, un, 0, zdds.length, zdds);
+    }
 
-        if (l > 2) {
+    static ZDD crossIntersection(final ZDDCachePredicate eq, final ZDDCacheOperation ci, final ZDDCacheOperation un, final int begin, final int end, final ZDD[] zdda)
+    {
+        final int length = end - begin;
 
-            final int l1 = l >> 1;
-            final int l2 = l - l1;
-
-            final ZDD[] zdds1 = new ZDD[l1];
-            final ZDD[] zdds2 = new ZDD[l2];
-
-            System.arraycopy(zdds, 0, zdds1, 0, l1);
-            System.arraycopy(zdds, l1, zdds2, 0, l2);
-
-            return crossIntersection(eq, ci, un, crossIntersection(eq, ci, un, zdds1), crossIntersection(eq, ci, un, zdds2));
-        } else if (l > 1) {
-            return crossIntersection(eq, ci, un, zdds[0], zdds[1]);
-        } else if (l > 0) {
-            return zdds[0];
+        if (length > 2) {
+            final int middle = begin + (length >> 1);
+            return crossIntersection(eq, ci, un, crossIntersection(eq, ci, un, begin, middle, zdda), crossIntersection(eq, ci, un, middle, end, zdda));
+        } else if (length > 1) {
+            return crossIntersection(eq, ci, un, zdda[begin], zdda[begin + 1]);
+        } else if (length > 0) {
+            return zdda[begin];
         }
 
         return TOP;
@@ -650,7 +635,8 @@ public final class ZDD {
             } else if (x1 > x2) {
                 zdd = union(eq, un, crossIntersection(eq, ci, un, zdd1, zdd2.b), crossIntersection(eq, ci, un, zdd1, zdd2.t));
             } else {
-                zdd = zdd(x1, union(eq, un, crossIntersection(eq, ci, un, zdd1.b, zdd2.b), union(eq, un, crossIntersection(eq, ci, un, zdd1.b, zdd2.t), crossIntersection(eq, ci, un, zdd1.t, zdd2.b))), crossIntersection(eq, ci, un, zdd1.t, zdd2.t));
+                zdd = zdd(x1, union(eq, un, crossIntersection(eq, ci, un, zdd1.b, zdd2.b), union(eq, un, crossIntersection(eq, ci, un, zdd1.b, zdd2.t), crossIntersection(eq, ci,
+                        un, zdd1.t, zdd2.b))), crossIntersection(eq, ci, un, zdd1.t, zdd2.t));
             }
 
             ci.put(zdd1, zdd2, zdd);
@@ -689,7 +675,8 @@ public final class ZDD {
             } else if (x1 > x2) {
                 zdd = union(eq, un, crossDifference(eq, cd, un, zdd1, zdd2.b), crossDifference(eq, cd, un, zdd1, zdd2.t));
             } else {
-                zdd = zdd(x1, union(eq, un, crossDifference(eq, cd, un, zdd1.b, zdd2.b), crossDifference(eq, cd, un, zdd1.b, zdd2.t), crossDifference(eq, cd, un, zdd1.t, zdd2.t)), crossDifference(eq, cd, un, zdd1.t, zdd2.b));
+                zdd = zdd(x1, union(eq, un, crossDifference(eq, cd, un, zdd1.b, zdd2.b), crossDifference(eq, cd, un, zdd1.b, zdd2.t), crossDifference(eq, cd, un, zdd1.t, zdd2.t)),
+                        crossDifference(eq, cd, un, zdd1.t, zdd2.b));
             }
 
             cd.put(zdd1, zdd2, zdd);
