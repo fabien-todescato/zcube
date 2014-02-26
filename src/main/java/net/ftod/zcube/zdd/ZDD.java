@@ -355,20 +355,20 @@ public final class ZDD {
         return zdd;
     }
 
-    static ZDD intersection(final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDD... zdds)
+    static ZDD intersection(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDD... zdds)
     {
-        return intersection(eq, in, 0, zdds.length, zdds);
+        return intersection(nod, eq, in, 0, zdds.length, zdds);
     }
 
-    static ZDD intersection(final ZDDCachePredicate eq, final ZDDCacheOperation in, final int begin, final int end, final ZDD[] zdda)
+    static ZDD intersection(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation in, final int begin, final int end, final ZDD[] zdda)
     {
         final int length = end - begin;
 
         if (length > 2) {
             final int middle = begin + (length >> 1);
-            return intersection(eq, in, intersection(eq, in, begin, middle, zdda), intersection(eq, in, middle, end, zdda));
+            return intersection(nod, eq, in, intersection(nod, eq, in, begin, middle, zdda), intersection(nod, eq, in, middle, end, zdda));
         } else if (length > 1) {
-            return intersection(eq, in, zdda[begin], zdda[begin + 1]);
+            return intersection(nod, eq, in, zdda[begin], zdda[begin + 1]);
         } else if (length > 0) {
             return zdda[begin];
         }
@@ -376,7 +376,7 @@ public final class ZDD {
         return BOT;
     }
 
-    static ZDD intersection(final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDD zdd1, final ZDD zdd2)
+    static ZDD intersection(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -403,11 +403,11 @@ public final class ZDD {
                 final long x2 = zdd2.x;
 
                 if (x1 < x2) {
-                    zdd = intersection(eq, in, zdd1.b, zdd2);
+                    zdd = intersection(nod, eq, in, zdd1.b, zdd2);
                 } else if (x1 > x2) {
-                    zdd = intersection(eq, in, zdd1, zdd2.b);
+                    zdd = intersection(nod, eq, in, zdd1, zdd2.b);
                 } else {
-                    zdd = zdd(new ZDDCacheNode(), x1, intersection(eq, in, zdd1.b, zdd2.b), intersection(eq, in, zdd1.t, zdd2.t));
+                    zdd = zdd(nod, x1, intersection(nod, eq, in, zdd1.b, zdd2.b), intersection(nod, eq, in, zdd1.t, zdd2.t));
                 }
             }
 

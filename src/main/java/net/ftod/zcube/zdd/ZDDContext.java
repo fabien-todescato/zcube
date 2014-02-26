@@ -43,12 +43,12 @@ public abstract class ZDDContext {
 
     final public ZDD intersection(final ZDD... zdds)
     {
-        return ZDD.intersection(_equ, _int, zdds);
+        return ZDD.intersection(_nod, _equ, _int, zdds);
     }
 
     final public ZDD intersection(final ZDD zdd1, final ZDD zdd2)
     {
-        return ZDD.intersection(_equ, _int, zdd1, zdd2);
+        return ZDD.intersection(_nod, _equ, _int, zdd1, zdd2);
     }
 
     final public ZDD difference(final ZDD zdd1, final ZDD zdd2)

@@ -258,7 +258,7 @@ public abstract class ZDDTree {
         final ZDDCacheOperation un = new ZDDCacheOperation();
         final ZDDCacheOperation in = new ZDDCacheOperation();
 
-        return ZDD.intersection(eq, in, z, subtrees(t, eq, cu, un));
+        return ZDD.intersection(new ZDDCacheNode(), eq, in, z, subtrees(t, eq, cu, un));
     }
 
     protected abstract ZDD trees(ZDDCachePredicate eq, ZDDCacheOperation cu, ZDDCacheOperation un, long h);

@@ -286,7 +286,7 @@ public final class ZDDNumber {
         if (zddn2 == ZERO) {
             return ZERO;
         }
-        return number(ZDD.intersection(eq, in, zddn1.digit, zddn2.digit), intersection(eq, in, zddn1.number, zddn2.number));
+        return number(ZDD.intersection(new ZDDCacheNode(), eq, in, zddn1.digit, zddn2.digit), intersection(eq, in, zddn1.number, zddn2.number));
     }
 
     private static ZDDNumber union(final ZDDCachePredicate eq, final ZDDCacheOperation un, final ZDDNumber zddn1, final ZDDNumber zddn2)
@@ -379,7 +379,7 @@ public final class ZDDNumber {
             final ZDDCacheOperation _int,
             final ZDDCacheOperation _dif)
     {
-        return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(l, ZDD.intersection(_equ, _int, filter, ZDDTree.subtrees(trees, _equ, _cru, _uni))), zn);
+        return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(l, ZDD.intersection(new ZDDCacheNode(), _equ, _int, filter, ZDDTree.subtrees(trees, _equ, _cru, _uni))), zn);
     }
 
     public static long[] pSumGroupBy(final ZDDTree[] ts, final Iterable<ZDDLong> i)
