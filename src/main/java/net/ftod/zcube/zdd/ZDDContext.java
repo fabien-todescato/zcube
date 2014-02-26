@@ -12,6 +12,7 @@ package net.ftod.zcube.zdd;
  */
 public abstract class ZDDContext {
 
+    final ZDDCacheNode _nod = new ZDDCacheNode();
     private final ZDDCachePredicate _equ = new ZDDCachePredicate();
     private final ZDDCachePredicate _inc = new ZDDCachePredicate();
     private final ZDDCacheOperation _uni = new ZDDCacheOperation();
@@ -32,12 +33,12 @@ public abstract class ZDDContext {
 
     final public ZDD union(final ZDD... zdds)
     {
-        return ZDD.union(new ZDDCacheNode(), _equ, _uni, zdds);
+        return ZDD.union(_nod, _equ, _uni, zdds);
     }
 
     final public ZDD union(final ZDD zdd1, final ZDD zdd2)
     {
-        return ZDD.union(new ZDDCacheNode(), _equ, _uni, zdd1, zdd2);
+        return ZDD.union(_nod, _equ, _uni, zdd1, zdd2);
     }
 
     final public ZDD intersection(final ZDD... zdds)
