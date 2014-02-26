@@ -297,7 +297,7 @@ public final class ZDDNumber {
         if (zddn2 == ZERO) {
             return zddn1;
         }
-        return number(ZDD.union(eq, un, zddn1.digit, zddn2.digit), union(eq, un, zddn1.number, zddn2.number));
+        return number(ZDD.union(new ZDDCacheNode(), eq, un, zddn1.digit, zddn2.digit), union(eq, un, zddn1.number, zddn2.number));
     }
 
     private static ZDDNumber difference(final ZDDCachePredicate eq, final ZDDCacheOperation di, final ZDDNumber zddn1, final ZDDNumber zddn2)

@@ -37,7 +37,7 @@ public abstract class ZDDContext {
 
     final public ZDD union(final ZDD zdd1, final ZDD zdd2)
     {
-        return ZDD.union(_equ, _uni, zdd1, zdd2);
+        return ZDD.union(new ZDDCacheNode(), _equ, _uni, zdd1, zdd2);
     }
 
     final public ZDD intersection(final ZDD... zdds)
