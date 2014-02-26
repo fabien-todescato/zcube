@@ -60,7 +60,16 @@ public final class ZDD {
             return b;
         }
 
-        return new ZDD(x, b, t);
+        final ZDDCacheNode nod = new ZDDCacheNode();
+
+        ZDD z = nod.get(x, b, t);
+
+        if (z == null) {
+            z = new ZDD(x, b, t);
+            nod.put(x, b, t, z);
+        }
+
+        return z;
     }
 
     public static long size(final ZDD z)
@@ -563,8 +572,7 @@ public final class ZDD {
             } else if (x1 > x2) {
                 zdd = zdd(x2, crossUnion(eq, cu, un, zdd1, zdd2.b), crossUnion(eq, cu, un, zdd1, zdd2.t));
             } else {
-                zdd = zdd(x1, crossUnion(eq, cu, un, zdd1.b, zdd2.b), union(eq, un, crossUnion(eq, cu, un, zdd1.t, zdd2.t), union(eq, un, crossUnion(eq, cu, un, zdd1.t, zdd2.b),
-                        crossUnion(eq, cu, un, zdd1.b, zdd2.t))));
+                zdd = zdd(x1, crossUnion(eq, cu, un, zdd1.b, zdd2.b), union(eq, un, crossUnion(eq, cu, un, zdd1.t, zdd2.t), union(eq, un, crossUnion(eq, cu, un, zdd1.t, zdd2.b), crossUnion(eq, cu, un, zdd1.b, zdd2.t))));
             }
 
             cu.put(zdd1, zdd2, zdd);
@@ -635,8 +643,7 @@ public final class ZDD {
             } else if (x1 > x2) {
                 zdd = union(eq, un, crossIntersection(eq, ci, un, zdd1, zdd2.b), crossIntersection(eq, ci, un, zdd1, zdd2.t));
             } else {
-                zdd = zdd(x1, union(eq, un, crossIntersection(eq, ci, un, zdd1.b, zdd2.b), union(eq, un, crossIntersection(eq, ci, un, zdd1.b, zdd2.t), crossIntersection(eq, ci,
-                        un, zdd1.t, zdd2.b))), crossIntersection(eq, ci, un, zdd1.t, zdd2.t));
+                zdd = zdd(x1, union(eq, un, crossIntersection(eq, ci, un, zdd1.b, zdd2.b), union(eq, un, crossIntersection(eq, ci, un, zdd1.b, zdd2.t), crossIntersection(eq, ci, un, zdd1.t, zdd2.b))), crossIntersection(eq, ci, un, zdd1.t, zdd2.t));
             }
 
             ci.put(zdd1, zdd2, zdd);
@@ -675,8 +682,7 @@ public final class ZDD {
             } else if (x1 > x2) {
                 zdd = union(eq, un, crossDifference(eq, cd, un, zdd1, zdd2.b), crossDifference(eq, cd, un, zdd1, zdd2.t));
             } else {
-                zdd = zdd(x1, union(eq, un, crossDifference(eq, cd, un, zdd1.b, zdd2.b), crossDifference(eq, cd, un, zdd1.b, zdd2.t), crossDifference(eq, cd, un, zdd1.t, zdd2.t)),
-                        crossDifference(eq, cd, un, zdd1.t, zdd2.b));
+                zdd = zdd(x1, union(eq, un, crossDifference(eq, cd, un, zdd1.b, zdd2.b), crossDifference(eq, cd, un, zdd1.b, zdd2.t), crossDifference(eq, cd, un, zdd1.t, zdd2.t)), crossDifference(eq, cd, un, zdd1.t, zdd2.b));
             }
 
             cd.put(zdd1, zdd2, zdd);
