@@ -32,7 +32,7 @@ public abstract class ZDDContext {
 
     final public ZDD union(final ZDD... zdds)
     {
-        return ZDD.union(_equ, _uni, zdds);
+        return ZDD.union(new ZDDCacheNode(), _equ, _uni, zdds);
     }
 
     final public ZDD union(final ZDD zdd1, final ZDD zdd2)

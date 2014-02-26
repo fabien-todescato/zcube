@@ -396,7 +396,7 @@ public final class ZDDNumber {
                 zs[j] = ZDDTree.trees(ts[j], eq, cu, un);
             }
 
-            u = ZDD.union(eq, un, zs);
+            u = ZDD.union(new ZDDCacheNode(), eq, un, zs);
         }
 
         final ZDDNumber zn = pSumSubtrees(u, i);

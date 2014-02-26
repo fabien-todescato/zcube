@@ -222,7 +222,7 @@ public abstract class ZDDTree {
             zs[i] = trees(ts[i], eq, cu, un);
         }
 
-        return ZDD.union(eq, un, zs);
+        return ZDD.union(new ZDDCacheNode(), eq, un, zs);
     }
 
     /**
@@ -553,13 +553,13 @@ final class ZDDTreeSum extends ZDDTree {
     @Override
     protected ZDD trees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
     {
-        return ZDD.union(eq, un, mapTrees(eq, cu, un, h, ts));
+        return ZDD.union(new ZDDCacheNode(), eq, un, mapTrees(eq, cu, un, h, ts));
     }
 
     @Override
     protected ZDD subtrees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
     {
-        return ZDD.union(eq, un, mapSubtrees(eq, cu, un, h, ts));
+        return ZDD.union(new ZDDCacheNode(), eq, un, mapSubtrees(eq, cu, un, h, ts));
     }
 
     @Override
