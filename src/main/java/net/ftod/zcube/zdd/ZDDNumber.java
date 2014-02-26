@@ -109,13 +109,7 @@ public final class ZDDNumber {
         return binaryAdd(new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation(), new ZDDCacheOperation(), zddn1, zddn2);
     }
 
-    static ZDDNumber binaryAdd(
-            final ZDDCachePredicate eq,
-            final ZDDCacheOperation in,
-            final ZDDCacheOperation un,
-            final ZDDCacheOperation di,
-            final ZDDNumber zddn1,
-            final ZDDNumber zddn2)
+    static ZDDNumber binaryAdd(final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDDCacheOperation un, final ZDDCacheOperation di, final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
         final ZDDNumber zddnc = intersection(eq, in, zddn1, zddn2);
         final ZDDNumber zddns = difference(eq, di, union(eq, un, zddn1, zddn2), zddnc);
@@ -228,13 +222,7 @@ public final class ZDDNumber {
         return zn;
     }
 
-    static ZDDNumber negabinaryAdd(
-            final ZDDCachePredicate eq,
-            final ZDDCacheOperation in,
-            final ZDDCacheOperation un,
-            final ZDDCacheOperation di,
-            final ZDDNumber zddn1,
-            final ZDDNumber zddn2)
+    static ZDDNumber negabinaryAdd(final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDDCacheOperation un, final ZDDCacheOperation di, final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
         final ZDDNumber zddnc = intersection(eq, in, zddn1, zddn2);
         final ZDDNumber zddns = difference(eq, di, union(eq, un, zddn1, zddn2), zddnc);
@@ -260,13 +248,7 @@ public final class ZDDNumber {
         return negabinarySub(new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation(), new ZDDCacheOperation(), zddn1, zddn2);
     }
 
-    static ZDDNumber negabinarySub(
-            final ZDDCachePredicate eq,
-            final ZDDCacheOperation in,
-            final ZDDCacheOperation un,
-            final ZDDCacheOperation di,
-            final ZDDNumber zddn1,
-            final ZDDNumber zddn2)
+    static ZDDNumber negabinarySub(final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDDCacheOperation un, final ZDDCacheOperation di, final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
         final ZDDNumber zddnb = difference(eq, di, zddn2, zddn1);
         final ZDDNumber zddnd = union(eq, un, difference(eq, di, zddn1, zddn2), zddnb);
@@ -302,13 +284,15 @@ public final class ZDDNumber {
 
     private static ZDDNumber difference(final ZDDCachePredicate eq, final ZDDCacheOperation di, final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
+        final ZDDCacheNode nod = new ZDDCacheNode();
+
         if (zddn1 == ZERO) {
             return ZERO;
         }
         if (zddn2 == ZERO) {
             return zddn1;
         }
-        return number(ZDD.difference(eq, di, zddn1.digit, zddn2.digit), difference(eq, di, zddn1.number, zddn2.number));
+        return number(ZDD.difference(nod, eq, di, zddn1.digit, zddn2.digit), difference(eq, di, zddn1.number, zddn2.number));
     }
 
     public static ZDDNumber addSubtrees(final ZDDLong zl, final ZDDNumber zn)
@@ -316,14 +300,7 @@ public final class ZDDNumber {
         return addSubtrees(zl.l, zl.t, zn);
     }
 
-    static ZDDNumber addSubtrees(
-            final ZDDLong zl,
-            final ZDDNumber zn,
-            final ZDDCachePredicate _equ,
-            final ZDDCacheOperation _cru,
-            final ZDDCacheOperation _uni,
-            final ZDDCacheOperation _int,
-            final ZDDCacheOperation _dif)
+    static ZDDNumber addSubtrees(final ZDDLong zl, final ZDDNumber zn, final ZDDCachePredicate _equ, final ZDDCacheOperation _cru, final ZDDCacheOperation _uni, final ZDDCacheOperation _int, final ZDDCacheOperation _dif)
     {
         return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(zl.l, ZDDTree.subtrees(zl.t, _equ, _cru, _uni)), zn);
     }
@@ -339,15 +316,7 @@ public final class ZDDNumber {
         return addSubtrees(l, trees, zn, _equ, _cru, _uni, _int, _dif);
     }
 
-    static ZDDNumber addSubtrees(
-            final long l,
-            final ZDDTree trees,
-            final ZDDNumber zn,
-            final ZDDCachePredicate _equ,
-            final ZDDCacheOperation _cru,
-            final ZDDCacheOperation _uni,
-            final ZDDCacheOperation _int,
-            final ZDDCacheOperation _dif)
+    static ZDDNumber addSubtrees(final long l, final ZDDTree trees, final ZDDNumber zn, final ZDDCachePredicate _equ, final ZDDCacheOperation _cru, final ZDDCacheOperation _uni, final ZDDCacheOperation _int, final ZDDCacheOperation _dif)
     {
         return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(l, ZDDTree.subtrees(trees, _equ, _cru, _uni)), zn);
     }
@@ -368,16 +337,7 @@ public final class ZDDNumber {
         return addSubtrees(l, trees, filter, zn, _equ, _cru, _uni, _int, _dif);
     }
 
-    static ZDDNumber addSubtrees(
-            final long l,
-            final ZDDTree trees,
-            final ZDD filter,
-            final ZDDNumber zn,
-            final ZDDCachePredicate _equ,
-            final ZDDCacheOperation _cru,
-            final ZDDCacheOperation _uni,
-            final ZDDCacheOperation _int,
-            final ZDDCacheOperation _dif)
+    static ZDDNumber addSubtrees(final long l, final ZDDTree trees, final ZDD filter, final ZDDNumber zn, final ZDDCachePredicate _equ, final ZDDCacheOperation _cru, final ZDDCacheOperation _uni, final ZDDCacheOperation _int, final ZDDCacheOperation _dif)
     {
         return negabinaryAdd(_equ, _int, _uni, _dif, negabinary(l, ZDD.intersection(new ZDDCacheNode(), _equ, _int, filter, ZDDTree.subtrees(trees, _equ, _cru, _uni))), zn);
     }

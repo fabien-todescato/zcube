@@ -437,7 +437,7 @@ public final class ZDD {
         return zdd;
     }
 
-    static ZDD difference(final ZDDCachePredicate eq, final ZDDCacheOperation di, final ZDD zdd1, final ZDD zdd2)
+    static ZDD difference(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation di, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -465,11 +465,11 @@ public final class ZDD {
                 final long x2 = zdd2.x;
 
                 if (x1 < x2) {
-                    zdd = zdd(new ZDDCacheNode(), x1, difference(eq, di, zdd1.b, zdd2), zdd1.t);
+                    zdd = zdd(nod, x1, difference(nod, eq, di, zdd1.b, zdd2), zdd1.t);
                 } else if (x1 > x2) {
-                    zdd = difference(eq, di, zdd1, zdd2.b);
+                    zdd = difference(nod, eq, di, zdd1, zdd2.b);
                 } else {
-                    zdd = zdd(new ZDDCacheNode(), x1, difference(eq, di, zdd1.b, zdd2.b), difference(eq, di, zdd1.t, zdd2.t));
+                    zdd = zdd(nod, x1, difference(nod, eq, di, zdd1.b, zdd2.b), difference(nod, eq, di, zdd1.t, zdd2.t));
                 }
             }
 

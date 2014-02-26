@@ -53,7 +53,7 @@ public abstract class ZDDContext {
 
     final public ZDD difference(final ZDD zdd1, final ZDD zdd2)
     {
-        return ZDD.difference(_equ, _dif, zdd1, zdd2);
+        return ZDD.difference(_nod, _equ, _dif, zdd1, zdd2);
     }
 
     final public ZDD crossDifference(final ZDD zdd1, final ZDD zdd2)
