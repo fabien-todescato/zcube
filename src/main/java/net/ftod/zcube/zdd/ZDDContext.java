@@ -123,12 +123,12 @@ public abstract class ZDDContext {
 
     final public ZDDNumber negabinaryAdd(final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
-        return ZDDNumber.negabinaryAdd(new ZDDCacheNode(), _equ, _int, _uni, _dif, zddn1, zddn2);
+        return ZDDNumber.negabinaryAdd(_nod, _equ, _int, _uni, _dif, zddn1, zddn2);
     }
 
     final public ZDDNumber negabinarySub(final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
-        return ZDDNumber.negabinarySub(_equ, _int, _uni, _dif, zddn1, zddn2);
+        return ZDDNumber.negabinarySub(_nod, _equ, _int, _uni, _dif, zddn1, zddn2);
     }
 
     final public ZDD trees(final ZDDTree t)

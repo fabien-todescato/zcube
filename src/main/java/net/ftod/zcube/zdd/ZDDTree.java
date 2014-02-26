@@ -253,12 +253,13 @@ public abstract class ZDDTree {
      */
     public static ZDD subtrees(final ZDD z, final ZDDTree t)
     {
+        final ZDDCacheNode nod = new ZDDCacheNode();
         final ZDDCachePredicate eq = new ZDDCachePredicate();
         final ZDDCacheOperation cu = new ZDDCacheOperation();
         final ZDDCacheOperation un = new ZDDCacheOperation();
         final ZDDCacheOperation in = new ZDDCacheOperation();
 
-        return ZDD.intersection(new ZDDCacheNode(), eq, in, z, subtrees(t, eq, cu, un));
+        return ZDD.intersection(nod, eq, in, z, subtrees(t, eq, cu, un));
     }
 
     protected abstract ZDD trees(ZDDCachePredicate eq, ZDDCacheOperation cu, ZDDCacheOperation un, long h);
@@ -505,7 +506,8 @@ final class ZDDTreeCross extends ZDDTree {
     @Override
     protected ZDD subtrees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
     {
-        return ZDD.crossUnion(new ZDDCacheNode(), eq, cu, un, mapSubtrees(eq, cu, un, h, ts));
+        final ZDDCacheNode nod = new ZDDCacheNode();
+        return ZDD.crossUnion(nod, eq, cu, un, mapSubtrees(eq, cu, un, h, ts));
     }
 
     @Override
