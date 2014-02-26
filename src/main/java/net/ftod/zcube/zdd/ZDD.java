@@ -48,10 +48,15 @@ public final class ZDD {
     private static int hash(final long x, final ZDD b, final ZDD t)
     {
         int result = 1;
-        result = 31 * result + Long.valueOf(x).hashCode();
+        result = 31 * result + hash(x);
         result = 31 * result + b.h;
         result = 31 * result + t.h;
         return result;
+    }
+
+    private static int hash(final long l)
+    {
+        return (int) (l ^ l >>> 32);
     }
 
     private static ZDD zdd(final ZDDCacheNode nod, final long x, final ZDD b, final ZDD t)
@@ -60,11 +65,13 @@ public final class ZDD {
             return b;
         }
 
-        ZDD z = nod.get(x, b, t);
+        final int h = hash(x, b, t);
+
+        ZDD z = nod.get(h, x, b, t);
 
         if (z == null) {
-            z = new ZDD(x, b, t);
-            nod.put(x, b, t, z);
+            z = new ZDD(x, b, t, h);
+            nod.put(h, x, b, t, z);
         }
 
         return z;
@@ -106,7 +113,7 @@ public final class ZDD {
      */
     public static ZDD singleton(final long x)
     {
-        return new ZDD(x, BOT, TOP);
+        return new ZDD(x, BOT, TOP); // FIXME Use node cache...
     }
 
     /**

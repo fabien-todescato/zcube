@@ -10,18 +10,13 @@ final class ZDDCacheNode {
     private final ZDD[] _t = new ZDD[CACHE_SIZE];
     private final ZDD[] _z = new ZDD[CACHE_SIZE];
 
-    private static int index(final long x, final ZDD b, final ZDD t)
-    {
-        return 1 + 31 * (Long.valueOf(x).hashCode() + 31 * (b.h + 31 * t.h)) & CACHE_MAX;
-    }
-
     ZDDCacheNode() {
         super();
     }
 
-    ZDD get(final long x, final ZDD b, final ZDD t)
+    ZDD get(final int h, final long x, final ZDD b, final ZDD t)
     {
-        final int index = index(x, b, t);
+        final int index = h & CACHE_MAX;
 
         if (x != _x[index]) {
             return null;
@@ -35,9 +30,9 @@ final class ZDDCacheNode {
         return _z[index];
     }
 
-    void put(final long x, final ZDD b, final ZDD t, final ZDD z)
+    void put(final int h, final long x, final ZDD b, final ZDD t, final ZDD z)
     {
-        final int index = index(x, b, t);
+        final int index = h & CACHE_MAX;
 
         _x[index] = x;
         _b[index] = b;
