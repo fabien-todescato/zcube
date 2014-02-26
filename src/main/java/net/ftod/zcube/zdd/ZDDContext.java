@@ -28,7 +28,7 @@ public abstract class ZDDContext {
 
     final public ZDD set(final long... xs)
     {
-        return ZDD.set(new ZDDCacheNode(), _equ, _cru, _uni, xs);
+        return ZDD.set(_nod, _equ, _cru, _uni, xs);
     }
 
     final public ZDD union(final ZDD... zdds)
