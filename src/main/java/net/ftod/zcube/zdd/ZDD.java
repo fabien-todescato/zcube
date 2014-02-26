@@ -118,7 +118,7 @@ public final class ZDD {
      */
     public static ZDD set(final long... xs)
     {
-        return set(new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation(), xs);
+        return set(new ZDDCacheNode(), new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation(), xs);
     }
 
     /**
@@ -519,20 +519,20 @@ public final class ZDD {
         return zdd;
     }
 
-    static ZDD crossUnion(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final ZDD... zdds)
+    static ZDD crossUnion(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final ZDD... zdds)
     {
-        return crossUnion(eq, cu, un, 0, zdds.length, zdds);
+        return crossUnion(nod, eq, cu, un, 0, zdds.length, zdds);
     }
 
-    static ZDD crossUnion(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final int begin, final int end, final ZDD[] zdda)
+    static ZDD crossUnion(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final int begin, final int end, final ZDD[] zdda)
     {
         final int length = end - begin;
 
         if (length > 2) {
             final int middle = begin + (length >> 1);
-            return crossUnion(eq, cu, un, crossUnion(eq, cu, un, begin, middle, zdda), crossUnion(eq, cu, un, middle, end, zdda));
+            return crossUnion(nod, eq, cu, un, crossUnion(nod, eq, cu, un, begin, middle, zdda), crossUnion(nod, eq, cu, un, middle, end, zdda));
         } else if (length > 1) {
-            return crossUnion(eq, cu, un, zdda[begin], zdda[begin + 1]);
+            return crossUnion(nod, eq, cu, un, zdda[begin], zdda[begin + 1]);
         } else if (length > 0) {
             return zdda[begin];
         }
@@ -540,7 +540,7 @@ public final class ZDD {
         return TOP;
     }
 
-    static ZDD crossUnion(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final ZDD zdd1, final ZDD zdd2)
+    static ZDD crossUnion(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -566,12 +566,11 @@ public final class ZDD {
             final long x2 = zdd2.x;
 
             if (x1 < x2) {
-                zdd = zdd(new ZDDCacheNode(), x1, crossUnion(eq, cu, un, zdd1.b, zdd2), crossUnion(eq, cu, un, zdd1.t, zdd2));
+                zdd = zdd(nod, x1, crossUnion(nod, eq, cu, un, zdd1.b, zdd2), crossUnion(nod, eq, cu, un, zdd1.t, zdd2));
             } else if (x1 > x2) {
-                zdd = zdd(new ZDDCacheNode(), x2, crossUnion(eq, cu, un, zdd1, zdd2.b), crossUnion(eq, cu, un, zdd1, zdd2.t));
+                zdd = zdd(nod, x2, crossUnion(nod, eq, cu, un, zdd1, zdd2.b), crossUnion(nod, eq, cu, un, zdd1, zdd2.t));
             } else {
-                zdd = zdd(new ZDDCacheNode(), x1, crossUnion(eq, cu, un, zdd1.b, zdd2.b), union(new ZDDCacheNode(), eq, un, crossUnion(eq, cu, un, zdd1.t, zdd2.t), union(new ZDDCacheNode(), eq, un, crossUnion(eq, cu, un, zdd1.t, zdd2.b), crossUnion(eq,
-                        cu, un, zdd1.b, zdd2.t))));
+                zdd = zdd(nod, x1, crossUnion(nod, eq, cu, un, zdd1.b, zdd2.b), union(nod, eq, un, crossUnion(nod, eq, cu, un, zdd1.t, zdd2.t), union(nod, eq, un, crossUnion(nod, eq, cu, un, zdd1.t, zdd2.b), crossUnion(nod, eq, cu, un, zdd1.b, zdd2.t))));
             }
 
             cu.put(zdd1, zdd2, zdd);
@@ -580,7 +579,7 @@ public final class ZDD {
         return zdd;
     }
 
-    static ZDD set(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long... xs)
+    static ZDD set(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long... xs)
     {
         final ZDD[] zdd = new ZDD[xs.length];
 
@@ -588,7 +587,7 @@ public final class ZDD {
             zdd[i] = singleton(xs[i]);
         }
 
-        return crossUnion(eq, cu, un, zdd);
+        return crossUnion(nod, eq, cu, un, zdd);
     }
 
     static ZDD crossIntersection(final ZDDCachePredicate eq, final ZDDCacheOperation ci, final ZDDCacheOperation un, final ZDD... zdds)

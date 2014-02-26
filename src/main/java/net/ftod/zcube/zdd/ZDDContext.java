@@ -28,7 +28,7 @@ public abstract class ZDDContext {
 
     final public ZDD set(final long... xs)
     {
-        return ZDD.set(_equ, _cru, _uni, xs);
+        return ZDD.set(new ZDDCacheNode(), _equ, _cru, _uni, xs);
     }
 
     final public ZDD union(final ZDD... zdds)
@@ -63,12 +63,12 @@ public abstract class ZDDContext {
 
     final public ZDD crossUnion(final ZDD... zdds)
     {
-        return ZDD.crossUnion(_equ, _cru, _uni, zdds);
+        return ZDD.crossUnion(_nod, _equ, _cru, _uni, zdds);
     }
 
     final public ZDD crossUnion(final ZDD zdd1, final ZDD zdd2)
     {
-        return ZDD.crossUnion(_equ, _cru, _uni, zdd1, zdd2);
+        return ZDD.crossUnion(_nod, _equ, _cru, _uni, zdd1, zdd2);
     }
 
     final public ZDD crossIntersection(final ZDD... zdds)

@@ -419,7 +419,7 @@ final class ZDDTreePrefix extends ZDDTree {
     {
         final long h1 = ZDDTreePrefix.djb2(h, prefix);
 
-        return ZDD.crossUnion(eq, cu, un, ZDD.singleton(h1), treeSet.trees(eq, cu, un, h1));
+        return ZDD.crossUnion(new ZDDCacheNode(), eq, cu, un, ZDD.singleton(h1), treeSet.trees(eq, cu, un, h1));
     }
 
     @Override
@@ -427,7 +427,7 @@ final class ZDDTreePrefix extends ZDDTree {
     {
         final long h1 = ZDDTreePrefix.djb2(h, prefix);
 
-        return ZDD.union(new ZDDCacheNode(), eq, un, ZDD.TOP, ZDD.crossUnion(eq, cu, un, ZDD.singleton(h1), treeSet.subtrees(eq, cu, un, h1)));
+        return ZDD.union(new ZDDCacheNode(), eq, un, ZDD.TOP, ZDD.crossUnion(new ZDDCacheNode(), eq, cu, un, ZDD.singleton(h1), treeSet.subtrees(eq, cu, un, h1)));
     }
 
     @Override
@@ -499,13 +499,13 @@ final class ZDDTreeCross extends ZDDTree {
     @Override
     protected ZDD trees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
     {
-        return ZDD.crossUnion(eq, cu, un, mapTrees(eq, cu, un, h, ts));
+        return ZDD.crossUnion(new ZDDCacheNode(), eq, cu, un, mapTrees(eq, cu, un, h, ts));
     }
 
     @Override
     protected ZDD subtrees(final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long h)
     {
-        return ZDD.crossUnion(eq, cu, un, mapSubtrees(eq, cu, un, h, ts));
+        return ZDD.crossUnion(new ZDDCacheNode(), eq, cu, un, mapSubtrees(eq, cu, un, h, ts));
     }
 
     @Override
