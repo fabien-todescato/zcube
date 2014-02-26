@@ -420,7 +420,7 @@ final class ZDDTreePrefix extends ZDDTree {
     {
         final long h1 = ZDDTreePrefix.djb2(h, prefix);
 
-        return ZDD.crossUnion(nod, eq, cu, un, ZDD.singleton(h1), treeSet.trees(nod, eq, cu, un, h1));
+        return ZDD.crossUnion(nod, eq, cu, un, ZDD.singleton(nod, h1), treeSet.trees(nod, eq, cu, un, h1));
     }
 
     @Override
@@ -428,7 +428,7 @@ final class ZDDTreePrefix extends ZDDTree {
     {
         final long h1 = ZDDTreePrefix.djb2(h, prefix);
 
-        return ZDD.union(nod, eq, un, ZDD.TOP, ZDD.crossUnion(nod, eq, cu, un, ZDD.singleton(h1), treeSet.subtrees(nod, eq, cu, un, h1)));
+        return ZDD.union(nod, eq, un, ZDD.TOP, ZDD.crossUnion(nod, eq, cu, un, ZDD.singleton(nod, h1), treeSet.subtrees(nod, eq, cu, un, h1)));
     }
 
     @Override

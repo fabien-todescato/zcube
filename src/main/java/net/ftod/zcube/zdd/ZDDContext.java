@@ -26,6 +26,11 @@ public abstract class ZDDContext {
         super();
     }
 
+    final public ZDD singleton(final long x)
+    {
+        return ZDD.singleton(_nod, x);
+    }
+
     final public ZDD set(final long... xs)
     {
         return ZDD.set(_nod, _equ, _cru, _uni, xs);

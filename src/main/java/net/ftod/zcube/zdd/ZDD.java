@@ -113,7 +113,12 @@ public final class ZDD {
      */
     public static ZDD singleton(final long x)
     {
-        return new ZDD(x, BOT, TOP); // FIXME Use node cache...
+        return singleton(new ZDDCacheNode(), x);
+    }
+
+    static ZDD singleton(final ZDDCacheNode nod, final long x)
+    {
+        return zdd(nod, x, BOT, TOP);
     }
 
     /**
@@ -591,7 +596,7 @@ public final class ZDD {
         final ZDD[] zdd = new ZDD[xs.length];
 
         for (int i = 0; i < xs.length; ++i) {
-            zdd[i] = singleton(xs[i]);
+            zdd[i] = singleton(nod, xs[i]);
         }
 
         return crossUnion(nod, eq, cu, un, zdd);

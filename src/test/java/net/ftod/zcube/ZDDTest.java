@@ -2,7 +2,6 @@ package net.ftod.zcube;
 
 import static net.ftod.zcube.zdd.ZDD.BOT;
 import static net.ftod.zcube.zdd.ZDD.TOP;
-import static net.ftod.zcube.zdd.ZDD.singleton;
 import static net.ftod.zcube.zdd.ZDDTree.cross;
 import static net.ftod.zcube.zdd.ZDDTree.path;
 import static org.junit.Assert.assertEquals;
