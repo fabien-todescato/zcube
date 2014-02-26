@@ -106,13 +106,13 @@ public final class ZDDNumber {
      */
     public static ZDDNumber binaryAdd(final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
-        return binaryAdd(new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation(), new ZDDCacheOperation(), zddn1, zddn2);
+        return binaryAdd(new ZDDCacheNode(), new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation(), new ZDDCacheOperation(), zddn1, zddn2);
     }
 
-    static ZDDNumber binaryAdd(final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDDCacheOperation un, final ZDDCacheOperation di, final ZDDNumber zddn1, final ZDDNumber zddn2)
+    static ZDDNumber binaryAdd(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDDCacheOperation un, final ZDDCacheOperation di, final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
-        final ZDDNumber zddnc = intersection(new ZDDCacheNode(), eq, in, zddn1, zddn2);
-        final ZDDNumber zddns = difference(new ZDDCacheNode(), eq, di, union(new ZDDCacheNode(), eq, un, zddn1, zddn2), zddnc);
+        final ZDDNumber zddnc = intersection(nod, eq, in, zddn1, zddn2);
+        final ZDDNumber zddns = difference(nod, eq, di, union(nod, eq, un, zddn1, zddn2), zddnc);
 
         if (zddnc == ZERO) {
             return zddns;
@@ -122,7 +122,7 @@ public final class ZDDNumber {
             return new ZDDNumber(ZDD.BOT, zddnc);
         }
 
-        return number(zddns.digit, binaryAdd(eq, in, un, di, zddns.number, zddnc));
+        return number(zddns.digit, binaryAdd(nod, eq, in, un, di, zddns.number, zddnc));
     }
 
     /**
@@ -224,8 +224,9 @@ public final class ZDDNumber {
 
     static ZDDNumber negabinaryAdd(final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDDCacheOperation un, final ZDDCacheOperation di, final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
-        final ZDDNumber zddnc = intersection(new ZDDCacheNode(), eq, in, zddn1, zddn2);
-        final ZDDNumber zddns = difference(new ZDDCacheNode(), eq, di, union(new ZDDCacheNode(), eq, un, zddn1, zddn2), zddnc);
+        final ZDDCacheNode nod = new ZDDCacheNode();
+        final ZDDNumber zddnc = intersection(nod, eq, in, zddn1, zddn2);
+        final ZDDNumber zddns = difference(nod, eq, di, union(nod, eq, un, zddn1, zddn2), zddnc);
 
         if (zddnc == ZERO) {
             return zddns;
@@ -326,13 +327,14 @@ public final class ZDDNumber {
 
     public static ZDDNumber addSubtrees(final long l, final ZDDTree trees, final ZDD filter, final ZDDNumber zn)
     {
+        final ZDDCacheNode nod = new ZDDCacheNode();
         final ZDDCachePredicate _equ = new ZDDCachePredicate();
         final ZDDCacheOperation _cru = new ZDDCacheOperation();
         final ZDDCacheOperation _uni = new ZDDCacheOperation();
         final ZDDCacheOperation _int = new ZDDCacheOperation();
         final ZDDCacheOperation _dif = new ZDDCacheOperation();
 
-        return addSubtrees(l, trees, filter, zn, new ZDDCacheNode(), _equ, _cru, _uni, _int, _dif);
+        return addSubtrees(l, trees, filter, zn, nod, _equ, _cru, _uni, _int, _dif);
     }
 
     static ZDDNumber addSubtrees(

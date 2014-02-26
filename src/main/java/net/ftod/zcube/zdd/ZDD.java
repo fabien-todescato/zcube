@@ -458,7 +458,7 @@ public final class ZDD {
             if (zdd1 == TOP) {
                 zdd = topDifference(di, zdd2);
             } else if (zdd2 == TOP) {
-                zdd = differenceTop(di, zdd1);
+                zdd = differenceTop(nod, di, zdd1);
             } else {
 
                 final long x1 = zdd1.x;
@@ -479,7 +479,7 @@ public final class ZDD {
         return zdd;
     }
 
-    private static ZDD differenceTop(final ZDDCacheOperation di, final ZDD zdd1)
+    private static ZDD differenceTop(final ZDDCacheNode nod, final ZDDCacheOperation di, final ZDD zdd1)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -492,7 +492,7 @@ public final class ZDD {
         ZDD zdd = di.get(zdd1, TOP);
 
         if (zdd == null) {
-            zdd = zdd(new ZDDCacheNode(), zdd1.x, differenceTop(di, zdd1.b), zdd1.t);
+            zdd = zdd(nod, zdd1.x, differenceTop(nod, di, zdd1.b), zdd1.t);
             di.put(zdd1, TOP, zdd);
         }
 
@@ -651,7 +651,7 @@ public final class ZDD {
         return zdd;
     }
 
-    static ZDD crossDifference(final ZDDCachePredicate eq, final ZDDCacheOperation cd, final ZDDCacheOperation un, final ZDD zdd1, final ZDD zdd2)
+    static ZDD crossDifference(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation cd, final ZDDCacheOperation un, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -677,12 +677,11 @@ public final class ZDD {
             final long x2 = zdd2.x;
 
             if (x1 < x2) {
-                zdd = zdd(new ZDDCacheNode(), x1, crossDifference(eq, cd, un, zdd1.b, zdd2), crossDifference(eq, cd, un, zdd1.t, zdd2));
+                zdd = zdd(nod, x1, crossDifference(nod, eq, cd, un, zdd1.b, zdd2), crossDifference(nod, eq, cd, un, zdd1.t, zdd2));
             } else if (x1 > x2) {
-                zdd = union(new ZDDCacheNode(), eq, un, crossDifference(eq, cd, un, zdd1, zdd2.b), crossDifference(eq, cd, un, zdd1, zdd2.t));
+                zdd = union(nod, eq, un, crossDifference(nod, eq, cd, un, zdd1, zdd2.b), crossDifference(nod, eq, cd, un, zdd1, zdd2.t));
             } else {
-                zdd = zdd(new ZDDCacheNode(), x1, union(new ZDDCacheNode(), eq, un, crossDifference(eq, cd, un, zdd1.b, zdd2.b), crossDifference(eq, cd, un, zdd1.b, zdd2.t), crossDifference(eq, cd, un, zdd1.t, zdd2.t)), crossDifference(eq, cd, un, zdd1.t,
-                        zdd2.b));
+                zdd = zdd(nod, x1, union(nod, eq, un, crossDifference(nod, eq, cd, un, zdd1.b, zdd2.b), crossDifference(nod, eq, cd, un, zdd1.b, zdd2.t), crossDifference(nod, eq, cd, un, zdd1.t, zdd2.t)), crossDifference(nod, eq, cd, un, zdd1.t, zdd2.b));
             }
 
             cd.put(zdd1, zdd2, zdd);

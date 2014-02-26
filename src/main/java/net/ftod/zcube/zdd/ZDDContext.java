@@ -58,7 +58,7 @@ public abstract class ZDDContext {
 
     final public ZDD crossDifference(final ZDD zdd1, final ZDD zdd2)
     {
-        return ZDD.crossDifference(_equ, _crd, _uni, zdd1, zdd2);
+        return ZDD.crossDifference(_nod, _equ, _crd, _uni, zdd1, zdd2);
     }
 
     final public ZDD crossUnion(final ZDD... zdds)
@@ -108,7 +108,7 @@ public abstract class ZDDContext {
 
     final public ZDDNumber binaryAdd(final ZDDNumber zddn1, final ZDDNumber zddn2)
     {
-        return ZDDNumber.binaryAdd(_equ, _int, _uni, _dif, zddn1, zddn2);
+        return ZDDNumber.binaryAdd(_nod, _equ, _int, _uni, _dif, zddn1, zddn2);
     }
 
     final public long negabinary(final ZDDNumber zddn, final ZDD zdd)
