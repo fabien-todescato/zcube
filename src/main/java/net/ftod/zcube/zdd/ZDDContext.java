@@ -138,7 +138,7 @@ public abstract class ZDDContext {
 
     final public ZDD subtrees(final ZDDTree t)
     {
-        return ZDDTree.subtrees(t, _equ, _cru, _uni);
+        return ZDDTree.subtrees(t, _nod, _equ, _cru, _uni);
     }
 
     protected abstract <T> T expression();
