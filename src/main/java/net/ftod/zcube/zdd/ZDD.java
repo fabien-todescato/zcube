@@ -590,20 +590,20 @@ public final class ZDD {
         return crossUnion(nod, eq, cu, un, zdd);
     }
 
-    static ZDD crossIntersection(final ZDDCachePredicate eq, final ZDDCacheOperation ci, final ZDDCacheOperation un, final ZDD... zdds)
+    static ZDD crossIntersection(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation ci, final ZDDCacheOperation un, final ZDD... zdds)
     {
-        return crossIntersection(eq, ci, un, 0, zdds.length, zdds);
+        return crossIntersection(nod, eq, ci, un, 0, zdds.length, zdds);
     }
 
-    static ZDD crossIntersection(final ZDDCachePredicate eq, final ZDDCacheOperation ci, final ZDDCacheOperation un, final int begin, final int end, final ZDD[] zdda)
+    static ZDD crossIntersection(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation ci, final ZDDCacheOperation un, final int begin, final int end, final ZDD[] zdda)
     {
         final int length = end - begin;
 
         if (length > 2) {
             final int middle = begin + (length >> 1);
-            return crossIntersection(eq, ci, un, crossIntersection(eq, ci, un, begin, middle, zdda), crossIntersection(eq, ci, un, middle, end, zdda));
+            return crossIntersection(nod, eq, ci, un, crossIntersection(nod, eq, ci, un, begin, middle, zdda), crossIntersection(nod, eq, ci, un, middle, end, zdda));
         } else if (length > 1) {
-            return crossIntersection(eq, ci, un, zdda[begin], zdda[begin + 1]);
+            return crossIntersection(nod, eq, ci, un, zdda[begin], zdda[begin + 1]);
         } else if (length > 0) {
             return zdda[begin];
         }
@@ -611,7 +611,7 @@ public final class ZDD {
         return TOP;
     }
 
-    static ZDD crossIntersection(final ZDDCachePredicate eq, final ZDDCacheOperation ci, final ZDDCacheOperation un, final ZDD zdd1, final ZDD zdd2)
+    static ZDD crossIntersection(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation ci, final ZDDCacheOperation un, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -637,12 +637,12 @@ public final class ZDD {
             final long x2 = zdd2.x;
 
             if (x1 < x2) {
-                zdd = union(new ZDDCacheNode(), eq, un, crossIntersection(eq, ci, un, zdd1.b, zdd2), crossIntersection(eq, ci, un, zdd1.t, zdd2));
+                zdd = union(nod, eq, un, crossIntersection(nod, eq, ci, un, zdd1.b, zdd2), crossIntersection(nod, eq, ci, un, zdd1.t, zdd2));
             } else if (x1 > x2) {
-                zdd = union(new ZDDCacheNode(), eq, un, crossIntersection(eq, ci, un, zdd1, zdd2.b), crossIntersection(eq, ci, un, zdd1, zdd2.t));
+                zdd = union(nod, eq, un, crossIntersection(nod, eq, ci, un, zdd1, zdd2.b), crossIntersection(nod, eq, ci, un, zdd1, zdd2.t));
             } else {
-                zdd = zdd(new ZDDCacheNode(), x1, union(new ZDDCacheNode(), eq, un, crossIntersection(eq, ci, un, zdd1.b, zdd2.b), union(new ZDDCacheNode(), eq, un, crossIntersection(eq, ci, un, zdd1.b, zdd2.t), crossIntersection(eq, ci, un, zdd1.t,
-                        zdd2.b))), crossIntersection(eq, ci, un, zdd1.t, zdd2.t));
+                zdd = zdd(nod, x1, union(nod, eq, un, crossIntersection(nod, eq, ci, un, zdd1.b, zdd2.b), union(nod, eq, un, crossIntersection(nod, eq, ci, un, zdd1.b, zdd2.t), crossIntersection(nod, eq, ci, un, zdd1.t, zdd2.b))), crossIntersection(nod,
+                        eq, ci, un, zdd1.t, zdd2.t));
             }
 
             ci.put(zdd1, zdd2, zdd);

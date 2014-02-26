@@ -73,12 +73,12 @@ public abstract class ZDDContext {
 
     final public ZDD crossIntersection(final ZDD... zdds)
     {
-        return ZDD.crossIntersection(_equ, _cri, _uni, zdds);
+        return ZDD.crossIntersection(_nod, _equ, _cri, _uni, zdds);
     }
 
     final public ZDD crossIntersection(final ZDD zdd1, final ZDD zdd2)
     {
-        return ZDD.crossIntersection(_equ, _cri, _uni, zdd1, zdd2);
+        return ZDD.crossIntersection(_nod, _equ, _cri, _uni, zdd1, zdd2);
     }
 
     final public boolean equals(final ZDD zdd1, final ZDD zdd2)
