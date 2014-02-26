@@ -133,7 +133,7 @@ public abstract class ZDDContext {
 
     final public ZDD trees(final ZDDTree t)
     {
-        return ZDDTree.trees(t, _equ, _cru, _uni);
+        return ZDDTree.trees(t, _nod, _equ, _cru, _uni);
     }
 
     final public ZDD subtrees(final ZDDTree t)

@@ -312,9 +312,9 @@ public final class ZDD {
 
         if (zdd == null) {
             if (zdd1 == TOP) {
-                zdd = unionTop(un, zdd2);
+                zdd = unionTop(nod, un, zdd2);
             } else if (zdd2 == TOP) {
-                zdd = unionTop(un, zdd1);
+                zdd = unionTop(nod, un, zdd1);
             } else {
 
                 final long x1 = zdd1.x;
@@ -335,7 +335,7 @@ public final class ZDD {
         return zdd;
     }
 
-    private static ZDD unionTop(final ZDDCacheOperation un, final ZDD zdd1)
+    private static ZDD unionTop(final ZDDCacheNode nod, final ZDDCacheOperation un, final ZDD zdd1)
     {
         if (zdd1 == BOT) {
             return TOP;
@@ -348,7 +348,7 @@ public final class ZDD {
         ZDD zdd = un.get(TOP, zdd1);
 
         if (zdd == null) {
-            zdd = zdd(new ZDDCacheNode(), zdd1.x, unionTop(un, zdd1.b), zdd1.t);
+            zdd = zdd(nod, zdd1.x, unionTop(nod, un, zdd1.b), zdd1.t);
             un.put(TOP, zdd1, zdd);
         }
 

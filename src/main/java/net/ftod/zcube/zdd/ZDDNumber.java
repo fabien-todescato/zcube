@@ -374,7 +374,7 @@ public final class ZDDNumber {
             final ZDDCacheOperation un = new ZDDCacheOperation();
 
             for (int j = 0; j < n; ++j) {
-                zs[j] = ZDDTree.trees(ts[j], eq, cu, un);
+                zs[j] = ZDDTree.trees(ts[j], no, eq, cu, un);
             }
 
             u = ZDD.union(no, eq, un, zs);
