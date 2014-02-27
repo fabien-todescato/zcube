@@ -44,13 +44,14 @@ public abstract class ZDDTree {
         @Override
         protected void _write(final DataOutputStream dos) throws IOException
         {
+            // Nothing to write
         }
 
         @Override
         public String toString()
         {
             return "bot";
-        };
+        }
     };
 
     /**
@@ -79,13 +80,14 @@ public abstract class ZDDTree {
         @Override
         protected void _write(final DataOutputStream dos) throws IOException
         {
+            // Nothing to write
         }
 
         @Override
         public String toString()
         {
             return "top";
-        };
+        }
     };
 
     /**
@@ -298,6 +300,7 @@ public abstract class ZDDTree {
     }
 
     protected enum Type {
+        @SuppressWarnings("hiding")
         BOT {
             @Override
             protected ZDDTree read(final DataInputStream dis)
@@ -305,6 +308,7 @@ public abstract class ZDDTree {
                 return ZDDTree.BOT;
             }
         },
+        @SuppressWarnings("hiding")
         TOP {
             @Override
             protected ZDDTree read(final DataInputStream dis)
@@ -312,21 +316,21 @@ public abstract class ZDDTree {
                 return ZDDTree.TOP;
             }
         },
-        Prefix {
+        PREFIX {
             @Override
             protected ZDDTree read(final DataInputStream dis) throws IOException
             {
                 return ZDDTreePrefix._read(dis);
             }
         },
-        Cross {
+        CROSS {
             @Override
             protected ZDDTree read(final DataInputStream dis) throws IOException
             {
                 return ZDDTreeCross._read(dis);
             }
         },
-        Sum {
+        SUM {
             @Override
             protected ZDDTree read(final DataInputStream dis) throws IOException
             {
@@ -434,7 +438,7 @@ final class ZDDTreePrefix extends ZDDTree {
     @Override
     protected Type type()
     {
-        return Type.Prefix;
+        return Type.PREFIX;
     }
 
     /**
@@ -512,7 +516,7 @@ final class ZDDTreeCross extends ZDDTree {
     @Override
     protected Type type()
     {
-        return Type.Cross;
+        return Type.CROSS;
     }
 
     @Override
@@ -566,7 +570,7 @@ final class ZDDTreeSum extends ZDDTree {
     @Override
     protected Type type()
     {
-        return Type.Sum;
+        return Type.SUM;
     }
 
     @Override
