@@ -12,7 +12,7 @@ import static net.ftod.zcube.zdd.ZDD.CACHE_SIZE;
  * 
  * @author <a href="mailto:fabien.todescato@gmail.com">Fabien Todescato</a>
  */
-final class ZDDCacheLong {
+final class ZDDCacheL {
 
     private final ZDD[] _z = new ZDD[CACHE_SIZE];
     private final long[] _l = new long[CACHE_SIZE];
@@ -22,7 +22,7 @@ final class ZDDCacheLong {
         return z.h & CACHE_MAX;
     }
 
-    ZDDCacheLong() {
+    ZDDCacheL() {
         super();
     }
 

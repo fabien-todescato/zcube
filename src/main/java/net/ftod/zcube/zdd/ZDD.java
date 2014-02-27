@@ -79,10 +79,10 @@ public final class ZDD {
 
     public static long size(final ZDD z)
     {
-        return size(new ZDDCacheLong(), z);
+        return size(new ZDDCacheL(), z);
     }
 
-    static long size(final ZDDCacheLong _cl, final ZDD z)
+    static long size(final ZDDCacheL _cl, final ZDD z)
     {
         if (z == BOT) {
             return 0L;
