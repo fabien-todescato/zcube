@@ -12,15 +12,15 @@ package net.ftod.zcube.zdd;
  */
 public abstract class ZDDContext {
 
-    final ZDDCacheNode _nod = new ZDDCacheNode();
-    private final ZDDCachePredicate _equ = new ZDDCachePredicate();
-    private final ZDDCachePredicate _inc = new ZDDCachePredicate();
-    private final ZDDCacheOperation _uni = new ZDDCacheOperation();
-    private final ZDDCacheOperation _int = new ZDDCacheOperation();
-    private final ZDDCacheOperation _dif = new ZDDCacheOperation();
-    private final ZDDCacheOperation _cru = new ZDDCacheOperation();
-    private final ZDDCacheOperation _crd = new ZDDCacheOperation();
-    private final ZDDCacheOperation _cri = new ZDDCacheOperation();
+    private final ZDDCacheN _nod = new ZDDCacheN();
+    private final ZDDCacheP _equ = new ZDDCacheP();
+    private final ZDDCacheP _inc = new ZDDCacheP();
+    private final ZDDCacheO _uni = new ZDDCacheO();
+    private final ZDDCacheO _int = new ZDDCacheO();
+    private final ZDDCacheO _dif = new ZDDCacheO();
+    private final ZDDCacheO _cru = new ZDDCacheO();
+    private final ZDDCacheO _crd = new ZDDCacheO();
+    private final ZDDCacheO _cri = new ZDDCacheO();
 
     protected ZDDContext() {
         super();

@@ -1,33 +1,32 @@
 package net.ftod.zcube.zdd;
 
-import static net.ftod.zcube.zdd.ZDD.CACHE_MAX;
 import static net.ftod.zcube.zdd.ZDD.CACHE_SIZE;
 
 /**
- * <h3>Caching binary operations</h3>
+ * <h1>Caching binary predicates</h1>
  * 
  * <p>
- * Small <b>mutable</b> cache for binary operations on {@link ZDD}. Used to speed up recursive operations.
+ * Small <b>mutable</b> cache for binary predicates on pairs of {@link ZDD}. Used to speed up recursive operations that require equality checks on {@link ZDD}.
  * </p>
  * 
  * @author <a href="mailto:fabien.todescato@gmail.com">Fabien Todescato</a>
  */
-final class ZDDCacheOperation {
+final class ZDDCacheP {
 
     private final ZDD[] _zdd1 = new ZDD[CACHE_SIZE];
     private final ZDD[] _zdd2 = new ZDD[CACHE_SIZE];
-    private final ZDD[] _zdd3 = new ZDD[CACHE_SIZE];
+    private final boolean[] _bool = new boolean[CACHE_SIZE];
 
     private static int index(final ZDD zdd1, final ZDD zdd2)
     {
-        return 1 + 31 * (zdd1.h + 31 * zdd2.h) & CACHE_MAX;
+        return 1 + 31 * (zdd1.h + 31 * zdd2.h) & ZDD.CACHE_MAX;
     }
 
-    ZDDCacheOperation() {
+    ZDDCacheP() {
         super();
     }
 
-    ZDD get(final ZDD zdd1, final ZDD zdd2)
+    Boolean get(final ZDD zdd1, final ZDD zdd2)
     {
         final int index = index(zdd1, zdd2);
 
@@ -35,16 +34,16 @@ final class ZDDCacheOperation {
             return null;
         }
 
-        return _zdd3[index];
+        return Boolean.valueOf(_bool[index]);
     }
 
-    void put(final ZDD zdd1, final ZDD zdd2, final ZDD zdd3)
+    void put(final ZDD zdd1, final ZDD zdd2, final boolean zdd3)
     {
         final int index = index(zdd1, zdd2);
 
         _zdd1[index] = zdd1;
         _zdd2[index] = zdd2;
-        _zdd3[index] = zdd3;
+        _bool[index] = zdd3;
     }
 
 }

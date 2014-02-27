@@ -3,14 +3,14 @@ package net.ftod.zcube.zdd;
 import static net.ftod.zcube.zdd.ZDD.CACHE_MAX;
 import static net.ftod.zcube.zdd.ZDD.CACHE_SIZE;
 
-final class ZDDCacheNode {
+final class ZDDCacheN {
 
     private final long[] _x = new long[CACHE_SIZE];
     private final ZDD[] _b = new ZDD[CACHE_SIZE];
     private final ZDD[] _t = new ZDD[CACHE_SIZE];
     private final ZDD[] _z = new ZDD[CACHE_SIZE];
 
-    ZDDCacheNode() {
+    ZDDCacheN() {
         super();
     }
 

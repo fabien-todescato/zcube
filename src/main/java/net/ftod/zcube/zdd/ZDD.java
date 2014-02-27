@@ -59,7 +59,7 @@ public final class ZDD {
         return (int) (l ^ l >>> 32);
     }
 
-    private static ZDD zdd(final ZDDCacheNode nod, final long x, final ZDD b, final ZDD t)
+    private static ZDD zdd(final ZDDCacheN nod, final long x, final ZDD b, final ZDD t)
     {
         if (t == BOT) {
             return b;
@@ -113,10 +113,10 @@ public final class ZDD {
      */
     public static ZDD singleton(final long x)
     {
-        return singleton(new ZDDCacheNode(), x);
+        return singleton(new ZDDCacheN(), x);
     }
 
-    static ZDD singleton(final ZDDCacheNode nod, final long x)
+    static ZDD singleton(final ZDDCacheN nod, final long x)
     {
         return zdd(nod, x, BOT, TOP);
     }
@@ -130,7 +130,7 @@ public final class ZDD {
      */
     public static ZDD set(final long... xs)
     {
-        return set(new ZDDCacheNode(), new ZDDCachePredicate(), new ZDDCacheOperation(), new ZDDCacheOperation(), xs);
+        return set(new ZDDCacheN(), new ZDDCacheP(), new ZDDCacheO(), new ZDDCacheO(), xs);
     }
 
     /**
@@ -144,10 +144,10 @@ public final class ZDD {
      */
     public static boolean included(final ZDD zdd1, final ZDD zdd2)
     {
-        return included(new ZDDCachePredicate(), new ZDDCachePredicate(), zdd1, zdd2);
+        return included(new ZDDCacheP(), new ZDDCacheP(), zdd1, zdd2);
     }
 
-    static boolean included(final ZDDCachePredicate eq, final ZDDCachePredicate in, final ZDD zdd1, final ZDD zdd2)
+    static boolean included(final ZDDCacheP eq, final ZDDCacheP in, final ZDD zdd1, final ZDD zdd2)
     {
         if (equals(eq, zdd1, zdd2)) {
             return true;
@@ -213,7 +213,7 @@ public final class ZDD {
      */
     public static ZDD union(final ZDD zdd1, final ZDD zdd2)
     {
-        return union(new ZDDCacheNode(), new ZDDCachePredicate(), new ZDDCacheOperation(), zdd1, zdd2);
+        return union(new ZDDCacheN(), new ZDDCacheP(), new ZDDCacheO(), zdd1, zdd2);
     }
 
     /**
@@ -225,7 +225,7 @@ public final class ZDD {
      */
     public static ZDD union(final ZDD... zdds)
     {
-        return union(new ZDDCacheNode(), new ZDDCachePredicate(), new ZDDCacheOperation(), zdds);
+        return union(new ZDDCacheN(), new ZDDCacheP(), new ZDDCacheO(), zdds);
     }
 
     /**
@@ -237,7 +237,7 @@ public final class ZDD {
      */
     public static boolean equals(final ZDD zdd1, final ZDD zdd2)
     {
-        return equals(new ZDDCachePredicate(), zdd1, zdd2);
+        return equals(new ZDDCacheP(), zdd1, zdd2);
     }
 
     @Override
@@ -283,12 +283,12 @@ public final class ZDD {
         return builder.toString();
     }
 
-    static ZDD union(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation un, final ZDD... zdds)
+    static ZDD union(final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO un, final ZDD... zdds)
     {
         return union(nod, eq, un, 0, zdds.length, zdds);
     }
 
-    static ZDD union(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation un, final int begin, final int end, final ZDD[] zdda)
+    static ZDD union(final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO un, final int begin, final int end, final ZDD[] zdda)
     {
         final int length = end - begin;
 
@@ -306,7 +306,7 @@ public final class ZDD {
         return BOT;
     }
 
-    static ZDD union(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation un, final ZDD zdd1, final ZDD zdd2)
+    static ZDD union(final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO un, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return zdd2;
@@ -347,7 +347,7 @@ public final class ZDD {
         return zdd;
     }
 
-    private static ZDD unionTop(final ZDDCacheNode nod, final ZDDCacheOperation un, final ZDD zdd1)
+    private static ZDD unionTop(final ZDDCacheN nod, final ZDDCacheO un, final ZDD zdd1)
     {
         if (zdd1 == BOT) {
             return TOP;
@@ -367,12 +367,12 @@ public final class ZDD {
         return zdd;
     }
 
-    static ZDD intersection(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDD... zdds)
+    static ZDD intersection(final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO in, final ZDD... zdds)
     {
         return intersection(nod, eq, in, 0, zdds.length, zdds);
     }
 
-    static ZDD intersection(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation in, final int begin, final int end, final ZDD[] zdda)
+    static ZDD intersection(final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO in, final int begin, final int end, final ZDD[] zdda)
     {
         final int length = end - begin;
 
@@ -388,7 +388,7 @@ public final class ZDD {
         return BOT;
     }
 
-    static ZDD intersection(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation in, final ZDD zdd1, final ZDD zdd2)
+    static ZDD intersection(final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO in, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -429,7 +429,7 @@ public final class ZDD {
         return zdd;
     }
 
-    private static ZDD intersectionTop(final ZDDCacheOperation in, final ZDD zdd1)
+    private static ZDD intersectionTop(final ZDDCacheO in, final ZDD zdd1)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -449,7 +449,7 @@ public final class ZDD {
         return zdd;
     }
 
-    static ZDD difference(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation di, final ZDD zdd1, final ZDD zdd2)
+    static ZDD difference(final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO di, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -491,7 +491,7 @@ public final class ZDD {
         return zdd;
     }
 
-    private static ZDD differenceTop(final ZDDCacheNode nod, final ZDDCacheOperation di, final ZDD zdd1)
+    private static ZDD differenceTop(final ZDDCacheN nod, final ZDDCacheO di, final ZDD zdd1)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -511,7 +511,7 @@ public final class ZDD {
         return zdd;
     }
 
-    private static ZDD topDifference(final ZDDCacheOperation di, final ZDD zdd2)
+    private static ZDD topDifference(final ZDDCacheO di, final ZDD zdd2)
     {
         if (zdd2 == BOT) {
             return TOP;
@@ -531,12 +531,12 @@ public final class ZDD {
         return zdd;
     }
 
-    static ZDD crossUnion(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final ZDD... zdds)
+    static ZDD crossUnion(final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO cu, final ZDDCacheO un, final ZDD... zdds)
     {
         return crossUnion(nod, eq, cu, un, 0, zdds.length, zdds);
     }
 
-    static ZDD crossUnion(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final int begin, final int end, final ZDD[] zdda)
+    static ZDD crossUnion(final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO cu, final ZDDCacheO un, final int begin, final int end, final ZDD[] zdda)
     {
         final int length = end - begin;
 
@@ -552,7 +552,7 @@ public final class ZDD {
         return TOP;
     }
 
-    static ZDD crossUnion(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final ZDD zdd1, final ZDD zdd2)
+    static ZDD crossUnion(final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO cu, final ZDDCacheO un, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -591,7 +591,7 @@ public final class ZDD {
         return zdd;
     }
 
-    static ZDD set(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation cu, final ZDDCacheOperation un, final long... xs)
+    static ZDD set(final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO cu, final ZDDCacheO un, final long... xs)
     {
         final ZDD[] zdd = new ZDD[xs.length];
 
@@ -602,12 +602,12 @@ public final class ZDD {
         return crossUnion(nod, eq, cu, un, zdd);
     }
 
-    static ZDD crossIntersection(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation ci, final ZDDCacheOperation un, final ZDD... zdds)
+    static ZDD crossIntersection(final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO ci, final ZDDCacheO un, final ZDD... zdds)
     {
         return crossIntersection(nod, eq, ci, un, 0, zdds.length, zdds);
     }
 
-    static ZDD crossIntersection(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation ci, final ZDDCacheOperation un, final int begin, final int end, final ZDD[] zdda)
+    static ZDD crossIntersection(final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO ci, final ZDDCacheO un, final int begin, final int end, final ZDD[] zdda)
     {
         final int length = end - begin;
 
@@ -623,7 +623,7 @@ public final class ZDD {
         return TOP;
     }
 
-    static ZDD crossIntersection(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation ci, final ZDDCacheOperation un, final ZDD zdd1, final ZDD zdd2)
+    static ZDD crossIntersection(final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO ci, final ZDDCacheO un, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -663,7 +663,7 @@ public final class ZDD {
         return zdd;
     }
 
-    static ZDD crossDifference(final ZDDCacheNode nod, final ZDDCachePredicate eq, final ZDDCacheOperation cd, final ZDDCacheOperation un, final ZDD zdd1, final ZDD zdd2)
+    static ZDD crossDifference(final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO cd, final ZDDCacheO un, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -702,7 +702,7 @@ public final class ZDD {
         return zdd;
     }
 
-    static boolean equals(final ZDDCachePredicate eq, final ZDD zdd1, final ZDD zdd2)
+    static boolean equals(final ZDDCacheP eq, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == zdd2) {
             return true;
