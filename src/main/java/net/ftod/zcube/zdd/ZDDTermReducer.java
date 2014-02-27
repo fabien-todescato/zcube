@@ -8,18 +8,22 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public abstract class ZDDLongReducer<T> {
+public abstract class ZDDTermReducer<T> {
 
-    abstract protected T reduce(Iterator<ZDDLong> i);
+    private ZDDTermReducer() {
+        super();
+    }
+
+    abstract protected T reduce(Iterator<ZDDTerm> i);
 
     private final T reduce(final File file) throws IOException
     {
         final DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
 
         try {
-            return reduce(new Iterator<ZDDLong>() {
+            return reduce(new Iterator<ZDDTerm>() {
 
-                private ZDDLong next = null;
+                private ZDDTerm next = null;
 
                 @Override
                 public boolean hasNext()
@@ -29,7 +33,7 @@ public abstract class ZDDLongReducer<T> {
                     }
 
                     try {
-                        next = ZDDLong.read(dis);
+                        next = ZDDTerm.read(dis);
                     } catch (final IOException e) {
                         return false;
                     }
@@ -38,13 +42,13 @@ public abstract class ZDDLongReducer<T> {
                 }
 
                 @Override
-                public ZDDLong next()
+                public ZDDTerm next()
                 {
                     if (next == null) {
                         throw new NoSuchElementException();
                     }
 
-                    final ZDDLong _next = next;
+                    final ZDDTerm _next = next;
                     next = null;
                     return _next;
                 }
@@ -60,9 +64,9 @@ public abstract class ZDDLongReducer<T> {
         }
     }
 
-    private static final ZDDLongReducer<ZDDNumber> SUM_SUBTREES = new ZDDLongReducer<ZDDNumber>() {
+    private static final ZDDTermReducer<ZDDNumber> SUM_SUBTREES = new ZDDTermReducer<ZDDNumber>() {
         @Override
-        protected ZDDNumber reduce(final Iterator<ZDDLong> i)
+        protected ZDDNumber reduce(final Iterator<ZDDTerm> i)
         {
             return ZDDNumber.pSumSubtrees(i);
         }

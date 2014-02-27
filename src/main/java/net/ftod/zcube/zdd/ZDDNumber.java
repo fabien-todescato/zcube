@@ -294,14 +294,14 @@ public final class ZDDNumber {
         return number(ZDD.difference(nod, eq, di, zddn1.digit, zddn2.digit), difference(nod, eq, di, zddn1.number, zddn2.number));
     }
 
-    public static ZDDNumber addSubtrees(final ZDDLong zl, final ZDDNumber zn)
+    public static ZDDNumber addSubtrees(final ZDDTerm zt, final ZDDNumber zn)
     {
-        return addSubtrees(zl.l, zl.t, zn);
+        return addSubtrees(zt.l, zt.t, zn);
     }
 
-    static ZDDNumber addSubtrees(final ZDDLong zl, final ZDDNumber zn, final ZDDCacheN nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final ZDDCacheO _int, final ZDDCacheO _dif)
+    static ZDDNumber addSubtrees(final ZDDTerm zt, final ZDDNumber zn, final ZDDCacheN nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final ZDDCacheO _int, final ZDDCacheO _dif)
     {
-        return negabinaryAdd(nod, _equ, _int, _uni, _dif, negabinary(zl.l, ZDDTree.subtrees(zl.t, nod, _equ, _cru, _uni)), zn);
+        return negabinaryAdd(nod, _equ, _int, _uni, _dif, negabinary(zt.l, ZDDTree.subtrees(zt.t, nod, _equ, _cru, _uni)), zn);
     }
 
     public static ZDDNumber addSubtrees(final long l, final ZDDTree trees, final ZDDNumber zn)
@@ -330,9 +330,9 @@ public final class ZDDNumber {
         return negabinaryAdd(nod, _equ, _int, _uni, _dif, negabinary(l, ZDDTree.subtrees(trees, nod, _equ, _cru, _uni)), zn);
     }
 
-    public static ZDDNumber addSubtrees(final ZDDLong zl, final ZDD filter, final ZDDNumber zn)
+    public static ZDDNumber addSubtrees(final ZDDTerm zt, final ZDD filter, final ZDDNumber zn)
     {
-        return addSubtrees(zl.l, zl.t, filter, zn);
+        return addSubtrees(zt.l, zt.t, filter, zn);
     }
 
     public static ZDDNumber addSubtrees(final long l, final ZDDTree trees, final ZDD filter, final ZDDNumber zn)
@@ -362,7 +362,7 @@ public final class ZDDNumber {
         return negabinaryAdd(nod, _equ, _int, _uni, _dif, negabinary(l, ZDD.intersection(nod, _equ, _int, filter, ZDDTree.subtrees(trees, nod, _equ, _cru, _uni))), zn);
     }
 
-    public static long[] pSumGroupBy(final ZDDTree[] ts, final Iterable<ZDDLong> i)
+    public static long[] pSumGroupBy(final ZDDTree[] ts, final Iterable<ZDDTerm> i)
     {
         final int n = ts.length;
         final ZDD[] zs = new ZDD[n];
@@ -391,12 +391,12 @@ public final class ZDDNumber {
         return ls;
     }
 
-    public static ZDDNumber pSumSubtrees(final Iterable<ZDDLong> i)
+    public static ZDDNumber pSumSubtrees(final Iterable<ZDDTerm> i)
     {
         return pSumSubtrees(i.iterator());
     }
 
-    public static ZDDNumber pSumSubtrees(final Iterator<ZDDLong> i)
+    public static ZDDNumber pSumSubtrees(final Iterator<ZDDTerm> i)
     {
         final int processors = Runtime.getRuntime().availableProcessors();
         final int sums = PROCESSOR_SPREAD * processors;
@@ -423,7 +423,7 @@ public final class ZDDNumber {
         }
     }
 
-    private static Runnable sumTask(final BlockingQueue<ZDDNumber> zns, final ZDDLong zl)
+    private static Runnable sumTask(final BlockingQueue<ZDDNumber> zns, final ZDDTerm zt)
     {
         final ZDDNumber zn;
 
@@ -438,7 +438,7 @@ public final class ZDDNumber {
             public void run()
             {
                 try {
-                    zns.put(addSubtrees(zl, zn));
+                    zns.put(addSubtrees(zt, zn));
                 } catch (final InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -446,12 +446,12 @@ public final class ZDDNumber {
         };
     }
 
-    public static ZDDNumber pSumSubtrees(final ZDD filter, final Iterable<ZDDLong> i)
+    public static ZDDNumber pSumSubtrees(final ZDD filter, final Iterable<ZDDTerm> i)
     {
         return pSumSubtrees(filter, i.iterator());
     }
 
-    public static ZDDNumber pSumSubtrees(final ZDD filter, final Iterator<ZDDLong> i)
+    public static ZDDNumber pSumSubtrees(final ZDD filter, final Iterator<ZDDTerm> i)
     {
         final int processors = Runtime.getRuntime().availableProcessors();
         final int sums = PROCESSOR_SPREAD * processors;
@@ -537,7 +537,7 @@ public final class ZDDNumber {
         };
     }
 
-    private static Runnable sumTask(final ZDD filter, final BlockingQueue<ZDDNumber> zns, final ZDDLong zl)
+    private static Runnable sumTask(final ZDD filter, final BlockingQueue<ZDDNumber> zns, final ZDDTerm zt)
     {
         final ZDDNumber zn;
 
@@ -552,7 +552,7 @@ public final class ZDDNumber {
             public void run()
             {
                 try {
-                    zns.put(addSubtrees(zl, filter, zn));
+                    zns.put(addSubtrees(zt, filter, zn));
                 } catch (final InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -560,12 +560,12 @@ public final class ZDDNumber {
         };
     }
 
-    public static ZDDNumber sumSubtrees(final Iterable<ZDDLong> i)
+    public static ZDDNumber sumSubtrees(final Iterable<ZDDTerm> i)
     {
         return sumSubtrees(i.iterator());
     }
 
-    public static ZDDNumber sumSubtrees(final Iterator<ZDDLong> i)
+    public static ZDDNumber sumSubtrees(final Iterator<ZDDTerm> i)
     {
         final ZDDCacheN nod = new ZDDCacheN();
         final ZDDCacheP _equ = new ZDDCacheP();
@@ -577,19 +577,19 @@ public final class ZDDNumber {
         ZDDNumber zn = ZERO;
 
         while (i.hasNext()) {
-            final ZDDLong zl = i.next();
-            zn = addSubtrees(zl.l, zl.t, zn, nod, _equ, _cru, _uni, _int, _dif);
+            final ZDDTerm zt = i.next();
+            zn = addSubtrees(zt.l, zt.t, zn, nod, _equ, _cru, _uni, _int, _dif);
         }
 
         return zn;
     }
 
-    public static ZDDNumber sumSubtrees(final ZDD filter, final Iterable<ZDDLong> i)
+    public static ZDDNumber sumSubtrees(final ZDD filter, final Iterable<ZDDTerm> i)
     {
         return sumSubtrees(filter, i.iterator());
     }
 
-    public static ZDDNumber sumSubtrees(final ZDD filter, final Iterator<ZDDLong> i)
+    public static ZDDNumber sumSubtrees(final ZDD filter, final Iterator<ZDDTerm> i)
     {
         final ZDDCacheN nod = new ZDDCacheN();
         final ZDDCacheP _equ = new ZDDCacheP();
@@ -601,8 +601,8 @@ public final class ZDDNumber {
         ZDDNumber zn = ZERO;
 
         while (i.hasNext()) {
-            final ZDDLong zl = i.next();
-            zn = addSubtrees(zl.l, zl.t, filter, zn, nod, _equ, _cru, _uni, _int, _dif);
+            final ZDDTerm zt = i.next();
+            zn = addSubtrees(zt.l, zt.t, filter, zn, nod, _equ, _cru, _uni, _int, _dif);
         }
 
         return zn;
