@@ -331,7 +331,6 @@ public abstract class ZDDTree {
     }
 
     protected enum Type {
-        @SuppressWarnings("hiding")
         BOT {
             @Override
             protected ZDDTree read(final DataInputStream dis)
@@ -339,7 +338,6 @@ public abstract class ZDDTree {
                 return ZDDTree.BOT;
             }
         },
-        @SuppressWarnings("hiding")
         TOP {
             @Override
             protected ZDDTree read(final DataInputStream dis)

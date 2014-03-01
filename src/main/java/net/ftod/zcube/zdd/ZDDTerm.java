@@ -29,6 +29,11 @@ public final class ZDDTerm {
         return ZDDNumber.negabinary(l, ZDDTree.subtrees(t, _nod, _equ, _cru, _uni));
     }
 
+    ZDDNumber subtrees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final ZDDCacheO _int, final ZDD filter)
+    {
+        return ZDDNumber.negabinary(l, ZDD.intersection(_nod, _equ, _int, filter, ZDDTree.subtrees(t, _nod, _equ, _cru, _uni)));
+    }
+
     public void write(final DataOutputStream dos) throws IOException
     {
         dos.writeLong(l);

@@ -13,6 +13,7 @@ package net.ftod.zcube.zdd;
  * 
  * @author <a href="mailto:fabien.todescato@gmail.com">Fabien Todescato</a>
  */
+// TODO Standardize cache names.
 public final class ZDD {
 
     static final int CACHE_POWER = 5;
@@ -582,8 +583,8 @@ public final class ZDD {
             } else if (x1 > x2) {
                 zdd = zdd(nod, x2, crossUnion(nod, equ, cru, uni, zdd1, zdd2.b), crossUnion(nod, equ, cru, uni, zdd1, zdd2.t));
             } else {
-                zdd = zdd(nod, x1, crossUnion(nod, equ, cru, uni, zdd1.b, zdd2.b), union(nod, equ, uni, crossUnion(nod, equ, cru, uni, zdd1.t, zdd2.t), union(nod, equ, uni,
-                        crossUnion(nod, equ, cru, uni, zdd1.t, zdd2.b), crossUnion(nod, equ, cru, uni, zdd1.b, zdd2.t))));
+                zdd = zdd(nod, x1, crossUnion(nod, equ, cru, uni, zdd1.b, zdd2.b), union(nod, equ, uni, crossUnion(nod, equ, cru, uni, zdd1.t, zdd2.t), union(nod, equ, uni, crossUnion(nod, equ, cru, uni, zdd1.t, zdd2.b), crossUnion(nod, equ, cru, uni,
+                        zdd1.b, zdd2.t))));
             }
 
             cru.put(zdd1, zdd2, zdd);
@@ -654,8 +655,8 @@ public final class ZDD {
             } else if (x1 > x2) {
                 zdd = union(nod, equ, uni, crossIntersection(nod, equ, cri, uni, zdd1, zdd2.b), crossIntersection(nod, equ, cri, uni, zdd1, zdd2.t));
             } else {
-                zdd = zdd(nod, x1, union(nod, equ, uni, crossIntersection(nod, equ, cri, uni, zdd1.b, zdd2.b), union(nod, equ, uni, crossIntersection(nod, equ, cri, uni, zdd1.b,
-                        zdd2.t), crossIntersection(nod, equ, cri, uni, zdd1.t, zdd2.b))), crossIntersection(nod, equ, cri, uni, zdd1.t, zdd2.t));
+                zdd = zdd(nod, x1, union(nod, equ, uni, crossIntersection(nod, equ, cri, uni, zdd1.b, zdd2.b), union(nod, equ, uni, crossIntersection(nod, equ, cri, uni, zdd1.b, zdd2.t), crossIntersection(nod, equ, cri, uni, zdd1.t, zdd2.b))),
+                        crossIntersection(nod, equ, cri, uni, zdd1.t, zdd2.t));
             }
 
             cri.put(zdd1, zdd2, zdd);
@@ -694,8 +695,8 @@ public final class ZDD {
             } else if (x1 > x2) {
                 zdd = union(nod, equ, uni, crossDifference(nod, equ, crd, uni, zdd1, zdd2.b), crossDifference(nod, equ, crd, uni, zdd1, zdd2.t));
             } else {
-                zdd = zdd(nod, x1, union(nod, equ, uni, crossDifference(nod, equ, crd, uni, zdd1.b, zdd2.b), crossDifference(nod, equ, crd, uni, zdd1.b, zdd2.t), crossDifference(
-                        nod, equ, crd, uni, zdd1.t, zdd2.t)), crossDifference(nod, equ, crd, uni, zdd1.t, zdd2.b));
+                zdd = zdd(nod, x1, union(nod, equ, uni, crossDifference(nod, equ, crd, uni, zdd1.b, zdd2.b), crossDifference(nod, equ, crd, uni, zdd1.b, zdd2.t), crossDifference(nod, equ, crd, uni, zdd1.t, zdd2.t)), crossDifference(nod, equ, crd, uni,
+                        zdd1.t, zdd2.b));
             }
 
             crd.put(zdd1, zdd2, zdd);
