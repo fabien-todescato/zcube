@@ -135,6 +135,54 @@ abstract class ZDDTreeL {
         return zdds;
     }
 
+    public static ZDD trees(final ZDDTreeL t)
+    {
+        return trees(t, new ZDDCacheN(), new ZDDCacheP(), new ZDDCacheO(), new ZDDCacheO());
+    }
+
+    static ZDD trees(final ZDDTreeL t, final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO cu, final ZDDCacheO un)
+    {
+        return t.trees(nod, eq, cu, un);
+    }
+
+    public static ZDD unionTrees(final ZDDTreeL... ts)
+    {
+        return unionTrees(ts, new ZDDCacheN(), new ZDDCacheP(), new ZDDCacheO(), new ZDDCacheO());
+    }
+
+    static ZDD unionTrees(final ZDDTreeL[] ts, final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO cu, final ZDDCacheO un)
+    {
+        final int n = ts.length;
+        final ZDD[] zs = new ZDD[n];
+
+        for (int i = 0; i < n; ++i) {
+            zs[i] = trees(ts[i], nod, eq, cu, un);
+        }
+
+        return ZDD.union(nod, eq, un, zs);
+    }
+
+    public static ZDD subtrees(final ZDDTreeL t)
+    {
+        return subtrees(t, new ZDDCacheN(), new ZDDCacheP(), new ZDDCacheO(), new ZDDCacheO());
+    }
+
+    static ZDD subtrees(final ZDDTreeL t, final ZDDCacheN nod, final ZDDCacheP eq, final ZDDCacheO cu, final ZDDCacheO un)
+    {
+        return t.subtrees(nod, eq, cu, un);
+    }
+
+    public static ZDD subtrees(final ZDD z, final ZDDTreeL t)
+    {
+        final ZDDCacheN nod = new ZDDCacheN();
+        final ZDDCacheP eq = new ZDDCacheP();
+        final ZDDCacheO cu = new ZDDCacheO();
+        final ZDDCacheO un = new ZDDCacheO();
+        final ZDDCacheO in = new ZDDCacheO();
+
+        return ZDD.intersection(nod, eq, in, z, subtrees(t, nod, eq, cu, un));
+    }
+
 }
 
 final class ZDDTreeLBOT extends ZDDTreeL {
