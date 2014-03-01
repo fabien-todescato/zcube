@@ -24,9 +24,19 @@ public final class ZDDTerm {
         return ZDDNumber.negabinary(l, ZDDTree.trees(t, _nod, _equ, _cru, _uni));
     }
 
+    public static ZDDNumber subtrees(final ZDDTerm zt)
+    {
+        return zt.subtrees(new ZDDCacheN(), new ZDDCacheP(), new ZDDCacheO(), new ZDDCacheO());
+    }
+
     ZDDNumber subtrees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni)
     {
         return ZDDNumber.negabinary(l, ZDDTree.subtrees(t, _nod, _equ, _cru, _uni));
+    }
+
+    public static ZDDNumber subtrees(final ZDD z, final ZDDTerm zt)
+    {
+        return zt.subtrees(new ZDDCacheN(), new ZDDCacheP(), new ZDDCacheO(), new ZDDCacheO(), new ZDDCacheO(), z);
     }
 
     ZDDNumber subtrees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final ZDDCacheO _int, final ZDD filter)

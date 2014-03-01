@@ -46,10 +46,10 @@
   "
   ( [ trees ]
     ( let [ ^ZDD z ( ZDDTree/unionTrees trees ) ]
-      ( fn [ ^long l ^ZDDTree t ] ( ZDDNumber/negabinary l ( ZDDTree/subtrees z t ) ) )
+      ( fn [ ^ZDDTerm zt ] ( ZDDTree/subtrees z zt ) )
     )
   )
-  ( [ ^long l ^ZDDTree t] ( ZDDNumber/negabinary l ( ZDDTree/subtrees t ) )
+  ( [ ^ZDDTerm zt ] ( ZDDTerm/subtrees zt )
   )
 )
 
@@ -76,10 +76,10 @@
   "
 ( [ trees ]
   ( let [ ^ZDD z ( ZDDTree/unionTrees trees ) ] ; Pay the ZDD computation once...
-    ( fn [ ^long l ^ZDDTree trees ^ZDD filter ^ZDDNumber zn ] ( ZDDNumber/addSubtrees l trees filter zn ) ) ; ...possibly apply multiple times over ZDD numbers.
+    ( fn [ ^ZDDterm zt ^ZDDNumber zn ] ( ZDDNumber/addSubtrees filter zt zn ) ) ; ...possibly apply multiple times over ZDD numbers.
   )
   )
-( [ ^long l ^ZDDTree trees ^ZDDNumber zn ] ( ZDDNumber/addSubtrees l trees zn )
+( [ ^ZDDterm zt ^ZDDNumber zn ] ( ZDDNumber/addSubtrees zt zn )
 )
 )
 

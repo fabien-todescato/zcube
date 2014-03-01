@@ -296,12 +296,36 @@ public final class ZDDNumber {
 
     public static ZDDNumber addSubtrees(final ZDDTerm zt, final ZDDNumber zn)
     {
-        return addSubtrees(zt.l, zt.t, zn);
+        final ZDDCacheN _nod = new ZDDCacheN();
+        final ZDDCacheP _equ = new ZDDCacheP();
+        final ZDDCacheO _cru = new ZDDCacheO();
+        final ZDDCacheO _uni = new ZDDCacheO();
+        final ZDDCacheO _int = new ZDDCacheO();
+        final ZDDCacheO _dif = new ZDDCacheO();
+
+        return addSubtrees(zt, zn, _nod, _equ, _cru, _uni, _int, _dif);
     }
 
     static ZDDNumber addSubtrees(final ZDDTerm zt, final ZDDNumber zn, final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final ZDDCacheO _int, final ZDDCacheO _dif)
     {
         return negabinaryAdd(_nod, _equ, _int, _uni, _dif, zt.subtrees(_nod, _equ, _cru, _uni), zn);
+    }
+
+    public static ZDDNumber addSubtrees(final ZDD filter, final ZDDTerm zt, final ZDDNumber zn)
+    {
+        final ZDDCacheN _nod = new ZDDCacheN();
+        final ZDDCacheP _equ = new ZDDCacheP();
+        final ZDDCacheO _cru = new ZDDCacheO();
+        final ZDDCacheO _uni = new ZDDCacheO();
+        final ZDDCacheO _int = new ZDDCacheO();
+        final ZDDCacheO _dif = new ZDDCacheO();
+
+        return addSubtrees(filter, zt, zn, _nod, _equ, _cru, _uni, _int, _dif);
+    }
+
+    static ZDDNumber addSubtrees(final ZDD filter, final ZDDTerm zt, final ZDDNumber zn, final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final ZDDCacheO _int, final ZDDCacheO _dif)
+    {
+        return negabinaryAdd(_nod, _equ, _int, _uni, _dif, zt.subtrees(_nod, _equ, _cru, _uni, _int, filter), zn);
     }
 
     @Deprecated
@@ -585,8 +609,7 @@ public final class ZDDNumber {
         ZDDNumber zn = ZERO;
 
         while (i.hasNext()) {
-            final ZDDTerm zt = i.next();
-            zn = addSubtrees(zt.l, zt.t, filter, zn, _nod, _equ, _cru, _uni, _int, _dif);
+            zn = addSubtrees(filter, i.next(), zn, _nod, _equ, _cru, _uni, _int, _dif);
         }
 
         return zn;
