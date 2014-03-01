@@ -13,7 +13,6 @@ package net.ftod.zcube.zdd;
  * 
  * @author <a href="mailto:fabien.todescato@gmail.com">Fabien Todescato</a>
  */
-// TODO Standardize cache names.
 public final class ZDD {
 
     static final int CACHE_POWER = 5;
@@ -83,7 +82,7 @@ public final class ZDD {
         return size(new ZDDCacheL(), z);
     }
 
-    static long size(final ZDDCacheL _cl, final ZDD z)
+    static long size(final ZDDCacheL _clo, final ZDD z)
     {
         if (z == BOT) {
             return 0L;
@@ -92,15 +91,15 @@ public final class ZDD {
             return 1L;
         }
 
-        final Long cached = _cl.get(z);
+        final Long cached = _clo.get(z);
 
         if (cached != null) {
             return cached.longValue();
         }
 
-        final long s = size(_cl, z.b) + size(_cl, z.t);
+        final long s = size(_clo, z.b) + size(_clo, z.t);
 
-        _cl.put(z, s);
+        _clo.put(z, s);
 
         return s;
     }
@@ -117,9 +116,9 @@ public final class ZDD {
         return singleton(new ZDDCacheN(), x);
     }
 
-    static ZDD singleton(final ZDDCacheN nod, final long x)
+    static ZDD singleton(final ZDDCacheN _nod, final long x)
     {
-        return zdd(nod, x, BOT, TOP);
+        return zdd(_nod, x, BOT, TOP);
     }
 
     /**
@@ -148,9 +147,9 @@ public final class ZDD {
         return included(new ZDDCacheP(), new ZDDCacheP(), zdd1, zdd2);
     }
 
-    static boolean included(final ZDDCacheP equ, final ZDDCacheP in, final ZDD zdd1, final ZDD zdd2)
+    static boolean included(final ZDDCacheP _equ, final ZDDCacheP _inc, final ZDD zdd1, final ZDD zdd2)
     {
-        if (equals(equ, zdd1, zdd2)) {
+        if (equals(_equ, zdd1, zdd2)) {
             return true;
         }
         if (zdd1 == BOT) {
@@ -166,7 +165,7 @@ public final class ZDD {
             return false;
         }
 
-        final Boolean cached = in.get(zdd1, zdd2);
+        final Boolean cached = _inc.get(zdd1, zdd2);
 
         if (cached != null) {
             return cached.booleanValue();
@@ -180,12 +179,12 @@ public final class ZDD {
         if (x1 < x2) {
             included = false;
         } else if (x1 > x2) {
-            included = included(equ, in, zdd1, zdd2.b);
+            included = included(_equ, _inc, zdd1, zdd2.b);
         } else {
-            included = included(equ, in, zdd1.b, zdd2.b) && included(equ, in, zdd1.t, zdd2.t);
+            included = included(_equ, _inc, zdd1.b, zdd2.b) && included(_equ, _inc, zdd1.t, zdd2.t);
         }
 
-        in.put(zdd1, zdd2, included);
+        _inc.put(zdd1, zdd2, included);
 
         return included;
     }
@@ -284,21 +283,21 @@ public final class ZDD {
         return builder.toString();
     }
 
-    static ZDD union(final ZDDCacheN nod, final ZDDCacheP equ, final ZDDCacheO uni, final ZDD... zdds)
+    static ZDD union(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _uni, final ZDD... zdds)
     {
-        return union(nod, equ, uni, 0, zdds.length, zdds);
+        return union(_nod, _equ, _uni, 0, zdds.length, zdds);
     }
 
-    static ZDD union(final ZDDCacheN nod, final ZDDCacheP equ, final ZDDCacheO uni, final int begin, final int end, final ZDD[] zdda)
+    static ZDD union(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _uni, final int begin, final int end, final ZDD[] zdda)
     {
         final int length = end - begin;
 
         if (length > 2) {
             final int middle = begin + (length >> 1);
-            return union(nod, equ, uni, union(nod, equ, uni, begin, middle, zdda), union(nod, equ, uni, middle, end, zdda));
+            return union(_nod, _equ, _uni, union(_nod, _equ, _uni, begin, middle, zdda), union(_nod, _equ, _uni, middle, end, zdda));
         }
         if (length > 1) {
-            return union(nod, equ, uni, zdda[begin], zdda[begin + 1]);
+            return union(_nod, _equ, _uni, zdda[begin], zdda[begin + 1]);
         }
         if (length > 0) {
             return zdda[begin];
@@ -307,7 +306,7 @@ public final class ZDD {
         return BOT;
     }
 
-    static ZDD union(final ZDDCacheN nod, final ZDDCacheP equ, final ZDDCacheO uni, final ZDD zdd1, final ZDD zdd2)
+    static ZDD union(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _uni, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return zdd2;
@@ -317,38 +316,38 @@ public final class ZDD {
             return zdd1;
         }
 
-        if (equals(equ, zdd1, zdd2)) {
+        if (equals(_equ, zdd1, zdd2)) {
             return zdd1;
         }
 
-        ZDD zdd = uni.get(zdd1, zdd2);
+        ZDD zdd = _uni.get(zdd1, zdd2);
 
         if (zdd == null) {
             if (zdd1 == TOP) {
-                zdd = unionTop(nod, uni, zdd2);
+                zdd = unionTop(_nod, _uni, zdd2);
             } else if (zdd2 == TOP) {
-                zdd = unionTop(nod, uni, zdd1);
+                zdd = unionTop(_nod, _uni, zdd1);
             } else {
 
                 final long x1 = zdd1.x;
                 final long x2 = zdd2.x;
 
                 if (x1 < x2) {
-                    zdd = zdd(nod, x1, union(nod, equ, uni, zdd1.b, zdd2), zdd1.t);
+                    zdd = zdd(_nod, x1, union(_nod, _equ, _uni, zdd1.b, zdd2), zdd1.t);
                 } else if (x1 > x2) {
-                    zdd = zdd(nod, x2, union(nod, equ, uni, zdd1, zdd2.b), zdd2.t);
+                    zdd = zdd(_nod, x2, union(_nod, _equ, _uni, zdd1, zdd2.b), zdd2.t);
                 } else {
-                    zdd = zdd(nod, x1, union(nod, equ, uni, zdd1.b, zdd2.b), union(nod, equ, uni, zdd1.t, zdd2.t));
+                    zdd = zdd(_nod, x1, union(_nod, _equ, _uni, zdd1.b, zdd2.b), union(_nod, _equ, _uni, zdd1.t, zdd2.t));
                 }
             }
 
-            uni.put(zdd1, zdd2, zdd);
+            _uni.put(zdd1, zdd2, zdd);
         }
 
         return zdd;
     }
 
-    private static ZDD unionTop(final ZDDCacheN nod, final ZDDCacheO uni, final ZDD zdd1)
+    private static ZDD unionTop(final ZDDCacheN _nod, final ZDDCacheO _uni, final ZDD zdd1)
     {
         if (zdd1 == BOT) {
             return TOP;
@@ -358,30 +357,30 @@ public final class ZDD {
             return TOP;
         }
 
-        ZDD zdd = uni.get(TOP, zdd1);
+        ZDD zdd = _uni.get(TOP, zdd1);
 
         if (zdd == null) {
-            zdd = zdd(nod, zdd1.x, unionTop(nod, uni, zdd1.b), zdd1.t);
-            uni.put(TOP, zdd1, zdd);
+            zdd = zdd(_nod, zdd1.x, unionTop(_nod, _uni, zdd1.b), zdd1.t);
+            _uni.put(TOP, zdd1, zdd);
         }
 
         return zdd;
     }
 
-    static ZDD intersection(final ZDDCacheN nod, final ZDDCacheP equ, final ZDDCacheO in, final ZDD... zdds)
+    static ZDD intersection(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _int, final ZDD... zdds)
     {
-        return intersection(nod, equ, in, 0, zdds.length, zdds);
+        return intersection(_nod, _equ, _int, 0, zdds.length, zdds);
     }
 
-    static ZDD intersection(final ZDDCacheN nod, final ZDDCacheP equ, final ZDDCacheO in, final int begin, final int end, final ZDD[] zdda)
+    static ZDD intersection(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _int, final int begin, final int end, final ZDD[] zdda)
     {
         final int length = end - begin;
 
         if (length > 2) {
             final int middle = begin + (length >> 1);
-            return intersection(nod, equ, in, intersection(nod, equ, in, begin, middle, zdda), intersection(nod, equ, in, middle, end, zdda));
+            return intersection(_nod, _equ, _int, intersection(_nod, _equ, _int, begin, middle, zdda), intersection(_nod, _equ, _int, middle, end, zdda));
         } else if (length > 1) {
-            return intersection(nod, equ, in, zdda[begin], zdda[begin + 1]);
+            return intersection(_nod, _equ, _int, zdda[begin], zdda[begin + 1]);
         } else if (length > 0) {
             return zdda[begin];
         }
@@ -389,7 +388,7 @@ public final class ZDD {
         return BOT;
     }
 
-    static ZDD intersection(final ZDDCacheN nod, final ZDDCacheP equ, final ZDDCacheO in, final ZDD zdd1, final ZDD zdd2)
+    static ZDD intersection(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _int, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -399,38 +398,38 @@ public final class ZDD {
             return BOT;
         }
 
-        if (equals(equ, zdd1, zdd2)) {
+        if (equals(_equ, zdd1, zdd2)) {
             return zdd1;
         }
 
-        ZDD zdd = in.get(zdd1, zdd2);
+        ZDD zdd = _int.get(zdd1, zdd2);
 
         if (zdd == null) {
             if (zdd1 == TOP) {
-                zdd = intersectionTop(in, zdd2);
+                zdd = intersectionTop(_int, zdd2);
             } else if (zdd2 == TOP) {
-                zdd = intersectionTop(in, zdd1);
+                zdd = intersectionTop(_int, zdd1);
             } else {
 
                 final long x1 = zdd1.x;
                 final long x2 = zdd2.x;
 
                 if (x1 < x2) {
-                    zdd = intersection(nod, equ, in, zdd1.b, zdd2);
+                    zdd = intersection(_nod, _equ, _int, zdd1.b, zdd2);
                 } else if (x1 > x2) {
-                    zdd = intersection(nod, equ, in, zdd1, zdd2.b);
+                    zdd = intersection(_nod, _equ, _int, zdd1, zdd2.b);
                 } else {
-                    zdd = zdd(nod, x1, intersection(nod, equ, in, zdd1.b, zdd2.b), intersection(nod, equ, in, zdd1.t, zdd2.t));
+                    zdd = zdd(_nod, x1, intersection(_nod, _equ, _int, zdd1.b, zdd2.b), intersection(_nod, _equ, _int, zdd1.t, zdd2.t));
                 }
             }
 
-            in.put(zdd1, zdd2, zdd);
+            _int.put(zdd1, zdd2, zdd);
         }
 
         return zdd;
     }
 
-    private static ZDD intersectionTop(final ZDDCacheO in, final ZDD zdd1)
+    private static ZDD intersectionTop(final ZDDCacheO _int, final ZDD zdd1)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -440,17 +439,17 @@ public final class ZDD {
             return TOP;
         }
 
-        ZDD zdd = in.get(TOP, zdd1);
+        ZDD zdd = _int.get(TOP, zdd1);
 
         if (zdd == null) {
-            zdd = intersectionTop(in, zdd1.b);
-            in.put(TOP, zdd1, zdd);
+            zdd = intersectionTop(_int, zdd1.b);
+            _int.put(TOP, zdd1, zdd);
         }
 
         return zdd;
     }
 
-    static ZDD difference(final ZDDCacheN nod, final ZDDCacheP equ, final ZDDCacheO di, final ZDD zdd1, final ZDD zdd2)
+    static ZDD difference(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _dif, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -460,39 +459,39 @@ public final class ZDD {
             return zdd1;
         }
 
-        if (equals(equ, zdd1, zdd2)) {
+        if (equals(_equ, zdd1, zdd2)) {
             return BOT;
         }
 
-        ZDD zdd = di.get(zdd1, zdd2);
+        ZDD zdd = _dif.get(zdd1, zdd2);
 
         if (zdd == null) {
 
             if (zdd1 == TOP) {
-                zdd = topDifference(di, zdd2);
+                zdd = topDifference(_dif, zdd2);
             } else if (zdd2 == TOP) {
-                zdd = differenceTop(nod, di, zdd1);
+                zdd = differenceTop(_nod, _dif, zdd1);
             } else {
 
                 final long x1 = zdd1.x;
                 final long x2 = zdd2.x;
 
                 if (x1 < x2) {
-                    zdd = zdd(nod, x1, difference(nod, equ, di, zdd1.b, zdd2), zdd1.t);
+                    zdd = zdd(_nod, x1, difference(_nod, _equ, _dif, zdd1.b, zdd2), zdd1.t);
                 } else if (x1 > x2) {
-                    zdd = difference(nod, equ, di, zdd1, zdd2.b);
+                    zdd = difference(_nod, _equ, _dif, zdd1, zdd2.b);
                 } else {
-                    zdd = zdd(nod, x1, difference(nod, equ, di, zdd1.b, zdd2.b), difference(nod, equ, di, zdd1.t, zdd2.t));
+                    zdd = zdd(_nod, x1, difference(_nod, _equ, _dif, zdd1.b, zdd2.b), difference(_nod, _equ, _dif, zdd1.t, zdd2.t));
                 }
             }
 
-            di.put(zdd1, zdd2, zdd);
+            _dif.put(zdd1, zdd2, zdd);
         }
 
         return zdd;
     }
 
-    private static ZDD differenceTop(final ZDDCacheN nod, final ZDDCacheO di, final ZDD zdd1)
+    private static ZDD differenceTop(final ZDDCacheN _nod, final ZDDCacheO _dif, final ZDD zdd1)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -502,17 +501,17 @@ public final class ZDD {
             return BOT;
         }
 
-        ZDD zdd = di.get(zdd1, TOP);
+        ZDD zdd = _dif.get(zdd1, TOP);
 
         if (zdd == null) {
-            zdd = zdd(nod, zdd1.x, differenceTop(nod, di, zdd1.b), zdd1.t);
-            di.put(zdd1, TOP, zdd);
+            zdd = zdd(_nod, zdd1.x, differenceTop(_nod, _dif, zdd1.b), zdd1.t);
+            _dif.put(zdd1, TOP, zdd);
         }
 
         return zdd;
     }
 
-    private static ZDD topDifference(final ZDDCacheO di, final ZDD zdd2)
+    private static ZDD topDifference(final ZDDCacheO _dif, final ZDD zdd2)
     {
         if (zdd2 == BOT) {
             return TOP;
@@ -522,30 +521,30 @@ public final class ZDD {
             return BOT;
         }
 
-        ZDD zdd = di.get(TOP, zdd2);
+        ZDD zdd = _dif.get(TOP, zdd2);
 
         if (zdd == null) {
-            zdd = topDifference(di, zdd2.b);
-            di.put(TOP, zdd2, zdd);
+            zdd = topDifference(_dif, zdd2.b);
+            _dif.put(TOP, zdd2, zdd);
         }
 
         return zdd;
     }
 
-    static ZDD crossUnion(final ZDDCacheN nod, final ZDDCacheP equ, final ZDDCacheO cru, final ZDDCacheO uni, final ZDD... zdds)
+    static ZDD crossUnion(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final ZDD... zdds)
     {
-        return crossUnion(nod, equ, cru, uni, 0, zdds.length, zdds);
+        return crossUnion(_nod, _equ, _cru, _uni, 0, zdds.length, zdds);
     }
 
-    static ZDD crossUnion(final ZDDCacheN nod, final ZDDCacheP equ, final ZDDCacheO cru, final ZDDCacheO uni, final int begin, final int end, final ZDD[] zdda)
+    static ZDD crossUnion(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final int begin, final int end, final ZDD[] zdda)
     {
         final int length = end - begin;
 
         if (length > 2) {
             final int middle = begin + (length >> 1);
-            return crossUnion(nod, equ, cru, uni, crossUnion(nod, equ, cru, uni, begin, middle, zdda), crossUnion(nod, equ, cru, uni, middle, end, zdda));
+            return crossUnion(_nod, _equ, _cru, _uni, crossUnion(_nod, _equ, _cru, _uni, begin, middle, zdda), crossUnion(_nod, _equ, _cru, _uni, middle, end, zdda));
         } else if (length > 1) {
-            return crossUnion(nod, equ, cru, uni, zdda[begin], zdda[begin + 1]);
+            return crossUnion(_nod, _equ, _cru, _uni, zdda[begin], zdda[begin + 1]);
         } else if (length > 0) {
             return zdda[begin];
         }
@@ -553,7 +552,7 @@ public final class ZDD {
         return TOP;
     }
 
-    static ZDD crossUnion(final ZDDCacheN nod, final ZDDCacheP equ, final ZDDCacheO cru, final ZDDCacheO uni, final ZDD zdd1, final ZDD zdd2)
+    static ZDD crossUnion(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -571,7 +570,7 @@ public final class ZDD {
             return zdd1;
         }
 
-        ZDD zdd = cru.get(zdd1, zdd2);
+        ZDD zdd = _cru.get(zdd1, zdd2);
 
         if (zdd == null) {
 
@@ -579,45 +578,45 @@ public final class ZDD {
             final long x2 = zdd2.x;
 
             if (x1 < x2) {
-                zdd = zdd(nod, x1, crossUnion(nod, equ, cru, uni, zdd1.b, zdd2), crossUnion(nod, equ, cru, uni, zdd1.t, zdd2));
+                zdd = zdd(_nod, x1, crossUnion(_nod, _equ, _cru, _uni, zdd1.b, zdd2), crossUnion(_nod, _equ, _cru, _uni, zdd1.t, zdd2));
             } else if (x1 > x2) {
-                zdd = zdd(nod, x2, crossUnion(nod, equ, cru, uni, zdd1, zdd2.b), crossUnion(nod, equ, cru, uni, zdd1, zdd2.t));
+                zdd = zdd(_nod, x2, crossUnion(_nod, _equ, _cru, _uni, zdd1, zdd2.b), crossUnion(_nod, _equ, _cru, _uni, zdd1, zdd2.t));
             } else {
-                zdd = zdd(nod, x1, crossUnion(nod, equ, cru, uni, zdd1.b, zdd2.b), union(nod, equ, uni, crossUnion(nod, equ, cru, uni, zdd1.t, zdd2.t), union(nod, equ, uni, crossUnion(nod, equ, cru, uni, zdd1.t, zdd2.b), crossUnion(nod, equ, cru, uni,
-                        zdd1.b, zdd2.t))));
+                zdd = zdd(_nod, x1, crossUnion(_nod, _equ, _cru, _uni, zdd1.b, zdd2.b), union(_nod, _equ, _uni, crossUnion(_nod, _equ, _cru, _uni, zdd1.t, zdd2.t), union(_nod, _equ, _uni, crossUnion(_nod, _equ, _cru, _uni, zdd1.t, zdd2.b), crossUnion(
+                        _nod, _equ, _cru, _uni, zdd1.b, zdd2.t))));
             }
 
-            cru.put(zdd1, zdd2, zdd);
+            _cru.put(zdd1, zdd2, zdd);
         }
 
         return zdd;
     }
 
-    static ZDD set(final ZDDCacheN nod, final ZDDCacheP equ, final ZDDCacheO cru, final ZDDCacheO uni, final long... xs)
+    static ZDD set(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final long[] xs)
     {
         final ZDD[] zdd = new ZDD[xs.length];
 
         for (int i = 0; i < xs.length; ++i) {
-            zdd[i] = singleton(nod, xs[i]);
+            zdd[i] = singleton(_nod, xs[i]);
         }
 
-        return crossUnion(nod, equ, cru, uni, zdd);
+        return crossUnion(_nod, _equ, _cru, _uni, zdd);
     }
 
-    static ZDD crossIntersection(final ZDDCacheN nod, final ZDDCacheP equ, final ZDDCacheO cri, final ZDDCacheO uni, final ZDD... zdds)
+    static ZDD crossIntersection(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cri, final ZDDCacheO _uni, final ZDD[] zdds)
     {
-        return crossIntersection(nod, equ, cri, uni, 0, zdds.length, zdds);
+        return crossIntersection(_nod, _equ, _cri, _uni, 0, zdds.length, zdds);
     }
 
-    static ZDD crossIntersection(final ZDDCacheN nod, final ZDDCacheP equ, final ZDDCacheO cri, final ZDDCacheO uni, final int begin, final int end, final ZDD[] zdda)
+    static ZDD crossIntersection(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cri, final ZDDCacheO _uni, final int begin, final int end, final ZDD[] zdda)
     {
         final int length = end - begin;
 
         if (length > 2) {
             final int middle = begin + (length >> 1);
-            return crossIntersection(nod, equ, cri, uni, crossIntersection(nod, equ, cri, uni, begin, middle, zdda), crossIntersection(nod, equ, cri, uni, middle, end, zdda));
+            return crossIntersection(_nod, _equ, _cri, _uni, crossIntersection(_nod, _equ, _cri, _uni, begin, middle, zdda), crossIntersection(_nod, _equ, _cri, _uni, middle, end, zdda));
         } else if (length > 1) {
-            return crossIntersection(nod, equ, cri, uni, zdda[begin], zdda[begin + 1]);
+            return crossIntersection(_nod, _equ, _cri, _uni, zdda[begin], zdda[begin + 1]);
         } else if (length > 0) {
             return zdda[begin];
         }
@@ -625,7 +624,7 @@ public final class ZDD {
         return TOP;
     }
 
-    static ZDD crossIntersection(final ZDDCacheN nod, final ZDDCacheP equ, final ZDDCacheO cri, final ZDDCacheO uni, final ZDD zdd1, final ZDD zdd2)
+    static ZDD crossIntersection(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cri, final ZDDCacheO _uni, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -643,7 +642,7 @@ public final class ZDD {
             return TOP;
         }
 
-        ZDD zdd = cri.get(zdd1, zdd2);
+        ZDD zdd = _cri.get(zdd1, zdd2);
 
         if (zdd == null) {
 
@@ -651,21 +650,21 @@ public final class ZDD {
             final long x2 = zdd2.x;
 
             if (x1 < x2) {
-                zdd = union(nod, equ, uni, crossIntersection(nod, equ, cri, uni, zdd1.b, zdd2), crossIntersection(nod, equ, cri, uni, zdd1.t, zdd2));
+                zdd = union(_nod, _equ, _uni, crossIntersection(_nod, _equ, _cri, _uni, zdd1.b, zdd2), crossIntersection(_nod, _equ, _cri, _uni, zdd1.t, zdd2));
             } else if (x1 > x2) {
-                zdd = union(nod, equ, uni, crossIntersection(nod, equ, cri, uni, zdd1, zdd2.b), crossIntersection(nod, equ, cri, uni, zdd1, zdd2.t));
+                zdd = union(_nod, _equ, _uni, crossIntersection(_nod, _equ, _cri, _uni, zdd1, zdd2.b), crossIntersection(_nod, _equ, _cri, _uni, zdd1, zdd2.t));
             } else {
-                zdd = zdd(nod, x1, union(nod, equ, uni, crossIntersection(nod, equ, cri, uni, zdd1.b, zdd2.b), union(nod, equ, uni, crossIntersection(nod, equ, cri, uni, zdd1.b, zdd2.t), crossIntersection(nod, equ, cri, uni, zdd1.t, zdd2.b))),
-                        crossIntersection(nod, equ, cri, uni, zdd1.t, zdd2.t));
+                zdd = zdd(_nod, x1, union(_nod, _equ, _uni, crossIntersection(_nod, _equ, _cri, _uni, zdd1.b, zdd2.b), union(_nod, _equ, _uni, crossIntersection(_nod, _equ, _cri, _uni, zdd1.b, zdd2.t), crossIntersection(_nod, _equ, _cri, _uni, zdd1.t,
+                        zdd2.b))), crossIntersection(_nod, _equ, _cri, _uni, zdd1.t, zdd2.t));
             }
 
-            cri.put(zdd1, zdd2, zdd);
+            _cri.put(zdd1, zdd2, zdd);
         }
 
         return zdd;
     }
 
-    static ZDD crossDifference(final ZDDCacheN nod, final ZDDCacheP equ, final ZDDCacheO crd, final ZDDCacheO uni, final ZDD zdd1, final ZDD zdd2)
+    static ZDD crossDifference(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _crd, final ZDDCacheO _uni, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == BOT) {
             return BOT;
@@ -683,7 +682,7 @@ public final class ZDD {
             return zdd1;
         }
 
-        ZDD zdd = crd.get(zdd1, zdd2);
+        ZDD zdd = _crd.get(zdd1, zdd2);
 
         if (zdd == null) {
 
@@ -691,21 +690,21 @@ public final class ZDD {
             final long x2 = zdd2.x;
 
             if (x1 < x2) {
-                zdd = zdd(nod, x1, crossDifference(nod, equ, crd, uni, zdd1.b, zdd2), crossDifference(nod, equ, crd, uni, zdd1.t, zdd2));
+                zdd = zdd(_nod, x1, crossDifference(_nod, _equ, _crd, _uni, zdd1.b, zdd2), crossDifference(_nod, _equ, _crd, _uni, zdd1.t, zdd2));
             } else if (x1 > x2) {
-                zdd = union(nod, equ, uni, crossDifference(nod, equ, crd, uni, zdd1, zdd2.b), crossDifference(nod, equ, crd, uni, zdd1, zdd2.t));
+                zdd = union(_nod, _equ, _uni, crossDifference(_nod, _equ, _crd, _uni, zdd1, zdd2.b), crossDifference(_nod, _equ, _crd, _uni, zdd1, zdd2.t));
             } else {
-                zdd = zdd(nod, x1, union(nod, equ, uni, crossDifference(nod, equ, crd, uni, zdd1.b, zdd2.b), crossDifference(nod, equ, crd, uni, zdd1.b, zdd2.t), crossDifference(nod, equ, crd, uni, zdd1.t, zdd2.t)), crossDifference(nod, equ, crd, uni,
-                        zdd1.t, zdd2.b));
+                zdd = zdd(_nod, x1, union(_nod, _equ, _uni, crossDifference(_nod, _equ, _crd, _uni, zdd1.b, zdd2.b), crossDifference(_nod, _equ, _crd, _uni, zdd1.b, zdd2.t), crossDifference(_nod, _equ, _crd, _uni, zdd1.t, zdd2.t)), crossDifference(_nod,
+                        _equ, _crd, _uni, zdd1.t, zdd2.b));
             }
 
-            crd.put(zdd1, zdd2, zdd);
+            _crd.put(zdd1, zdd2, zdd);
         }
 
         return zdd;
     }
 
-    static boolean equals(final ZDDCacheP equ, final ZDD zdd1, final ZDD zdd2)
+    static boolean equals(final ZDDCacheP _equ, final ZDD zdd1, final ZDD zdd2)
     {
         if (zdd1 == zdd2) {
             return true;
@@ -715,7 +714,7 @@ public final class ZDD {
             return false;
         }
 
-        final Boolean cached = equ.get(zdd1, zdd2);
+        final Boolean cached = _equ.get(zdd1, zdd2);
 
         if (cached != null) {
             return cached.booleanValue();
@@ -725,15 +724,15 @@ public final class ZDD {
 
         if (zdd1.x != zdd2.x) {
             equal = false;
-        } else if (!equals(equ, zdd1.b, zdd2.b)) {
+        } else if (!equals(_equ, zdd1.b, zdd2.b)) {
             equal = false;
-        } else if (!equals(equ, zdd1.t, zdd2.t)) {
+        } else if (!equals(_equ, zdd1.t, zdd2.t)) {
             equal = false;
         } else {
             equal = true;
         }
 
-        equ.put(zdd1, zdd2, equal);
+        _equ.put(zdd1, zdd2, equal);
 
         return equal;
     }
