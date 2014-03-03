@@ -359,34 +359,6 @@ public final class ZDDNumber {
         return negabinaryAdd(_nod, _equ, _int, _uni, _dif, zt.subtrees(_nod, _equ, _cru, _uni, _int, filter), zn);
     }
 
-    @Deprecated
-    public static ZDDNumber addSubtrees(final long l, final ZDDTree trees, final ZDDNumber zn)
-    {
-        final ZDDCacheN _nod = new ZDDCacheN();
-        final ZDDCacheP _equ = new ZDDCacheP();
-        final ZDDCacheO _cru = new ZDDCacheO();
-        final ZDDCacheO _uni = new ZDDCacheO();
-        final ZDDCacheO _int = new ZDDCacheO();
-        final ZDDCacheO _dif = new ZDDCacheO();
-
-        return addSubtrees(l, trees, zn, _nod, _equ, _cru, _uni, _int, _dif);
-    }
-
-    @Deprecated
-    static ZDDNumber addSubtrees(
-            final long l,
-            final ZDDTree trees,
-            final ZDDNumber zn,
-            final ZDDCacheN _nod,
-            final ZDDCacheP _equ,
-            final ZDDCacheO _cru,
-            final ZDDCacheO _uni,
-            final ZDDCacheO _int,
-            final ZDDCacheO _dif)
-    {
-        return negabinaryAdd(_nod, _equ, _int, _uni, _dif, negabinary(l, ZDDTree.subtrees(trees, _nod, _equ, _cru, _uni)), zn);
-    }
-
     public static ZDDNumber addSubtrees(final ZDDTerm zt, final ZDD filter, final ZDDNumber zn)
     {
         final ZDDCacheN _nod = new ZDDCacheN();
