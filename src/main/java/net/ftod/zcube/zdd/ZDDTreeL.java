@@ -88,10 +88,10 @@ abstract class ZDDTreeL {
         return Type.values()[dis.readByte()].read(dis);
     }
 
-    protected static final void write(final ZDDTreeL[] ts, final DataOutputStream dos) throws IOException
+    protected static final void writeArray(final ZDDTreeL[] ts, final DataOutputStream dos) throws IOException
     {
         final int n = ts.length;
-        dos.writeInt(n);
+        dos.writeByte(n);
         for (int i = 0; i < n; ++i) {
             ts[i].write(dos);
         }
@@ -99,7 +99,7 @@ abstract class ZDDTreeL {
 
     protected static final ZDDTreeL[] readArray(final DataInputStream dis) throws IOException
     {
-        final int n = dis.readInt();
+        final int n = dis.readByte();
         final ZDDTreeL[] ts = new ZDDTreeL[n];
         for (int i = 0; i < n; ++i) {
             ts[i] = read(dis);
@@ -324,7 +324,7 @@ final class ZDDTreeLCross extends ZDDTreeL {
     @Override
     protected void _write(final DataOutputStream dos) throws IOException
     {
-        write(ts, dos);
+        writeArray(ts, dos);
     }
 
     static ZDDTreeLCross _read(final DataInputStream dis) throws IOException
@@ -363,7 +363,7 @@ final class ZDDTreeLSum extends ZDDTreeL {
     @Override
     protected void _write(final DataOutputStream dos) throws IOException
     {
-        write(ts, dos);
+        writeArray(ts, dos);
     }
 
     static ZDDTreeLSum _read(final DataInputStream dis) throws IOException
