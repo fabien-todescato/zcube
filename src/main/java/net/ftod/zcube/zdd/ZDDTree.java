@@ -30,18 +30,6 @@ public abstract class ZDDTree {
         }
 
         @Override
-        protected ZDD trees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final long h)
-        {
-            return ZDD.BOT;
-        }
-
-        @Override
-        protected ZDD subtrees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final long h)
-        {
-            return ZDD.BOT;
-        }
-
-        @Override
         protected Type type()
         {
             return Type.BOT;
@@ -69,18 +57,6 @@ public abstract class ZDDTree {
         protected ZDDTreeL treeL(final long h)
         {
             return ZDDTreeL.top();
-        }
-
-        @Override
-        protected ZDD trees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final long h)
-        {
-            return ZDD.TOP;
-        }
-
-        @Override
-        protected ZDD subtrees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final long h)
-        {
-            return ZDD.TOP;
         }
 
         @Override
@@ -295,34 +271,6 @@ public abstract class ZDDTree {
         return ZDD.intersection(_nod, _equ, _int, z, subtrees(t, _nod, _equ, _cru, _uni));
     }
 
-    protected abstract ZDD trees(ZDDCacheN _nod, ZDDCacheP _equ, ZDDCacheO _cru, ZDDCacheO _uni, long h);
-
-    protected abstract ZDD subtrees(ZDDCacheN _nod, ZDDCacheP _equ, ZDDCacheO _cru, ZDDCacheO _uni, long h);
-
-    protected static final ZDD[] mapTrees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final long h, final ZDDTree[] ts)
-    {
-        final int n = ts.length;
-        final ZDD[] zdds = new ZDD[n];
-
-        for (int i = 0; i < n; ++i) {
-            zdds[i] = ts[i].trees(_nod, _equ, _cru, _uni, h);
-        }
-
-        return zdds;
-    }
-
-    protected static final ZDD[] mapSubtrees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final long h, final ZDDTree[] ts)
-    {
-        final int n = ts.length;
-        final ZDD[] zdds = new ZDD[n];
-
-        for (int i = 0; i < n; ++i) {
-            zdds[i] = ts[i].subtrees(_nod, _equ, _cru, _uni, h);
-        }
-
-        return zdds;
-    }
-
     private static ZDDTree[] array(final Collection<ZDDTree> c)
     {
         final ZDDTree[] a = new ZDDTree[c.size()];
@@ -451,22 +399,6 @@ final class ZDDTreePrefix extends ZDDTree {
     }
 
     @Override
-    protected ZDD trees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final long h)
-    {
-        final long h1 = ZDDTreePrefix.djb2(h, prefix);
-
-        return ZDD.crossUnion(_nod, _equ, _cru, _uni, ZDD.singleton(_nod, h1), treeSet.trees(_nod, _equ, _cru, _uni, h1));
-    }
-
-    @Override
-    protected ZDD subtrees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final long h)
-    {
-        final long h1 = ZDDTreePrefix.djb2(h, prefix);
-
-        return ZDD.union(_nod, _equ, _uni, ZDD.TOP, ZDD.crossUnion(_nod, _equ, _cru, _uni, ZDD.singleton(_nod, h1), treeSet.subtrees(_nod, _equ, _cru, _uni, h1)));
-    }
-
-    @Override
     protected Type type()
     {
         return Type.PREFIX;
@@ -540,18 +472,6 @@ final class ZDDTreeCross extends ZDDTree {
     }
 
     @Override
-    protected ZDD trees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final long h)
-    {
-        return ZDD.crossUnion(_nod, _equ, _cru, _uni, mapTrees(_nod, _equ, _cru, _uni, h, ts));
-    }
-
-    @Override
-    protected ZDD subtrees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final long h)
-    {
-        return ZDD.crossUnion(_nod, _equ, _cru, _uni, mapSubtrees(_nod, _equ, _cru, _uni, h, ts));
-    }
-
-    @Override
     protected Type type()
     {
         return Type.CROSS;
@@ -597,18 +517,6 @@ final class ZDDTreeSum extends ZDDTree {
     protected void _write(final DataOutputStream dos) throws IOException
     {
         writeArray(ts, dos);
-    }
-
-    @Override
-    protected ZDD trees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final long h)
-    {
-        return ZDD.union(_nod, _equ, _uni, mapTrees(_nod, _equ, _cru, _uni, h, ts));
-    }
-
-    @Override
-    protected ZDD subtrees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final long h)
-    {
-        return ZDD.union(_nod, _equ, _uni, mapSubtrees(_nod, _equ, _cru, _uni, h, ts));
     }
 
     @Override
