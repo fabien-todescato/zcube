@@ -44,6 +44,7 @@ public class ZDDTest {
     public void equal()
     {
         new ZDDContextTest() {
+            @SuppressWarnings("hiding")
             @Override
             protected <Void> Void expression()
             {
@@ -59,6 +60,7 @@ public class ZDDTest {
     public void included()
     {
         new ZDDContextTest() {
+            @SuppressWarnings("hiding")
             @Override
             protected <Void> Void expression()
             {
@@ -78,6 +80,7 @@ public class ZDDTest {
     public void set()
     {
         new ZDDContextTest() {
+            @SuppressWarnings("hiding")
             @Override
             protected <Void> Void expression()
             {
@@ -94,6 +97,7 @@ public class ZDDTest {
     public void union()
     {
         new ZDDContextTest() {
+            @SuppressWarnings("hiding")
             @Override
             protected <Void> Void expression()
             {
@@ -115,6 +119,7 @@ public class ZDDTest {
     public void difference()
     {
         new ZDDContextTest() {
+            @SuppressWarnings("hiding")
             @Override
             protected <Void> Void expression()
             {
@@ -139,6 +144,7 @@ public class ZDDTest {
     public void crossDifference()
     {
         new ZDDContextTest() {
+            @SuppressWarnings("hiding")
             @Override
             protected <Void> Void expression()
             {
@@ -168,6 +174,7 @@ public class ZDDTest {
     public void intersection()
     {
         new ZDDContextTest() {
+            @SuppressWarnings("hiding")
             @Override
             protected <Void> Void expression()
             {
@@ -220,6 +227,7 @@ public class ZDDTest {
     public void crossUnion()
     {
         new ZDDContextTest() {
+            @SuppressWarnings("hiding")
             @Override
             protected <Void> Void expression()
             {
@@ -237,6 +245,7 @@ public class ZDDTest {
     public void crossIntersection()
     {
         new ZDDContextTest() {
+            @SuppressWarnings("hiding")
             @Override
             protected <Void> Void expression()
             {
@@ -258,6 +267,7 @@ public class ZDDTest {
     public void trees()
     {
         new ZDDContextTest() {
+            @SuppressWarnings("hiding")
             @Override
             protected <Void> Void expression()
             {
@@ -279,6 +289,7 @@ public class ZDDTest {
     public void treesBinary()
     {
         new ZDDContextTest() {
+            @SuppressWarnings("hiding")
             @Override
             protected <Void> Void expression()
             {
@@ -339,6 +350,7 @@ public class ZDDTest {
     public void treesNegabinary()
     {
         new ZDDContextTest() {
+            @SuppressWarnings("hiding")
             @Override
             protected <Void> Void expression()
             {
@@ -399,6 +411,7 @@ public class ZDDTest {
     public void treesNegabinaryParallel()
     {
         new ZDDContextTest() {
+            @SuppressWarnings("hiding")
             @Override
             protected <Void> Void expression()
             {
@@ -444,6 +457,7 @@ public class ZDDTest {
     public void binary()
     {
         new ZDDContextTest() {
+            @SuppressWarnings("hiding")
             @Override
             protected <Void> Void expression()
             {
@@ -491,6 +505,7 @@ public class ZDDTest {
     public void negabinary()
     {
         new ZDDContextTest() {
+            @SuppressWarnings("hiding")
             @Override
             protected <Void> Void expression()
             {
