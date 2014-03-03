@@ -80,7 +80,7 @@ public final class ZDDTerm {
     public static ZDDTerm read(final DataInputStream dis) throws IOException
     {
         final long l = dis.readLong();
-        final ZDDTree t = ZDDTree.read(dis);
+        final ZDDTreeL t = ZDDTreeL.read(dis);
 
         return new ZDDTerm(l, t);
     }
