@@ -1,8 +1,5 @@
 package net.ftod.zcube.zdd;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -30,18 +27,6 @@ public abstract class ZDDTree {
         }
 
         @Override
-        protected Type type()
-        {
-            return Type.BOT;
-        }
-
-        @Override
-        protected void _write(final DataOutputStream dos) throws IOException
-        {
-            // Nothing to write
-        }
-
-        @Override
         public String toString()
         {
             return "bot";
@@ -57,18 +42,6 @@ public abstract class ZDDTree {
         protected ZDDTreeL treeL(final long h)
         {
             return ZDDTreeL.top();
-        }
-
-        @Override
-        protected Type type()
-        {
-            return Type.TOP;
-        }
-
-        @Override
-        protected void _write(final DataOutputStream dos) throws IOException
-        {
-            // Nothing to write
         }
 
         @Override
@@ -278,98 +251,6 @@ public abstract class ZDDTree {
         return a;
     }
 
-    protected enum Type {
-        @SuppressWarnings("hiding")
-        BOT {
-            @Override
-            protected ZDDTree read(final DataInputStream dis)
-            {
-                return ZDDTree.BOT;
-            }
-        },
-        @SuppressWarnings("hiding")
-        TOP {
-            @Override
-            protected ZDDTree read(final DataInputStream dis)
-            {
-                return ZDDTree.TOP;
-            }
-        },
-        PREFIX {
-            @Override
-            protected ZDDTree read(final DataInputStream dis) throws IOException
-            {
-                return ZDDTreePrefix._read(dis);
-            }
-        },
-        CROSS {
-            @Override
-            protected ZDDTree read(final DataInputStream dis) throws IOException
-            {
-                return ZDDTreeCross._read(dis);
-            }
-        },
-        SUM {
-            @Override
-            protected ZDDTree read(final DataInputStream dis) throws IOException
-            {
-                return ZDDTreeSum._read(dis);
-            }
-        };
-
-        protected abstract ZDDTree read(DataInputStream dis) throws IOException;
-    }
-
-    protected abstract Type type();
-
-    /**
-     * <h3>Read back {@link ZDDTree} from {@link DataInputStream}</h3>
-     */
-    public static ZDDTree read(final DataInputStream dis) throws IOException
-    {
-        return Type.values()[dis.readByte()].read(dis);
-    }
-
-    /**
-     * <h3>Write a {@link ZDDTree} to a {@link DataOutputStream}</h3>
-     */
-    public void write(final DataOutputStream dos) throws IOException
-    {
-        dos.writeByte(type().ordinal());
-        _write(dos);
-    }
-
-    protected abstract void _write(DataOutputStream dos) throws IOException;
-
-    /**
-     * <h3>Read back an array of {@link ZDDTree} from a {@link DataInputStream}</h3>
-     */
-    public static ZDDTree[] readArray(final DataInputStream dis) throws IOException
-    {
-        final int length = dis.readInt();
-        final ZDDTree[] array = new ZDDTree[length];
-
-        for (int i = 0; i < length; ++i) {
-            array[i] = read(dis);
-        }
-
-        return array;
-    }
-
-    /**
-     * <h3>Write an array of {@link ZDDTree} to a {@link DataOutputStream}</h3>
-     */
-    public static void writeArray(final ZDDTree[] ts, final DataOutputStream dos) throws IOException
-    {
-        final int length = ts.length;
-
-        dos.writeInt(length);
-
-        for (int i = 0; i < length; ++i) {
-            ts[i].write(dos);
-        }
-    }
-
 }
 
 final class ZDDTreePrefix extends ZDDTree {
@@ -381,27 +262,6 @@ final class ZDDTreePrefix extends ZDDTree {
         super();
         this.treeSet = treeSet;
         this.prefix = prefix;
-    }
-
-    static ZDDTree _read(final DataInputStream dis) throws IOException
-    {
-        final String prefix = dis.readUTF();
-        final ZDDTree treeSet = read(dis);
-
-        return new ZDDTreePrefix(prefix, treeSet);
-    }
-
-    @Override
-    protected void _write(final DataOutputStream dos) throws IOException
-    {
-        dos.writeUTF(prefix);
-        treeSet.write(dos);
-    }
-
-    @Override
-    protected Type type()
-    {
-        return Type.PREFIX;
     }
 
     /**
@@ -460,23 +320,6 @@ final class ZDDTreeCross extends ZDDTree {
         this.ts = ts;
     }
 
-    static ZDDTreeCross _read(final DataInputStream dis) throws IOException
-    {
-        return new ZDDTreeCross(readArray(dis));
-    }
-
-    @Override
-    protected void _write(final DataOutputStream dos) throws IOException
-    {
-        writeArray(ts, dos);
-    }
-
-    @Override
-    protected Type type()
-    {
-        return Type.CROSS;
-    }
-
     @Override
     public String toString()
     {
@@ -506,23 +349,6 @@ final class ZDDTreeSum extends ZDDTree {
     ZDDTreeSum(final ZDDTree[] ts) {
         super();
         this.ts = ts;
-    }
-
-    static ZDDTreeSum _read(final DataInputStream dis) throws IOException
-    {
-        return new ZDDTreeSum(readArray(dis));
-    }
-
-    @Override
-    protected void _write(final DataOutputStream dos) throws IOException
-    {
-        writeArray(ts, dos);
-    }
-
-    @Override
-    protected Type type()
-    {
-        return Type.SUM;
     }
 
     @Override
