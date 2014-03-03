@@ -27,8 +27,8 @@ In a nutshell :
 ( deftest test-sum-3 ; Branching trees example
   ( is
     ( let [ zn ( z/sum-subtrees
-               [ [ 5 ( z/cross ( z/path "a" "b" ) ( z/path "a" "c" ) ) ] 
-               , [ 3 ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) ]
+               [ ( z/times 5 ( z/cross ( z/path "a" "b" ) ( z/path "a" "c" ) ) ) 
+               , ( z/times 3 ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) )
                ] ) ]
       ( and
         ( =  8 ( ( z/count-trees ( z/path "a" )                                    ) zn ) )
@@ -124,8 +124,8 @@ Using the _zcube_ Clojure API, this can be written :
 ( deftest test-sum-2 ; Branching trees example
   ( is
     ( let [ zn ( z/sum-subtrees
-               [ [ 1 ( z/cross ( z/path "a" "b" ) ( z/path "a" "c" ) ) ] 
-               , [ 1 ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) ]
+               [ ( z/times 1 ( z/cross ( z/path "a" "b" ) ( z/path "a" "c" ) ) ) 
+               , ( z/times 1 ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) )
                ] ) ]
       ( and
         ( =  2 ( ( z/count-trees ( z/path "a" ) ) zn ) )
@@ -164,8 +164,8 @@ Nothing really new there :
 ( deftest test-sum-3 ; Branching trees example
   ( is
     ( let [ zn ( z/sum-subtrees
-               [ [ 5 ( z/cross ( z/path "a" "b" ) ( z/path "a" "c" ) ) ] 
-               , [ 3 ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) ]
+               [ ( z/times 5 ( z/cross ( z/path "a" "b" ) ( z/path "a" "c" ) ) ) 
+               , ( z/times 3 ( z/cross ( z/path "a" "b" ) ( z/path "a" "d" ) ) )
                ] ) ]
       ( and
         ( =  8 ( ( z/count-trees ( z/path "a" )                                    ) zn ) )
@@ -206,18 +206,18 @@ This translates as follows using the zcube API :
 ( deftest test-analytics ; Analytics example
   ( is
     ( let [ zn ( z/sum-subtrees
-                 [ [ 1 ( z/cross
-                         ( z/path "www.company.com" "page1" )
-                         ( z/path "gender" "male" )
-                         ( z/path "2014" "01" "01" "10" "32" ) ) ]
-                 , [ 1 ( z/cross
-                         ( z/path "www.company.com" "page2" )
-                         ( z/path "gender" "female" )
-                         ( z/path "2014" "01" "02" "11" "35" ) ) ]
-                 , [ 1 ( z/cross
-                         ( z/path "www.company.com" "page1" )
-                         ( z/path "gender" "female" )
-                         ( z/path "2014" "01" "03" "08" "15" ) ) ]
+                 [ ( z/times 1 ( z/cross
+                                 ( z/path "www.company.com" "page1" )
+                                 ( z/path "gender" "male" )
+                                 ( z/path "2014" "01" "01" "10" "32" ) ) )
+                 , ( z/times 1 ( z/cross
+                                   ( z/path "www.company.com" "page2" )
+                                   ( z/path "gender" "female" )
+                                   ( z/path "2014" "01" "02" "11" "35" ) ) )
+                 , ( z/times 1 ( z/cross
+                                   ( z/path "www.company.com" "page1" )
+                                   ( z/path "gender" "female" )
+                                   ( z/path "2014" "01" "03" "08" "15" ) ) )
                  ]
                ) ]
       ( and
@@ -290,9 +290,10 @@ A few algebraic identities hold :
 |Expression      |Description|
 |----------------|-----------|
 |nil             |The _ZDDNumber_ zero.|
-|( subtrees l t )|Linear combination of _l_ times the subtrees of the tree _t_.|
-|( add z1 z2 )   |Sum of _ZDDNumbers_ _z1_, _z2_.                              |
-|( sub z1 z2 )   |Difference of _ZDDNumbers_ _z1_, _z2_.                       |
+|( times l t )   |The _ZDDTerm_ representing _l_ occurrences of the tree set _t_.|
+|( subtrees zt ) |The _ZDDNumber_ for the occurrences of the subtrees of the _ZDDTerm_ zt.||
+|( add z1 z2 )   |Sum of _ZDDNumbers_ _z1_, _z2_.|
+|( sub z1 z2 )   |Difference of _ZDDNumbers_ _z1_, _z2_.|
 
 _add_ is _associative_ and _commutative_, and thus lends itself well to the concurrent execution of aggregation operations.   
 
@@ -300,15 +301,13 @@ _add_ is _associative_ and _commutative_, and thus lends itself well to the conc
 
 The expansion of trees into their subtrees entails exponential complexity.
 When counting subtrees for trees with numerous or deep branches, one may want to restrict the set of subtrees before aggregating.
-The arity 1 variant of the _subtrees_ function is an higher-order function that takes as parameter a set of trees acting as a filter.
-
-Thus :
+The higher-order variant of the _subtrees_ function takes as parameter a set of trees acting as a filter.
 
 ```clojure
-( ( subtrees filter ) l tree ) 
+( ( filter-subtrees filter ) zt ) 
 ```
 
-Will generate _l_ occurrences of all the subtrees of _tree_, that are also in the set of trees expressed by _filter_. 
+Will generate the occurrences of the subtrees of for the _ZDDTerm_ _zt_, that are also in the set of trees expressed by _filter_. 
 
 ## The Accumulative API
 
@@ -321,31 +320,18 @@ The caches are allocated less often, and the sharing hopefully results in more c
 |Expression      |Description                                              |
 |----------------|---------------------------------------------------------|
 |nil             |The _ZDDNumber_ zero.                                    |
-|( add-subtrees l t z )|Add _l_ occurrences of the subtrees of the tree _t_ to the _ZDDNumber_ _z_.|
-|( sum-subtrees lts )|Reduce a sequence of pairs of longs and trees, adding up the occurrences of their subtrees into a _ZDDNumber_.[
-
-_sum-subtrees_ is a simple convenience function :
-
-```clojure
-( defn sum-subtrees [ long-trees ]
-  ( reduce
-    ( fn [ zn [ long tree ] ] ( add-subtrees long tree zn ) )
-    nil 
-    long-trees
-  )
-)
-```
-
+|( add-subtrees zt z )|Add the occurrences of the subtrees of the _ZDDTerm_ _zt_ to the _ZDDNumber_ _z_.|
+|( sum-subtrees zts )|Reduce a sequence of _ZDDTerms_, adding up the occurrences of their subtrees into a _ZDDNumber_.[
 
 ### Filtering
 
 Again, filtering against a set of trees is taken care of by the following higher-order function :
 
 ```clojure
-( ( add-subtrees filter ) l tree znumber ) 
+( ( add-filter-subtrees filter ) zt znumber ) 
 ```
 
-Will add to _znumber_ _l_ occurrences of the subtrees of _tree_, that are also in _filter_.
+Will add to _znumber_ the occurrences of the subtrees of the _ZDDNumber_ _zt_, that are also in _filter_.
 
 ## Counting subtrees
 
@@ -366,6 +352,7 @@ In the [VSOP Calculator][2] paper, _Minato et al_ explain how _ZDD_, and forests
 The bulk of the library is written in Java, around hopefully efficient _immutable_ data structures. A thin Clojure layer provides for the public API of the library.
 
 * A **ZDDNumber** represents a linear combination of sets of trees with integer coefficients.
+* A **ZDDTerm** represents a long integer coefficient multiplying a set of trees.
 * A **ZDDTree** is a symbolic expression that represents a sets of trees.
 * A **ZDD** is a symbolic decision-diagram based representation of a set of trees.
 

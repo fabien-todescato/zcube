@@ -41,15 +41,18 @@
 
 ( defn ^ZDDNumber subtrees
   "Construct ZDD number counting the occurrences of subtrees of a tree.
-   The higher-order one-argument version takes a filter expressed a sequence of trees,
+  "
+  [ ^ZDDTerm zt ] ( ZDDTerm/subtrees zt )
+)
+
+( defn ^ZDDNumber filter-subtrees
+  "Construct ZDD number counting the occurrences of subtrees of a tree.
+   This higher-order one-argument version takes a filter expressed a sequence of trees,
    and yields the corresponding constructor function.
   "
-  ( [ trees ]
-    ( let [ ^ZDD z ( ZDDTree/unionTrees trees ) ]
-      ( fn [ ^ZDDTerm zt ] ( ZDDTree/subtrees z zt ) )
-    )
-  )
-  ( [ ^ZDDTerm zt ] ( ZDDTerm/subtrees zt )
+  [ trees ]
+  ( let [ ^ZDD z ( ZDDTree/unionTrees trees ) ] ; Pay once the computation of the ZDD...
+    ( fn [ ^ZDDTerm zt ] ( ZDDTree/subtrees z zt ) ) ; ...reuse it multiple times.
   )
 )
 
@@ -70,17 +73,19 @@
 ;
 
 ( defn ^ZDDNumber add-subtrees
+  "Add occurrences of subtrees to a ZDD number."
+  [ ^ZDDTerm zt ^ZDDNumber zn ] ( ZDDNumber/addSubtrees zt zn )
+)
+
+( defn ^ZDDNumber add-filter-subtrees
   "Add occurrences of subtrees to a ZDD number.
-   The higher-order one-argument version takes a filter expressed a sequence of trees,
+   This higher-order one-argument version takes a filter expressed a sequence of trees,
    and yields the corresponding adder function.
   "
-( [ trees ]
+  [ trees ]
   ( let [ ^ZDD z ( ZDDTree/unionTrees trees ) ] ; Pay the ZDD computation once...
-    ( fn [ ^ZDDterm zt ^ZDDNumber zn ] ( ZDDNumber/addSubtrees filter zt zn ) ) ; ...possibly apply multiple times over ZDD numbers.
+    ( fn [ ^ZDDTerm zt ^ZDDNumber zn ] ( ZDDNumber/addSubtrees filter zt zn ) ) ; ...possibly apply multiple times over ZDD numbers.
   )
-  )
-( [ ^ZDDterm zt ^ZDDNumber zn ] ( ZDDNumber/addSubtrees zt zn )
-)
 )
 
 ;
