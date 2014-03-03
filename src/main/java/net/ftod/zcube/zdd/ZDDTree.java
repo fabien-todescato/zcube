@@ -26,7 +26,7 @@ public abstract class ZDDTree {
         @Override
         protected ZDDTreeL treeL(final long h)
         {
-            return ZDDTreeL.top();
+            return ZDDTreeL.bot();
         }
 
         @Override
@@ -68,7 +68,7 @@ public abstract class ZDDTree {
         @Override
         protected ZDDTreeL treeL(final long h)
         {
-            return ZDDTreeL.bot();
+            return ZDDTreeL.top();
         }
 
         @Override
@@ -196,7 +196,7 @@ public abstract class ZDDTree {
 
     public static ZDDTreeL treeL(final ZDDTree t)
     {
-        return t.treeL(0L);
+        return t.treeL(1L);
     }
 
     protected static final ZDDTreeL[] treeL(final long h, final ZDDTree[] ts)
@@ -227,7 +227,7 @@ public abstract class ZDDTree {
 
     static ZDD trees(final ZDDTree t, final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni)
     {
-        return t.trees(_nod, _equ, _cru, _uni, 1L);
+        return ZDDTreeL.trees(treeL(t), _nod, _equ, _cru, _uni);
     }
 
     /**
@@ -272,7 +272,7 @@ public abstract class ZDDTree {
 
     static ZDD subtrees(final ZDDTree t, final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni)
     {
-        return t.subtrees(_nod, _equ, _cru, _uni, 1L);
+        return ZDDTreeL.subtrees(treeL(t), _nod, _equ, _cru, _uni);
     }
 
     /**
@@ -331,6 +331,7 @@ public abstract class ZDDTree {
     }
 
     protected enum Type {
+        @SuppressWarnings("hiding")
         BOT {
             @Override
             protected ZDDTree read(final DataInputStream dis)
@@ -338,6 +339,7 @@ public abstract class ZDDTree {
                 return ZDDTree.BOT;
             }
         },
+        @SuppressWarnings("hiding")
         TOP {
             @Override
             protected ZDDTree read(final DataInputStream dis)

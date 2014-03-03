@@ -11,17 +11,21 @@ import java.util.Iterator;
 public final class ZDDTerm {
 
     public final long l;
-    public final ZDDTree t;
+    public final ZDDTreeL t;
 
-    public ZDDTerm(final long l, final ZDDTree t) {
+    public ZDDTerm(final long l, final ZDDTreeL t) {
         super();
         this.l = l;
         this.t = t;
     }
 
+    public ZDDTerm(final long l, final ZDDTree t) {
+        this(l, ZDDTree.treeL(t));
+    }
+
     ZDDNumber trees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni)
     {
-        return ZDDNumber.negabinary(l, ZDDTree.trees(t, _nod, _equ, _cru, _uni));
+        return ZDDNumber.negabinary(l, ZDDTreeL.trees(t, _nod, _equ, _cru, _uni));
     }
 
     public static ZDDNumber subtrees(final ZDDTerm zt)
@@ -31,7 +35,7 @@ public final class ZDDTerm {
 
     ZDDNumber subtrees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni)
     {
-        return ZDDNumber.negabinary(l, ZDDTree.subtrees(t, _nod, _equ, _cru, _uni));
+        return ZDDNumber.negabinary(l, ZDDTreeL.subtrees(t, _nod, _equ, _cru, _uni));
     }
 
     public static ZDDNumber subtrees(final ZDD z, final ZDDTerm zt)
@@ -41,7 +45,7 @@ public final class ZDDTerm {
 
     ZDDNumber subtrees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni, final ZDDCacheO _int, final ZDD filter)
     {
-        return ZDDNumber.negabinary(l, ZDD.intersection(_nod, _equ, _int, filter, ZDDTree.subtrees(t, _nod, _equ, _cru, _uni)));
+        return ZDDNumber.negabinary(l, ZDD.intersection(_nod, _equ, _int, filter, ZDDTreeL.subtrees(t, _nod, _equ, _cru, _uni)));
     }
 
     public void write(final DataOutputStream dos) throws IOException
