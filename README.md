@@ -335,7 +335,7 @@ Again, filtering against a set of trees is taken care of by the following higher
 
 Will add to _znumber_ the occurrences of the subtrees of the _ZDDNumber_ _zt_, that are also in _filter_.
 
-## The bulk API
+## The Bulk API
 
 The bulk API offers simple operations to compute aggregates over large sequences of _ZDDTerms_.
 
@@ -455,6 +455,9 @@ The overall algorithmic organization is as follows :
 * A tree can be represented as the set of its integer nodes.
 * The subtrees of a tree can be represented as a set of sets of integers, ie a _ZDD_.
 * A list of shared _ZDD_ then represents occurrences of trees.        
+
+The parallel operations over large sequences of _ZDDTerms_ use a round-robin scheme to distribute the sum over a a set of parallel accumulators.
+A final fork-join parallel step reduces in parallel the accumulators into a single _ZDDNumber_.  
 
 # Future Work
 
