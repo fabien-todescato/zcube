@@ -105,7 +105,7 @@
 
 ( deftest p-test-analytics ; Analytics example, parallel
   ( is
-    ( let [ n 65536
+    ( let [ n ( * 1024 1024 )
           , zn ( z/p-sum-subtrees
                  ( flatten ( repeat n
                    [ ( z/times 1 ( z/cross
@@ -131,9 +131,45 @@
         ( = ( * 1 n ) ( ( z/count-trees ( z/cross ( z/path "gender" "female" ) ( z/path "2014" "01" "02" ) ) ) zn ) )
       ) ) ) )
 
+( deftest test-analytics-sum-group-by ; Analytics example, sequential sum group by
+  ( is
+    ( let [ n ( * 256 256 ) ]
+      ( =
+        ( z/sum-group-by
+          [ ( z/path "www.company.com" ) ; 3*n
+          , ( z/path "www.company.com" "page1" ) ; 2*n
+          , ( z/path "2014" "01" ) ; 3*n
+          , ( z/path "gender" "female" ) ; 2*n
+          , ( z/cross ( z/path "gender" "female" ) ( z/path "2014" "01" ) ) ; 2*n
+          , ( z/cross ( z/path "gender" "female" ) ( z/path "2014" "01" "02" ) ) ; 1*n
+          ]
+          ( flatten ( repeat n
+            [ ( z/times 1 ( z/cross
+                            ( z/path "www.company.com" "page1" )
+                            ( z/path "gender" "male" )
+                            ( z/path "2014" "01" "01" "10" "32" ) ) )
+            , ( z/times 1 ( z/cross
+                            ( z/path "www.company.com" "page2" )
+                            ( z/path "gender" "female" )
+                            ( z/path "2014" "01" "02" "11" "35" ) ) )
+            , ( z/times 1 ( z/cross
+                            ( z/path "www.company.com" "page1" )
+                            ( z/path "gender" "female" )
+                            ( z/path "2014" "01" "03" "08" "15" ) ) )
+            ] ) )
+        )
+        [ ( * 3 n )
+        , ( * 2 n )
+        , ( * 3 n )
+        , ( * 2 n )
+        , ( * 2 n )
+        , ( * 1 n )
+        ]
+      ) ) ) )
+
 ( deftest p-test-analytics-sum-group-by ; Analytics example, parallel sum group by
   ( is
-    ( let [ n 65536 ]
+    ( let [ n ( * 1024 1024 ) ]
       ( =
         ( z/p-sum-group-by
           [ ( z/path "www.company.com" ) ; 3*n

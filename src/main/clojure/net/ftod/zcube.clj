@@ -124,8 +124,14 @@
   ( ZDDNumber/pSumSubtrees ^Iterable zts )
 )
 
-( defn p-sum-group-by
-  "Sum a sequence of ZDDTerm, silmultaneously grouping by a sequence of trees."
+( defn sum-group-by
+  "Sum a sequence of ZDDTerm, simultaneously grouping by a sequence of trees."
   [ ts zts ]
-  ( seq ( ZDDNumber/pSumGroupBy ( into-array ZDDTree ts ) ^Iterable zts ) )
+  ( seq ( ZDDNumber/sumGroupBy ( into-array ZDDTree ts ) ^Iterable zts ) )
+)
+
+( defn p-sum-group-by
+ "Sum in parallel a sequence of ZDDTerm, simultaneously grouping by a sequence of trees."
+ [ ts zts ]
+ ( seq ( ZDDNumber/pSumGroupBy ( into-array ZDDTree ts ) ^Iterable zts ) )
 )

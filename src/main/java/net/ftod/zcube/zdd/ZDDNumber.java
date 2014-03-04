@@ -371,6 +371,35 @@ public final class ZDDNumber {
         return addSubtrees(filter, zt, zn, _nod, _equ, _cru, _uni, _int, _dif);
     }
 
+    public static long[] sumGroupBy(final ZDDTree[] ts, final Iterable<ZDDTerm> i)
+    {
+        final int n = ts.length;
+        final ZDD[] zs = new ZDD[n];
+        final ZDD u;
+        {
+            final ZDDCacheN _nod = new ZDDCacheN();
+            final ZDDCacheP _equ = new ZDDCacheP();
+            final ZDDCacheO _cru = new ZDDCacheO();
+            final ZDDCacheO _uni = new ZDDCacheO();
+
+            for (int j = 0; j < n; ++j) {
+                zs[j] = ZDDTree.trees(ts[j], _nod, _equ, _cru, _uni);
+            }
+
+            u = ZDD.union(_nod, _equ, _uni, zs);
+        }
+
+        final ZDDNumber zn = sumSubtrees(u, i);
+
+        final long[] ls = new long[n];
+
+        for (int j = 0; j < n; ++j) {
+            ls[j] = negabinary(zn, zs[j]);
+        }
+
+        return ls;
+    }
+
     public static long[] pSumGroupBy(final ZDDTree[] ts, final Iterable<ZDDTerm> i)
     {
         final int n = ts.length;
