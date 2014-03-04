@@ -84,6 +84,8 @@ The rather simple API provides two styles of computing aggregate counts of subtr
 * A _commutative associative_ style whereby :
   * A tree and an integer coefficient yield a _ZDDNumber_
   * Sequences of _ZDDNumber_ may be added.
+* A _bulk_ API style whereby :
+  * Large sequences of _ZDDTerms_ may be summed up, optionally in parallel, taking advantage of multi-core systems. 
 
 See [Add ALL The Things][1] for a good introduction to the power of associativity and commutativity.
 
@@ -333,6 +335,94 @@ Again, filtering against a set of trees is taken care of by the following higher
 
 Will add to _znumber_ the occurrences of the subtrees of the _ZDDNumber_ _zt_, that are also in _filter_.
 
+## The bulk API
+
+The bulk API offers simple operations to compute aggregates over large sequences of _ZDDTerms_.
+
+Parallel versions of these operations are offered, taking advantage of multi-core systems.
+
+|Expression      |Description                                              |
+|----------------|---------------------------------------------------------|
+|( sum-subtrees zterms)|Adds up into a single _ZDDNumber_ the occurrences of the subtrees in the sequence of _ZDDTerms_.|
+|( p-sum-subtrees zterms )|Parallel version of the above.|
+|( sum-group-by ztrees zterms )|Reduces a sequence of _ZDDTerms_ into the vector of counts corresponding to the given vector of _ZDDTrees_.|
+|( p-sum-group-by ztrees zterms )|Parallel version of the above.|
+
+The following unit test illustrates the use of _p-sum-subtrees_ to reduce (in parallel) a large sequence of _ZDDTerms_ :
+
+```clojure
+( deftest p-test-analytics ; Analytics example, parallel
+  ( is
+    ( let [ n ( * 1024 1024 )
+          , zn ( z/p-sum-subtrees
+                 ( flatten ( repeat n
+                   [ ( z/times 1 ( z/cross
+                                   ( z/path "www.company.com" "page1" )
+                                   ( z/path "gender" "male" )
+                                   ( z/path "2014" "01" "01" "10" "32" ) ) )
+                   , ( z/times 1 ( z/cross
+                                   ( z/path "www.company.com" "page2" )
+                                   ( z/path "gender" "female" )
+                                   ( z/path "2014" "01" "02" "11" "35" ) ) )
+                   , ( z/times 1 ( z/cross
+                                   ( z/path "www.company.com" "page1" )
+                                   ( z/path "gender" "female" )
+                                   ( z/path "2014" "01" "03" "08" "15" ) ) )
+                   ] ) )
+               ) ]
+      ( and
+        ( = ( * 3 n ) ( ( z/count-trees ( z/path "www.company.com" )                                         ) zn ) )
+        ( = ( * 2 n ) ( ( z/count-trees ( z/path "www.company.com" "page1" )                                 ) zn ) )
+        ( = ( * 3 n ) ( ( z/count-trees ( z/path "2014" "01" )                                               ) zn ) )
+        ( = ( * 2 n ) ( ( z/count-trees ( z/path "gender" "female" )                                         ) zn ) )
+        ( = ( * 2 n ) ( ( z/count-trees ( z/cross ( z/path "gender" "female" ) ( z/path "2014" "01" ) )      ) zn ) )
+        ( = ( * 1 n ) ( ( z/count-trees ( z/cross ( z/path "gender" "female" ) ( z/path "2014" "01" "02" ) ) ) zn ) )
+      ) ) ) )
+```
+
+When the set of trees of which the aggregate counts are wanted is known beforehand, it may be advantageous to use the _sum-group-by_ operations.
+Instead of blindly summing up the occurrences of all the subtrees induced by the _ZDDTerms_, the _sum-group-by_ operations filter the set of subtrees, keeping only the occurrences of the wanted trees before summing them up.
+
+The following unit test illustrates the use of _p-sum-group-by_ to compute (in parallel) aggregate counts for some predefined _ZDDTrees_ :
+
+```clojure
+( deftest p-test-analytics-sum-group-by ; Analytics example, parallel sum group by
+  ( is
+    ( let [ n ( * 1024 1024 ) ]
+      ( =
+        ( z/p-sum-group-by
+          [ ( z/path "www.company.com" ) ; 3*n
+          , ( z/path "www.company.com" "page1" ) ; 2*n
+          , ( z/path "2014" "01" ) ; 3*n
+          , ( z/path "gender" "female" ) ; 2*n
+          , ( z/cross ( z/path "gender" "female" ) ( z/path "2014" "01" ) ) ; 2*n
+          , ( z/cross ( z/path "gender" "female" ) ( z/path "2014" "01" "02" ) ) ; 1*n
+          ]
+          ( flatten ( repeat n
+            [ ( z/times 1 ( z/cross
+                            ( z/path "www.company.com" "page1" )
+                            ( z/path "gender" "male" )
+                            ( z/path "2014" "01" "01" "10" "32" ) ) )
+            , ( z/times 1 ( z/cross
+                            ( z/path "www.company.com" "page2" )
+                            ( z/path "gender" "female" )
+                            ( z/path "2014" "01" "02" "11" "35" ) ) )
+            , ( z/times 1 ( z/cross
+                            ( z/path "www.company.com" "page1" )
+                            ( z/path "gender" "female" )
+                            ( z/path "2014" "01" "03" "08" "15" ) ) )
+            ] ) )
+        )
+        [ ( * 3 n )
+        , ( * 2 n )
+        , ( * 3 n )
+        , ( * 2 n )
+        , ( * 2 n )
+        , ( * 1 n )
+        ]
+      ) ) ) )
+```
+
 ## Counting subtrees
 
 Eventually, counting occurrences of trees in a _ZDDNumber_ is done with the _count-trees_ higher-order function :
@@ -351,7 +441,7 @@ In the [VSOP Calculator][2] paper, _Minato et al_ explain how _ZDD_, and forests
 
 The bulk of the library is written in Java, around hopefully efficient _immutable_ data structures. A thin Clojure layer provides for the public API of the library.
 
-* A **ZDDNumber** represents a linear combination of sets of trees with integer coefficients.
+* A **ZDDNumber** represents a linear combination of sets of trees with integer coefficients, ie a sum of _ZDDTerms_.
 * A **ZDDTerm** represents a long integer coefficient multiplying a set of trees.
 * A **ZDDTree** is a symbolic expression that represents a sets of trees.
 * A **ZDD** is a symbolic decision-diagram based representation of a set of trees.
