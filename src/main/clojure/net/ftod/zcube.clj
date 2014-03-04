@@ -109,7 +109,7 @@
 ( defn ^ZDDTerm times
   "Multiply a treeset by a (long) number of occurrences."
   [ ^long l ^ZDDTree t ]
-  ( ZDDTerm. l t )
+  ( ZDDTerm/times l t )
 )
 
 ( defn ^ZDDNumber sum-subtrees

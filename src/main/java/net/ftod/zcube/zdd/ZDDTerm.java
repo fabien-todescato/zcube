@@ -13,14 +13,15 @@ public final class ZDDTerm {
     public final long l;
     public final ZDDTreeL t;
 
-    public ZDDTerm(final long l, final ZDDTreeL t) {
+    private ZDDTerm(final long l, final ZDDTreeL t) {
         super();
         this.l = l;
         this.t = t;
     }
 
-    public ZDDTerm(final long l, final ZDDTree t) {
-        this(l, ZDDTree.treeL(t));
+    public static ZDDTerm times(final long l, final ZDDTree t)
+    {
+        return new ZDDTerm(l, ZDDTree.treeL(t));
     }
 
     ZDDNumber trees(final ZDDCacheN _nod, final ZDDCacheP _equ, final ZDDCacheO _cru, final ZDDCacheO _uni)
