@@ -105,7 +105,7 @@
 
 ( deftest p-test-analytics ; Analytics example, parallel
   ( is
-    ( let [ n ( * 1024 1024 )
+    ( let [ n ( * 64 1024 )
           , zn ( z/p-sum-subtrees
                  ( flatten ( repeat n
                    [ ( z/times 1 ( z/cross
@@ -133,7 +133,7 @@
 
 ( deftest test-analytics-sum-group-by ; Analytics example, sequential sum group by
   ( is
-    ( let [ n ( * 256 256 ) ]
+    ( let [ n ( * 64 1024 ) ]
       ( =
         ( z/sum-group-by
           [ ( z/path "www.company.com" ) ; 3*n
@@ -169,7 +169,7 @@
 
 ( deftest p-test-analytics-sum-group-by ; Analytics example, parallel sum group by
   ( is
-    ( let [ n ( * 1024 1024 ) ]
+    ( let [ n ( * 64 1024 ) ]
       ( =
         ( z/p-sum-group-by
           [ ( z/path "www.company.com" ) ; 3*n
