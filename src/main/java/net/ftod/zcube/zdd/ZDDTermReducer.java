@@ -18,7 +18,7 @@ public abstract class ZDDTermReducer<T> {
 
     private final T reduce(final File file) throws IOException
     {
-        final DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
+        final DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream(file), 262144));
 
         try {
             return reduce(new Iterator<ZDDTerm>() {
