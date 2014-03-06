@@ -84,7 +84,7 @@
   "
   [ trees ]
   ( let [ ^ZDD z ( ZDDTree/unionTrees trees ) ] ; Pay the ZDD computation once...
-    ( fn [ ^ZDDTerm zt ^ZDDNumber zn ] ( ZDDNumber/addSubtrees filter zt zn ) ) ; ...possibly apply multiple times over ZDD numbers.
+    ( fn [ ^ZDDTerm zt ^ZDDNumber zn ] ( ZDDNumber/addSubtrees z zt zn ) ) ; ...possibly apply multiple times over ZDD numbers.
   )
 )
 
