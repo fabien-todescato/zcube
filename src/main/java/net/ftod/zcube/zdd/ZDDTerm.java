@@ -57,6 +57,11 @@ public final class ZDDTerm {
 
     public static void write(final Iterable<ZDDTerm> i, final File file) throws IOException
     {
+        write(i.iterator(), file);
+    }
+
+    public static void write(final Iterator<ZDDTerm> i, final File file) throws IOException
+    {
         final DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 
         try {
@@ -64,11 +69,6 @@ public final class ZDDTerm {
         } finally {
             dos.close();
         }
-    }
-
-    public static void write(final Iterable<ZDDTerm> i, final DataOutputStream dos) throws IOException
-    {
-        write(i.iterator(), dos);
     }
 
     public static void write(final Iterator<ZDDTerm> i, final DataOutputStream dos) throws IOException
