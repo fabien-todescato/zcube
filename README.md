@@ -80,12 +80,12 @@ The API
 The rather simple API provides two styles of computing aggregate counts of subtrees :
 
 * An _accumulative style_ whereby :
-  * Given a tree and a integer coefficient, occurrences of its subtrees are accumulated into an immutable _ZDDNumber_.
+  * Given a tree and a integer coefficient ( a _ZDDTerm_), occurrences of its subtrees are accumulated into an immutable _ZDDNumber_.
 * A _commutative associative_ style whereby :
   * A tree and an integer coefficient yield a _ZDDNumber_
   * Sequences of _ZDDNumber_ may be added.
 * A _bulk_ API style whereby :
-  * Large sequences of _ZDDTerms_ may be summed up, optionally in parallel, taking advantage of multi-core systems. 
+  * Large sequences of _ZDDTerms_ may be summed up, optionally in parallel, taking advantage of multicore systems. 
 
 See [Add ALL The Things][1] for a good introduction to the power of associativity and commutativity.
 
