@@ -187,7 +187,7 @@ Well, suppose you want to perform some _analytics_ on a clickstream, where each 
 
 You can model such events as trees, for example, using an _informal_ algebraic notation to denote trees :
 
-      male   user on page1 the 1st of january 2014 at 1OH32 ~ www.company.com/page1+gender/male+2014/01/01/10/32
+      male   user on page1 the 1st of january 2014 at 10H32 ~ www.company.com/page1+gender/male+2014/01/01/10/32
       female user on page2 the 2nd of january 2014 at 11H15 ~ www.company.com/page2+gender/female+2014/01/02/11/15
       female user on page1 the 3rd of january 2014 at 08H15 ~ www.company.com/page1+gender/female+2014/01/03/08/15
 
