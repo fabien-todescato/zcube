@@ -45,12 +45,12 @@ Releases and Dependency Information
 
 Releases published on [Clojars].
 
-Latest stable is **0.0.1**
+Latest stable is **0.0.2**
 
 
 [Leiningen] dependency information:
 ```clojure
-[ net.ftod/zcube "0.0.1" ]
+[ net.ftod/zcube "0.0.2" ]
 ```
 
 [Maven] dependency information:
@@ -58,7 +58,7 @@ Latest stable is **0.0.1**
 <dependency>
   <groupId>net.ftod</groupId>
   <artifactId>zcube</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
 </dependency>
 ```
 
